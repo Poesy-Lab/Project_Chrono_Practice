@@ -1,0 +1,736 @@
+# Project Chrono 학습 가이드
+
+> **대상**: Project Chrono를 처음 접하는 완전 초보자
+> **목표**: 물리 시뮬레이션의 기초 개념부터 실습까지 단계별 학습
+> **환경**: Windows / Linux / macOS 모두 지원, NVIDIA GPU 선택사항
+
+---
+
+## 1. Project Chrono란?
+
+Project Chrono는 **멀티바디 물리 시뮬레이션 엔진**입니다.
+
+쉽게 말하면, 현실 세계의 물리 법칙(중력, 충돌, 마찰, 관성 등)을 컴퓨터 안에서 재현하는 소프트웨어입니다.
+
+### 어디에 쓰이나요?
+
+| 분야 | 예시 |
+|------|------|
+| 자동차 공학 | 차량 주행 시뮬레이션, 서스펜션 테스트 |
+| 로봇 공학 | 로봇 팔 동작 시뮬레이션, 보행 로봇 |
+| 토목/건축 | 구조물 진동 해석 |
+| 우주/항공 | 위성 전개 메커니즘 시뮬레이션 |
+| 게임/영화 | 물리 기반 애니메이션 |
+| 자율주행 | 센서 시뮬레이션 (카메라, LiDAR) |
+
+### 핵심 개념 5가지
+
+```
+1. System (시스템)     → 시뮬레이션 세계 전체를 담는 그릇
+2. Body (물체)        → 시뮬레이션 속 강체 (상자, 구, 실린더 등)
+3. Link/Joint (조인트) → 물체끼리 연결하는 관절/구속 조건
+4. Force (힘)         → 중력, 스프링, 모터 등 물체에 작용하는 힘
+5. Solver (솔버)      → 물리 방정식을 풀어 다음 상태를 계산하는 엔진
+```
+
+---
+
+## 2. 설치 가이드
+
+자신의 환경에 맞는 섹션을 따라가세요.
+
+### 2-A. 공통 사전 준비
+
+어떤 OS든 아래 소프트웨어가 필요합니다:
+
+| 도구 | 용도 | 다운로드 |
+|------|------|----------|
+| **Git** | 소스 코드 다운로드 | https://git-scm.com/downloads |
+| **CMake** (3.28+) | 빌드 설정 도구 | https://cmake.org/download/ |
+| **Python** (3.10+) | PyChrono 사용 | https://www.python.org/ 또는 Anaconda |
+| **C++ 컴파일러** | Chrono 빌드 | Windows: Visual Studio / Linux: GCC / macOS: Xcode CLT |
+
+---
+
+### 2-B. Windows 설치
+
+#### Step 1: 필수 도구 설치
+
+1. **Visual Studio 2022** (Community, 무료)
+   - https://visualstudio.microsoft.com/ko/downloads/
+   - 설치 시 **"C++를 사용한 데스크톱 개발"** 워크로드 선택
+
+2. **CMake**
+   - https://cmake.org/download/ → Windows x64 Installer
+   - 설치 시 **"Add CMake to the system PATH"** 체크
+
+3. **Git**
+   - https://git-scm.com/download/win
+
+4. **Python** (Anaconda 추천)
+   - https://www.anaconda.com/download
+   - 또는 https://www.python.org/downloads/
+
+5. **SWIG** (PyChrono 빌드 시 필요)
+   - https://www.swig.org/download.html → swigwin 다운로드
+   - 압축 풀고 경로를 환경변수 `PATH`에 추가
+
+#### Step 2: Chrono 소스 다운로드
+
+```powershell
+cd C:\Users\%USERNAME%\Documents
+git clone https://github.com/projectchrono/chrono.git
+mkdir chrono_build
+```
+
+#### Step 3: 의존성 설치 (Eigen3)
+
+```powershell
+# Eigen3 다운로드 (헤더만 있는 라이브러리)
+cd C:\Users\%USERNAME%\Documents
+git clone --branch 3.4.0 https://gitlab.com/libeigen/eigen.git eigen3
+```
+
+#### Step 4: CMake 설정 (GUI 사용)
+
+1. **CMake GUI** 실행 (`cmake-gui`)
+2. Source 경로: `C:/Users/사용자명/Documents/chrono`
+3. Build 경로: `C:/Users/사용자명/Documents/chrono_build`
+4. **Configure** 클릭 → Generator: **Visual Studio 17 2022** 선택
+5. 아래 항목 설정:
+
+| CMake 변수 | 값 |
+|------------|-----|
+| `CMAKE_INSTALL_PREFIX` | `C:/Users/사용자명/Documents/chrono_install` |
+| `EIGEN3_INCLUDE_DIR` | `C:/Users/사용자명/Documents/eigen3` |
+| `CH_ENABLE_MODULE_IRRLICHT` | `ON` |
+| `CH_ENABLE_MODULE_VEHICLE` | `ON` |
+| `CH_ENABLE_MODULE_POSTPROCESS` | `ON` |
+| `CH_ENABLE_MODULE_PYTHON` | `ON` (PyChrono 원할 경우) |
+| `BUILD_DEMOS` | `ON` |
+
+> **Irrlicht**: Configure 후 자동으로 다운로드됩니다. 안 되면 수동으로:
+> https://irrlicht.sourceforge.io/downloads/ → irrlicht-1.8.5 다운로드 후 경로 지정
+
+6. **Configure** 다시 클릭 → 오류 없으면 **Generate** 클릭
+7. **Open Project** 클릭 → Visual Studio 열림
+
+#### Step 5: 빌드
+
+- Visual Studio에서 상단 드롭다운을 **Release**로 변경
+- 메뉴 → **빌드** → **솔루션 빌드** (Ctrl+Shift+B)
+- 빌드 완료까지 10~30분 소요
+
+#### Step 6: 환경 변수 설정
+
+시스템 환경변수에 추가 (PowerShell 관리자):
+```powershell
+# PyChrono를 사용하려면:
+[Environment]::SetEnvironmentVariable("PYTHONPATH", "C:\Users\사용자명\Documents\chrono_build\bin\Release", "User")
+[Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\Users\사용자명\Documents\chrono_build\bin\Release", "User")
+```
+
+또는 매 세션마다:
+```powershell
+$env:PYTHONPATH = "C:\Users\사용자명\Documents\chrono_build\bin\Release"
+$env:PATH += ";C:\Users\사용자명\Documents\chrono_build\bin\Release"
+```
+
+#### Step 7: 설치 확인
+
+```powershell
+python -c "import pychrono; print('PyChrono OK')"
+```
+
+---
+
+### 2-C. Linux (Ubuntu/Debian) 설치
+
+#### Step 1: 시스템 패키지 설치
+
+```bash
+sudo apt-get update
+sudo apt-get install -y \
+  build-essential cmake cmake-curses-gui \
+  libeigen3-dev libglew-dev libglfw3-dev libglm-dev freeglut3-dev \
+  libirrlicht-dev ninja-build swig python3-dev git
+```
+
+#### Step 2: Chrono 소스 다운로드
+
+```bash
+cd ~/Documents
+mkdir Project_Chrono_Practice && cd Project_Chrono_Practice
+git clone https://github.com/projectchrono/chrono.git
+mkdir chrono_build
+```
+
+#### Step 3: CMake 설정 및 빌드
+
+```bash
+cd chrono_build
+cmake -G "Ninja" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=../chrono_install \
+  -DEIGEN3_INCLUDE_DIR=/usr/include/eigen3 \
+  -DCH_ENABLE_MODULE_IRRLICHT:BOOL=ON \
+  -DIrrlicht_ROOT=/usr \
+  -DCH_ENABLE_MODULE_POSTPROCESS:BOOL=ON \
+  -DCH_ENABLE_MODULE_VEHICLE:BOOL=ON \
+  -DCH_ENABLE_MODULE_PYTHON:BOOL=ON \
+  -DBUILD_DEMOS:BOOL=ON \
+  ../chrono
+
+ninja -j$(nproc)
+```
+
+#### Step 4: 환경 설정
+
+```bash
+# ~/.bashrc에 추가하거나, 매 세션마다 실행:
+export LD_LIBRARY_PATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/lib:$LD_LIBRARY_PATH"
+export PYTHONPATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/bin:$PYTHONPATH"
+```
+
+> **Anaconda 사용자 주의**: libstdc++ 충돌이 발생하면 아래 추가:
+> ```bash
+> export LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libstdc++.so.6
+> ```
+> 이 프로젝트의 `setup_chrono_env.sh`에 이미 포함되어 있습니다.
+
+#### Step 5: 설치 확인
+
+```bash
+python3 -c "import pychrono; print('PyChrono OK')"
+```
+
+---
+
+### 2-D. macOS 설치 (Intel / Apple Silicon M1~M4)
+
+> macOS에서는 CUDA가 지원되지 않으므로 GPU 모듈(DEM, FSI-SPH, Sensor)은 사용할 수 없습니다.
+> 그 외 Core, Vehicle, FEA, Irrlicht 등 대부분의 모듈은 정상 동작합니다.
+
+#### Step 1: Xcode Command Line Tools + Homebrew
+
+```bash
+# Xcode CLI 도구 (컴파일러 포함)
+xcode-select --install
+
+# Homebrew 설치 (없는 경우)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+#### Step 2: 의존성 설치
+
+```bash
+brew install cmake ninja eigen irrlicht libomp swig python3 git
+```
+
+#### Step 3: Chrono 소스 다운로드
+
+```bash
+cd ~/Documents
+mkdir Project_Chrono_Practice && cd Project_Chrono_Practice
+git clone https://github.com/projectchrono/chrono.git
+mkdir chrono_build
+```
+
+#### Step 4: CMake 설정 및 빌드
+
+```bash
+HOMEBREW_PREFIX=$(brew --prefix)
+
+cd chrono_build
+cmake -G "Ninja" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DCMAKE_INSTALL_PREFIX=../chrono_install \
+  -DEIGEN3_INCLUDE_DIR=$(brew --prefix eigen)/include/eigen3 \
+  -DCH_ENABLE_MODULE_IRRLICHT:BOOL=ON \
+  -DIrrlicht_ROOT=$(brew --prefix irrlicht) \
+  -DCH_ENABLE_MODULE_POSTPROCESS:BOOL=ON \
+  -DCH_ENABLE_MODULE_VEHICLE:BOOL=ON \
+  -DCH_ENABLE_MODULE_PYTHON:BOOL=ON \
+  -DOpenMP_CXX_FLAGS="-Xclang -fopenmp" \
+  -DOpenMP_CXX_LIB_NAMES="libomp" \
+  -DOpenMP_libomp_LIBRARY="${HOMEBREW_PREFIX}/opt/libomp/lib/libomp.dylib" \
+  -DBUILD_DEMOS:BOOL=ON \
+  ../chrono
+
+ninja -j$(sysctl -n hw.ncpu)
+```
+
+> **Apple Silicon 참고**: M1/M2/M3/M4 칩에서 Intel MKL, MATLAB, Pardiso MKL 솔버는 사용 불가합니다.
+> Irrlicht 시각화는 정상 작동합니다.
+
+#### Step 5: 환경 설정
+
+```bash
+# ~/.zshrc에 추가하거나, 매 세션마다 실행:
+export DYLD_LIBRARY_PATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/lib:$DYLD_LIBRARY_PATH"
+export PYTHONPATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/bin:$PYTHONPATH"
+```
+
+또는 이 프로젝트의 `setup_chrono_env.sh`를 사용하세요:
+```bash
+source setup_chrono_env.sh
+```
+
+#### Step 6: 설치 확인
+
+```bash
+python3 -c "import pychrono; print('PyChrono OK')"
+```
+
+#### macOS에서 사용 가능/불가능한 모듈
+
+| 사용 가능 | 사용 불가 (CUDA 필요) |
+|-----------|----------------------|
+| Core, FEA, Vehicle | DEM (이산요소법) |
+| Irrlicht (3D 시각화) | FSI-SPH (유체-구조) |
+| Postprocess, Robot | Sensor (OptiX 레이트레이싱) |
+| PyChrono, Multicore | Pardiso MKL (Apple Silicon) |
+
+---
+
+### 2-E. GPU/CUDA 모듈 설치 (선택사항, Linux/Windows만 해당)
+
+> **필요 조건**: NVIDIA GPU + CUDA Toolkit (macOS에서는 사용 불가)
+> **GPU가 없어도** Core, Irrlicht, Vehicle, FEA 등 대부분의 기능은 정상 동작합니다.
+> GPU 모듈은 대규모 입자 시뮬레이션이나 유체-구조 상호작용 등에서 필요합니다.
+
+#### 언제 GPU가 필요한가?
+
+| 모듈 | GPU 필요? | 용도 |
+|------|-----------|------|
+| Core, Vehicle, FEA, Robot | 불필요 | 기본 물리 시뮬레이션 |
+| Irrlicht (시각화) | 불필요 | 3D 렌더링 (CPU로 충분) |
+| **DEM** | **CUDA 필수** | GPU 가속 입자/과립 시뮬레이션 |
+| **FSI-SPH** | **CUDA 필수** | 유체-구조 상호작용 (SPH) |
+| **Sensor** | **CUDA 선택** | 카메라/LiDAR 센서 (OptiX 레이트레이싱) |
+| Multicore | 불필요 | CPU 멀티코어 병렬 연산 |
+
+#### CUDA Toolkit 설치
+
+**Windows:**
+1. https://developer.nvidia.com/cuda-downloads 에서 다운로드
+2. CUDA Toolkit 12.8 이상 권장
+3. 설치 후 `nvcc --version`으로 확인
+
+**Linux (Ubuntu 24.04):**
+```bash
+wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2404/x86_64/cuda-keyring_1.1-1_all.deb
+sudo dpkg -i cuda-keyring_1.1-1_all.deb
+sudo apt-get update
+sudo apt-get install -y cuda-toolkit-12-8
+# 터미널 재시작 후:
+export PATH=/usr/local/cuda-12.8/bin:$PATH
+nvcc --version
+```
+
+#### CUDA 모듈 활성화하여 재빌드
+
+CMake에 아래 옵션을 추가합니다:
+
+```
+-DCH_ENABLE_MODULE_DEM:BOOL=ON
+-DCH_ENABLE_MODULE_FSI:BOOL=ON
+-DCH_ENABLE_MODULE_FSI_SPH:BOOL=ON
+```
+
+**Linux 전체 명령어:**
+```bash
+cd chrono_build
+cmake -G "Ninja" \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DEIGEN3_INCLUDE_DIR=/usr/include/eigen3 \
+  -DCH_ENABLE_MODULE_IRRLICHT:BOOL=ON \
+  -DCH_ENABLE_MODULE_VEHICLE:BOOL=ON \
+  -DCH_ENABLE_MODULE_POSTPROCESS:BOOL=ON \
+  -DCH_ENABLE_MODULE_PYTHON:BOOL=ON \
+  -DCH_ENABLE_MODULE_DEM:BOOL=ON \
+  -DCH_ENABLE_MODULE_FSI:BOOL=ON \
+  -DCH_ENABLE_MODULE_FSI_SPH:BOOL=ON \
+  -DBUILD_DEMOS:BOOL=ON \
+  ../chrono
+
+ninja -j$(nproc)
+```
+
+**Windows (CMake GUI):** 위와 동일한 옵션을 체크박스로 켜면 됩니다.
+
+---
+
+### 2-F. PyChrono만 빠르게 설치 (conda, 모든 OS)
+
+소스 빌드 없이 Python만 쓰고 싶다면:
+
+```bash
+conda install -c conda-forge -c projectchrono pychrono
+```
+
+> 주의: conda 버전은 최신이 아닐 수 있고, GPU 모듈이 포함되지 않을 수 있습니다.
+
+---
+
+### 2-G. Docker로 설치 (고급, Linux/Windows)
+
+```bash
+docker pull uwsbel/projectchrono:latest
+docker run -it uwsbel/projectchrono:latest
+```
+
+---
+
+## 3. 학습 로드맵
+
+### Phase 1: 기초 (Week 1~2) - "물리 세계 만들기"
+
+| 순서 | 주제 | 배우는 것 |
+|------|------|-----------|
+| 01 | Hello Chrono | 시스템 생성, 물체 추가, 시뮬레이션 실행 |
+| 02 | 중력과 자유낙하 | 중력 설정, 시간 스텝, 위치 추적 |
+| 03 | 3D 시각화 | Irrlicht로 시뮬레이션을 눈으로 보기 |
+| 04 | 다양한 형태의 물체 | 상자, 구, 실린더 만들기 |
+| 05 | 충돌과 접촉 | 물체끼리 부딪히게 만들기 |
+| 06 | 재질과 마찰 | 미끄러운 바닥 vs 거친 바닥 |
+
+### Phase 2: 메커니즘 (Week 3~4) - "움직이는 기계 만들기"
+
+| 순서 | 주제 | 배우는 것 |
+|------|------|-----------|
+| 07 | 회전 조인트 (Revolute) | 문의 경첩처럼 한 축으로 회전 |
+| 08 | 진자 운동 | 실제 진자 시뮬레이션 |
+| 09 | 스프링과 댐퍼 | 탄성체 연결, 감쇠 |
+| 10 | 모터 구동 | 조인트에 모터를 달아 자동 회전 |
+| 11 | 4절 링크 기구 | 크랭크-슬라이더 메커니즘 |
+| 12 | 기어와 풀리 | 동력 전달 시스템 |
+
+### Phase 3: 응용 (Week 5~) - "실전 시뮬레이션"
+
+| 순서 | 주제 | 배우는 것 |
+|------|------|-----------|
+| 13 | FEA 입문 | 유연체 (휘어지는 보, 케이블) |
+| 14 | 차량 시뮬레이션 | HMMWV 군용차량 주행 |
+| 15 | 로봇 시뮬레이션 | Curiosity 로버, Turtlebot |
+| 16 | GPU 가속 (선택) | DEM/FSI로 대규모 입자 시뮬레이션 |
+
+---
+
+## 4. 핵심 API 패턴 (Python)
+
+모든 PyChrono 프로그램은 이 5단계 패턴을 따릅니다:
+
+### 패턴 1: 시스템 생성
+
+```python
+import pychrono as chrono
+
+# 물리 세계를 만든다
+sys = chrono.ChSystemNSC()                                    # NSC = 비매끄러운 접촉 방식
+sys.SetGravitationalAcceleration(chrono.ChVector3d(0, -9.81, 0))  # 중력 설정 (y축 아래)
+```
+
+> **NSC vs SMC**: 두 가지 접촉 모델이 있습니다
+> - `ChSystemNSC` : Non-Smooth Contact. 빠르고 일반적. 대부분 이걸 사용
+> - `ChSystemSMC` : Smooth Contact. 부드러운 접촉이 필요할 때 (고무, 타이어 등)
+
+### 패턴 2: 물체 추가
+
+```python
+# 방법 A: 직접 생성 (세밀한 제어)
+body = chrono.ChBody()
+body.SetMass(10.0)                              # 질량 10kg
+body.SetPos(chrono.ChVector3d(0, 5, 0))         # 위치: (x=0, y=5, z=0)
+body.SetFixed(False)                            # 고정 안 함 (움직임)
+sys.AddBody(body)
+
+# 방법 B: 간편 생성 (형태+밀도로 자동 계산)
+sphere = chrono.ChBodyEasySphere(0.5, 1000, True)  # 반지름 0.5m, 밀도 1000kg/m³, 시각화 ON
+sys.AddBody(sphere)
+```
+
+### 패턴 3: 조인트/구속 추가
+
+```python
+# 회전 조인트 (경첩) 만들기
+joint = chrono.ChLinkRevolute()
+frame = chrono.ChFramed(chrono.ChVector3d(0, 0.5, 0))   # 조인트 위치
+joint.Initialize(body_A, body_B, frame)                   # 두 물체를 연결
+sys.Add(joint)
+```
+
+### 패턴 4: 3D 시각화 설정
+
+```python
+import pychrono.irrlicht as chronoirr
+
+vis = chronoirr.ChVisualSystemIrrlicht()
+vis.AttachSystem(sys)                           # 시스템 연결
+vis.SetWindowSize(1024, 768)                    # 창 크기
+vis.SetWindowTitle('My Simulation')             # 창 제목
+vis.Initialize()
+vis.AddSkyBox()                                 # 하늘 배경
+vis.AddCamera(chrono.ChVector3d(3, 3, 3))       # 카메라 위치
+vis.AddTypicalLights()                          # 조명
+```
+
+### 패턴 5: 시뮬레이션 루프
+
+```python
+# 시각화 있는 경우
+while vis.Run():
+    vis.BeginScene()
+    vis.Render()
+    vis.EndScene()
+    sys.DoStepDynamics(0.005)  # 0.005초씩 시간 전진
+
+# 시각화 없는 경우 (빠른 계산)
+while sys.GetChTime() < 10.0:
+    sys.DoStepDynamics(0.001)
+    pos = body.GetPos()
+    print(f"t={sys.GetChTime():.3f}  y={pos.y:.4f}")
+```
+
+---
+
+## 5. 첫 번째 예제: 자유낙하 시뮬레이션
+
+`lessons/lesson_01_hello_chrono.py` 파일이 이미 준비되어 있습니다.
+
+**Linux / macOS:**
+```bash
+source setup_chrono_env.sh
+python3 lessons/lesson_01_hello_chrono.py
+```
+
+**Windows:**
+```powershell
+# 환경변수 설정 후:
+python lessons/lesson_01_hello_chrono.py
+```
+
+**예상 출력:**
+```
+물리 시스템 생성 완료!
+  중력: -9.81 m/s²
+
+공 생성 완료!
+  질량: 1.0 kg
+  초기 위치: y = 10.0 m
+
+   시간(s)       높이(m)     속도(m/s)       이론높이(m)
+────────────────────────────────────────────────
+    0.20      9.7940     -1.9620        9.8038
+    0.40      9.1956     -3.9240        9.2152
+    ...
+시뮬레이션 결과: y = -9.7181 m
+이론값 (물리):   y = -9.6200 m
+축하합니다! 첫 번째 물리 시뮬레이션을 완료했습니다!
+```
+
+---
+
+## 6. 기존 데모 실행하기
+
+Chrono 소스에는 400개 이상의 예제가 포함되어 있습니다.
+
+### 추천 데모 (난이도순)
+
+| 난이도 | 파일 | 설명 |
+|--------|------|------|
+| ★☆☆ | `python/core/demo_CH_buildsystem.py` | 기본 시스템 생성, 물체 추가 |
+| ★☆☆ | `python/core/demo_CH_coords.py` | 좌표계와 변환 |
+| ★★☆ | `python/mbs/demo_MBS_revolute.py` | 회전 조인트 (3D 시각화) |
+| ★★☆ | `python/mbs/demo_MBS_spring.py` | 스프링-댐퍼 시스템 |
+| ★★☆ | `python/mbs/demo_MBS_collision_2d.py` | 2D 충돌 시뮬레이션 |
+| ★★★ | `python/vehicle/demo_VEH_HMMWV.py` | HMMWV 차량 주행 |
+| ★★★ | `python/robot/demo_ROBOT_Curiosity_Rigid.py` | 화성 탐사 로버 |
+
+### 실행 방법
+
+**Linux / macOS:**
+```bash
+source setup_chrono_env.sh
+python3 chrono/src/demos/python/mbs/demo_MBS_revolute.py
+```
+
+**Windows:**
+```powershell
+python chrono\src\demos\python\mbs\demo_MBS_revolute.py
+```
+
+---
+
+## 7. 좌표계와 단위
+
+Project Chrono는 **SI 단위계**를 사용합니다:
+
+| 물리량 | 단위 | 예시 |
+|--------|------|------|
+| 길이 | 미터 (m) | `ChVector3d(1, 0, 0)` = 1m |
+| 질량 | 킬로그램 (kg) | `SetMass(10)` = 10kg |
+| 시간 | 초 (s) | `DoStepDynamics(0.01)` = 10ms |
+| 힘 | 뉴턴 (N) | F = ma |
+| 각도 | 라디안 (rad) | 180도 = 3.14159 rad |
+
+### 좌표계 (오른손 법칙)
+
+```
+    Y (위)
+    |
+    |
+    +------→ X (오른쪽)
+   /
+  Z (앞, 화면 밖으로)
+```
+
+- `ChVector3d(x, y, z)` : 3D 위치/방향 벡터
+- `ChQuaterniond(w, x, y, z)` : 회전을 나타내는 쿼터니언
+- `ChFramed(위치, 회전)` : 위치 + 방향 = 좌표 프레임
+
+---
+
+## 8. 주요 클래스 사전
+
+### 물체 (Body)
+
+| 클래스 | 용도 |
+|--------|------|
+| `ChBody` | 기본 강체 (위치, 질량, 관성 직접 설정) |
+| `ChBodyEasyBox(x,y,z, 밀도, 시각화)` | 상자 형태 간편 생성 |
+| `ChBodyEasySphere(반지름, 밀도, 시각화)` | 구 형태 간편 생성 |
+| `ChBodyEasyCylinder(반지름, 높이, 밀도, 시각화)` | 실린더 간편 생성 |
+| `ChBodyAuxRef` | 무게중심과 기준점이 다른 물체 |
+
+### 조인트/링크 (Joint/Link)
+
+| 클래스 | 자유도 | 실제 예시 |
+|--------|--------|-----------|
+| `ChLinkRevolute` | 회전 1축 | 문 경첩 |
+| `ChLinkSpherical` | 회전 3축 | 볼 조인트 |
+| `ChLinkPrismatic` | 직선 1축 | 서랍 레일 |
+| `ChLinkLockLock` | 고정 0 | 용접 |
+| `ChLinkTSDA` | 스프링-댐퍼 | 자동차 서스펜션 |
+| `ChLinkMotorRotationSpeed` | 모터 | 전동기 |
+
+### 시스템 (System)
+
+| 클래스 | 용도 |
+|--------|------|
+| `ChSystemNSC` | 비매끄러운 접촉 (일반적, 빠름) |
+| `ChSystemSMC` | 매끄러운 접촉 (정밀, 느림) |
+
+---
+
+## 9. 문제 해결 (Troubleshooting)
+
+### 공통
+
+| 증상 | 원인 | 해결 |
+|------|------|------|
+| `ModuleNotFoundError: No module named 'pychrono'` | PYTHONPATH 미설정 | 환경변수에 빌드 디렉토리 추가 |
+| 데이터 파일을 못 찾음 | 데이터 경로 미설정 | 코드에 `chrono.SetChronoDataPath(...)` 추가 |
+| Irrlicht 창이 안 열림 | GUI 환경 없음 | X11/데스크톱 환경에서 실행 |
+
+### Linux 전용
+
+| 증상 | 원인 | 해결 |
+|------|------|------|
+| `GLIBCXX_3.4.32 not found` | Anaconda libstdc++ 충돌 | `source setup_chrono_env.sh` 실행 |
+| `libGL error` | 그래픽 드라이버 문제 | `sudo apt install mesa-utils` |
+
+### macOS 전용
+
+| 증상 | 원인 | 해결 |
+|------|------|------|
+| `ld: library not found for -lomp` | OpenMP 미설치 | `brew install libomp` |
+| CMake에서 OpenMP 못 찾음 | Apple clang 기본 미포함 | CMake에 `-DOpenMP_CXX_FLAGS="-Xclang -fopenmp"` 추가 |
+| `dyld: Library not loaded` | DYLD_LIBRARY_PATH 미설정 | `source setup_chrono_env.sh` 실행 |
+| Irrlicht 관련 오류 | Homebrew 경로 문제 | `-DIrrlicht_ROOT=$(brew --prefix irrlicht)` 확인 |
+
+### Windows 전용
+
+| 증상 | 원인 | 해결 |
+|------|------|------|
+| DLL not found | PATH에 빌드 디렉토리 없음 | bin/Release 폴더를 PATH에 추가 |
+| CMake에서 Eigen 못 찾음 | 경로 오류 | `EIGEN3_INCLUDE_DIR`을 정확히 지정 |
+| SWIG 오류 | SWIG 미설치 또는 PATH 없음 | SWIG 설치 후 PATH 추가 |
+
+---
+
+## 10. 참고 자료
+
+| 자료 | 링크 |
+|------|------|
+| 공식 API 문서 | https://api.projectchrono.org/ |
+| 공식 홈페이지 | https://projectchrono.org/ |
+| GitHub 저장소 | https://github.com/projectchrono/chrono |
+| 설치 가이드 (공식) | https://api.projectchrono.org/tutorial_install_chrono.html |
+| PyChrono conda | `conda install -c conda-forge -c projectchrono pychrono` |
+| 다운로드 페이지 | https://projectchrono.org/download/ |
+
+소스 빌드 후 사용 가능한 로컬 자료:
+
+| 자료 | 경로 |
+|------|------|
+| 매뉴얼 (마크다운) | `chrono/doxygen/documentation/manuals/chrono/` |
+| Python 데모 109개 | `chrono/src/demos/python/` |
+| C++ 데모 182개 | `chrono/src/demos/` |
+| 차량 모델 데이터 | `chrono/data/vehicle/` |
+| 로봇 모델 데이터 | `chrono/data/robot/` |
+
+---
+
+## 11. 프로젝트 디렉토리 구조
+
+```
+Project_Chrono_Practice/
+│
+├── lessons/                         # [학습] 우리가 작성하는 학습 코드
+│   ├── lesson_01_hello_chrono.py    #   첫 번째 시뮬레이션
+│   └── ...
+│
+├── chrono/                          # [소스] Chrono 엔진 (git clone, .gitignore됨)
+│   ├── src/demos/python/            #   Python 데모 예제들
+│   └── data/                        #   모델, 텍스쳐 데이터
+│
+├── chrono_build/                    # [빌드] 컴파일 결과물 (.gitignore됨)
+│   ├── bin/pychrono/                #   PyChrono 모듈
+│   └── lib/                         #   공유 라이브러리
+│
+├── setup_chrono_env.sh              # Linux/macOS 환경 설정 스크립트
+├── requirements.txt                 # Python 추가 패키지
+├── CLAUDE.md                        # Claude AI 작업 지침
+├── README.md                        # 이 파일 (학습 가이드)
+└── .gitignore                       # Git 제외 목록
+```
+
+> `chrono/`와 `chrono_build/`는 용량이 크므로 Git에 포함되지 않습니다.
+> 각 멤버가 자신의 환경에서 직접 빌드해야 합니다.
+
+---
+
+## 12. 플랫폼별 모듈 호환성
+
+| 모듈 | Linux | Windows | macOS Intel | macOS Apple Silicon |
+|------|:-----:|:-------:|:-----------:|:-------------------:|
+| Core (물리 엔진) | O | O | O | O |
+| Irrlicht (3D 시각화) | O | O | O | O |
+| Vehicle (차량) | O | O | O | O |
+| FEA (유한요소) | O | O | O | O |
+| Robot (로봇) | O | O | O | O |
+| Postprocess (후처리) | O | O | O | O |
+| PyChrono (Python) | O | O | O | O |
+| Multicore (병렬) | O | O | O | O |
+| **DEM (GPU 입자)** | **O*** | **O*** | X | X |
+| **FSI-SPH (GPU 유체)** | **O*** | **O*** | X | X |
+| **Sensor (GPU 센서)** | **O*** | **O*** | X | X |
+| Pardiso MKL (솔버) | O | O | O | X |
+
+**O*** = NVIDIA GPU + CUDA Toolkit 필요
+
+> **GPU가 없어도 걱정 마세요!**
+> Phase 1~3의 모든 학습 과정(물리 기초, 메커니즘, 차량/로봇/FEA)은
+> GPU 없이도 완벽하게 수행할 수 있습니다.
+> GPU 모듈은 고급 과정(대규모 입자, 유체 시뮬레이션)에서만 필요합니다.

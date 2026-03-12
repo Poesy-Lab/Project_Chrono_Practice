@@ -1,0 +1,17 @@
+# Project Chrono Practice - Python Dependencies
+# ================================================
+# PyChrono 자체는 소스에서 빌드됨 (chrono_build/bin/pychrono/)
+# 아래는 학습 및 데이터 분석에 필요한 추가 패키지들
+
+# 필수: 수치 계산
+numpy>=1.24
+
+# 시각화 & 그래프
+matplotlib>=3.7
+
+# 데이터 분석 (선택)
+pandas>=2.0
+
+# Jupyter 노트북 (선택, 대화형 학습)
+jupyter>=1.0
+ipykernel>=6.0
