@@ -126,7 +126,10 @@ print("\n3D 시각화 초기화 중...")
 
 vis = chronoirr.ChVisualSystemIrrlicht()
 vis.AttachSystem(sys)               # 물리 시스템과 연결
+
 vis.SetWindowSize(1280, 720)        # 창 크기 (가로 x 세로)
+# 참고: macOS Retina에서는 렌더링이 창의 일부만 채울 수 있습니다.
+#   이는 Irrlicht가 HiDPI를 지원하지 않는 알려진 제한사항입니다.
 vis.SetWindowTitle('Lesson 03: Bouncing Balls')  # 창 제목
 vis.Initialize()                    # 초기화
 
@@ -161,11 +164,17 @@ print("─" * 55)
 
 step_size = 0.005   # 5ms 간격
 
+# ★ 실시간 속도 맞추기 (이게 없으면 물리가 순식간에 끝남!)
+#   macOS에서는 vsync가 안 걸릴 수 있어서, 이 타이머가 시뮬레이션을
+#   실제 시간과 동기화해줍니다. (없으면 공이 이미 떨어진 상태로 보임)
+realtime_timer = chrono.ChRealtimeStepTimer()
+
 while vis.Run():
     vis.BeginScene()       # 프레임 시작
     vis.Render()           # 3D 장면 그리기
     vis.EndScene()         # 프레임 끝
     sys.DoStepDynamics(step_size)  # 물리 계산
+    realtime_timer.Spin(step_size) # 실제 시간에 맞춰 대기
 
 # ──────────────────────────────────────────────────
 # 6단계: 종료 후 결과

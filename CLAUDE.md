@@ -188,6 +188,22 @@ Project_Chrono_Practice/
 - 속도: `GetPosDt()`, 가속도: `GetPosDt2()`
 - Linux Anaconda: `LD_PRELOAD` 필요 (setup_chrono_env.sh에 포함)
 
+## macOS Irrlicht 시각화 주의사항
+- macOS에서는 기본 비디오 드라이버 대신 **OpenGL 폴백**으로 동작함 (`Cannot use default video driver - fall back to OpenGL` 메시지 정상)
+- **Retina 디스플레이**: 렌더링이 창의 왼쪽 아래 1/4만 채움 — Irrlicht가 macOS HiDPI를 지원하지 않는 알려진 제한사항 (코드로 해결 불가)
+- **vsync 미지원**: macOS OpenGL 폴백에서는 vsync가 안 걸려서 시뮬레이션이 순식간에 끝남 → 반드시 `ChRealtimeStepTimer`를 사용하여 실시간 동기화 필요
+- **창 크기 제한**: 1280x720 초과 시 segfault 발생 가능 (OpenGL 폴백 한계)
+- 시각화 레슨 작성 시 반드시 아래 패턴 사용:
+```python
+realtime_timer = chrono.ChRealtimeStepTimer()
+while vis.Run():
+    vis.BeginScene()
+    vis.Render()
+    vis.EndScene()
+    sys.DoStepDynamics(step_size)
+    realtime_timer.Spin(step_size)  # 실시간 속도 동기화 (macOS 필수)
+```
+
 ## 참고 문서
 - API: https://api.projectchrono.org/
 - 설치: https://api.projectchrono.org/tutorial_install_chrono.html

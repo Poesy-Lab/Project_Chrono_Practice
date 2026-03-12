@@ -301,9 +301,15 @@ python -c "import pychrono; print('PyChrono OK')"
 | 사용 가능 | 사용 불가 (CUDA 필요) |
 |-----------|----------------------|
 | Core, FEA, Vehicle | DEM (이산요소법) |
-| Irrlicht (3D 시각화) | FSI-SPH (유체-구조) |
+| Irrlicht (3D 시각화) ※ | FSI-SPH (유체-구조) |
 | Postprocess, Robot | Sensor (OptiX 레이트레이싱) |
 | PyChrono, Multicore | Pardiso MKL (Apple Silicon) |
+
+> ※ **macOS Irrlicht 제한사항:**
+> - OpenGL 폴백으로 동작 (정상)
+> - Retina 디스플레이에서 렌더링이 창의 1/4만 채워짐 (Irrlicht HiDPI 미지원)
+> - vsync가 안 걸리므로 코드에 `ChRealtimeStepTimer` 필수
+> - 창 크기 1280x720 초과 시 segfault 가능
 
 ---
 
@@ -673,6 +679,10 @@ Project Chrono는 **SI 단위계**를 사용합니다:
 | CMake에서 OpenMP 못 찾음 | Apple clang 기본 미포함 | CMake에 `-DOpenMP_CXX_FLAGS="-Xclang -fopenmp"` 추가 |
 | `dyld: Library not loaded` | DYLD_LIBRARY_PATH 미설정 | `source setup_chrono_env.sh` 실행 |
 | Irrlicht 관련 오류 | Homebrew 경로 문제 | `-DIrrlicht_ROOT=$(brew --prefix irrlicht)` 확인 |
+| Irrlicht 렌더링이 창의 1/4만 채움 | Retina 디스플레이 HiDPI 미지원 | Irrlicht 알려진 제한사항, 기능은 정상 동작 |
+| `Cannot use default video driver - fall back to OpenGL` | macOS 기본 드라이버 미지원 | 정상 동작, OpenGL 폴백은 예상된 것 |
+| 시뮬레이션이 순식간에 끝남 (애니메이션 안 보임) | macOS OpenGL에서 vsync 미지원 | `ChRealtimeStepTimer` 사용 (코드 참고) |
+| Irrlicht 창 크기 크게 설정 시 segfault | OpenGL 폴백의 해상도 제한 | 창 크기를 1280x720 이하로 설정 |
 
 ### Windows 전용
 
