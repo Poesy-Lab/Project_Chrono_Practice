@@ -20,8 +20,9 @@ Lesson 02: 충돌과 바닥 - 공이 바닥에 부딪혀 튕기기
   - SetFixed(True) : 물체 고정 (바닥처럼 안 움직이게)
 
 실행 방법:
+  conda activate chrono
   source setup_chrono_env.sh
-  python3 lessons/lesson_02_collision.py
+  python lessons/lesson_02_collision.py
 ==========================================================
 """
 

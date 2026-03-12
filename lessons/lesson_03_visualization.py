@@ -24,8 +24,9 @@ Lesson 03: 3D 시각화 - Irrlicht로 시뮬레이션을 눈으로 보기!
   - ESC 또는 창 닫기 : 종료
 
 실행 방법:
+  conda activate chrono
   source setup_chrono_env.sh
-  python3 lessons/lesson_03_visualization.py
+  python lessons/lesson_03_visualization.py
 ==========================================================
 """
 

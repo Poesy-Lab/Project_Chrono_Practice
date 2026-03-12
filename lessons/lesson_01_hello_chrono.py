@@ -9,8 +9,9 @@ Lesson 01: Hello Chrono - 자유낙하 시뮬레이션
   4. 물체의 위치/속도를 읽는 법
 
 실행 방법:
+  conda activate chrono
   source setup_chrono_env.sh
-  python3 lessons/lesson_01_hello_chrono.py
+  python lessons/lesson_01_hello_chrono.py
 ==========================================================
 """
 

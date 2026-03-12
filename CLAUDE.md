@@ -7,10 +7,34 @@ GitHub로 팀원 간 공유되며, 멤버들은 다양한 환경(Windows/Linux/m
 
 ---
 
+## Python 환경 규칙 (중요!)
+
+- **모든 OS에서 conda 환경 `chrono`를 사용합니다** (Python 버전 통일을 위해).
+- 레슨 실행 시 반드시 `conda activate chrono` 후 `python` 명령어를 사용합니다.
+- **`python3` 명령어를 사용하지 마세요** — 시스템 Python을 가리켜 버전 불일치/segfault가 발생합니다.
+- `.venv` 등 다른 가상환경과 혼용하지 마세요.
+- conda 환경 생성: `conda create -n chrono python=3.11 numpy -y`
+
+```bash
+# 모든 OS 공통 실행 방법
+conda activate chrono
+source setup_chrono_env.sh   # Linux/macOS만
+python lessons/lesson_XX_주제.py
+```
+
+---
+
 ## 자동 환경 감지 및 설치 가이드
 
 > **Claude Code가 이 파일을 읽고 있다면:**
 > 아래 절차에 따라 사용자의 환경을 감지하고, Chrono가 아직 빌드되지 않았으면 설치를 안내/진행하세요.
+> **빌드 전에 반드시 conda 환경 `chrono`를 생성/활성화하고 그 안에서 CMake를 실행하세요.**
+
+### Step 0: conda 환경 생성
+```bash
+conda create -n chrono python=3.11 numpy -y
+conda activate chrono
+```
 
 ### Step 1: OS 감지
 ```bash
@@ -104,6 +128,13 @@ cmake --build . --config Release
 - **Linux**: `source setup_chrono_env.sh`
 - **macOS**: `source setup_chrono_env.sh`
 - **Windows**: `PYTHONPATH`와 `PATH`에 `chrono_build\bin\Release` 추가
+
+### Step 5: 레슨 실행
+```bash
+conda activate chrono
+source setup_chrono_env.sh   # Linux/macOS
+python lessons/lesson_01_hello_chrono.py
+```
 
 ---
 

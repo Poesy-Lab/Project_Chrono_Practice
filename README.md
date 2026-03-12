@@ -47,8 +47,23 @@ Project Chrono는 **멀티바디 물리 시뮬레이션 엔진**입니다.
 |------|------|----------|
 | **Git** | 소스 코드 다운로드 | https://git-scm.com/downloads |
 | **CMake** (3.28+) | 빌드 설정 도구 | https://cmake.org/download/ |
-| **Python** (3.10+) | PyChrono 사용 | https://www.python.org/ 또는 Anaconda |
+| **Anaconda/Miniconda** | Python 환경 관리 | https://www.anaconda.com/download 또는 https://docs.conda.io/en/latest/miniconda.html |
 | **C++ 컴파일러** | Chrono 빌드 | Windows: Visual Studio / Linux: GCC / macOS: Xcode CLT |
+
+#### conda 환경 생성 (모든 OS 공통, 가장 먼저!)
+
+```bash
+conda create -n chrono python=3.11 numpy -y
+conda activate chrono
+```
+
+> **왜 conda 환경을 쓰나요?**
+> PyChrono는 빌드 시 사용된 Python 버전에 종속됩니다. 시스템 Python 버전은 OS마다 다르고,
+> Homebrew/apt 업데이트로 바뀔 수 있어서 팀원 간 충돌이 생깁니다.
+> conda로 Python 3.11을 고정하면 모든 OS에서 동일하게 동작합니다.
+>
+> **주의:** conda 환경에서는 `python3`가 아닌 **`python`** 명령어를 사용하세요.
+> `python3`는 시스템 Python을 가리킬 수 있어 버전 불일치로 segfault가 발생합니다.
 
 ---
 
@@ -67,9 +82,9 @@ Project Chrono는 **멀티바디 물리 시뮬레이션 엔진**입니다.
 3. **Git**
    - https://git-scm.com/download/win
 
-4. **Python** (Anaconda 추천)
+4. **Anaconda** (Python 환경 관리)
    - https://www.anaconda.com/download
-   - 또는 https://www.python.org/downloads/
+   - 설치 후: `conda create -n chrono python=3.11 numpy -y`
 
 5. **SWIG** (PyChrono 빌드 시 필요)
    - https://www.swig.org/download.html → swigwin 다운로드
@@ -92,6 +107,8 @@ git clone --branch 3.4.0 https://gitlab.com/libeigen/eigen.git eigen3
 ```
 
 #### Step 4: CMake 설정 (GUI 사용)
+
+> **중요**: CMake 실행 전에 Anaconda Prompt에서 `conda activate chrono`를 먼저 실행하세요.
 
 1. **CMake GUI** 실행 (`cmake-gui`)
 2. Source 경로: `C:/Users/사용자명/Documents/chrono`
@@ -123,15 +140,9 @@ git clone --branch 3.4.0 https://gitlab.com/libeigen/eigen.git eigen3
 
 #### Step 6: 환경 변수 설정
 
-시스템 환경변수에 추가 (PowerShell 관리자):
+Anaconda Prompt에서 매 세션마다:
 ```powershell
-# PyChrono를 사용하려면:
-[Environment]::SetEnvironmentVariable("PYTHONPATH", "C:\Users\사용자명\Documents\chrono_build\bin\Release", "User")
-[Environment]::SetEnvironmentVariable("PATH", $env:PATH + ";C:\Users\사용자명\Documents\chrono_build\bin\Release", "User")
-```
-
-또는 매 세션마다:
-```powershell
+conda activate chrono
 $env:PYTHONPATH = "C:\Users\사용자명\Documents\chrono_build\bin\Release"
 $env:PATH += ";C:\Users\사용자명\Documents\chrono_build\bin\Release"
 ```
@@ -139,6 +150,7 @@ $env:PATH += ";C:\Users\사용자명\Documents\chrono_build\bin\Release"
 #### Step 7: 설치 확인
 
 ```powershell
+conda activate chrono
 python -c "import pychrono; print('PyChrono OK')"
 ```
 
@@ -168,6 +180,8 @@ mkdir chrono_build
 #### Step 3: CMake 설정 및 빌드
 
 ```bash
+conda activate chrono    # 반드시 conda 환경에서 빌드!
+
 cd chrono_build
 cmake -G "Ninja" \
   -DCMAKE_BUILD_TYPE=Release \
@@ -187,9 +201,9 @@ ninja -j$(nproc)
 #### Step 4: 환경 설정
 
 ```bash
-# ~/.bashrc에 추가하거나, 매 세션마다 실행:
-export LD_LIBRARY_PATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/lib:$LD_LIBRARY_PATH"
-export PYTHONPATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/bin:$PYTHONPATH"
+# 매 세션마다 실행:
+conda activate chrono
+source setup_chrono_env.sh
 ```
 
 > **Anaconda 사용자 주의**: libstdc++ 충돌이 발생하면 아래 추가:
@@ -201,7 +215,9 @@ export PYTHONPATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/bin:$PYT
 #### Step 5: 설치 확인
 
 ```bash
-python3 -c "import pychrono; print('PyChrono OK')"
+conda activate chrono
+source setup_chrono_env.sh
+python -c "import pychrono; print('PyChrono OK')"
 ```
 
 ---
@@ -239,6 +255,7 @@ mkdir chrono_build
 #### Step 4: CMake 설정 및 빌드
 
 ```bash
+conda activate chrono    # 반드시 conda 환경에서 빌드!
 HOMEBREW_PREFIX=$(brew --prefix)
 
 cd chrono_build
@@ -266,20 +283,17 @@ ninja -j$(sysctl -n hw.ncpu)
 #### Step 5: 환경 설정
 
 ```bash
-# ~/.zshrc에 추가하거나, 매 세션마다 실행:
-export DYLD_LIBRARY_PATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/lib:$DYLD_LIBRARY_PATH"
-export PYTHONPATH="$HOME/Documents/Project_Chrono_Practice/chrono_build/bin:$PYTHONPATH"
-```
-
-또는 이 프로젝트의 `setup_chrono_env.sh`를 사용하세요:
-```bash
+# 매 세션마다 실행:
+conda activate chrono
 source setup_chrono_env.sh
 ```
 
 #### Step 6: 설치 확인
 
 ```bash
-python3 -c "import pychrono; print('PyChrono OK')"
+conda activate chrono
+source setup_chrono_env.sh
+python -c "import pychrono; print('PyChrono OK')"
 ```
 
 #### macOS에서 사용 가능/불가능한 모듈
@@ -500,15 +514,22 @@ while sys.GetChTime() < 10.0:
 
 **Linux / macOS:**
 ```bash
+conda activate chrono          # conda로 빌드한 경우 반드시 먼저 활성화
 source setup_chrono_env.sh
-python3 lessons/lesson_01_hello_chrono.py
+python lessons/lesson_01_hello_chrono.py
 ```
 
 **Windows:**
 ```powershell
+conda activate chrono          # conda로 빌드한 경우 반드시 먼저 활성화
 # 환경변수 설정 후:
 python lessons/lesson_01_hello_chrono.py
 ```
+
+> **주의: `python3` 대신 `python`을 사용하세요!**
+> conda 환경에서 `python3`는 시스템 Python(Homebrew 등)을 가리킬 수 있어
+> 빌드에 사용된 Python 버전과 달라 segfault가 발생합니다.
+> conda 환경 안에서는 항상 `python` 명령어를 사용하세요.
 
 **예상 출력:**
 ```
@@ -551,12 +572,14 @@ Chrono 소스에는 400개 이상의 예제가 포함되어 있습니다.
 
 **Linux / macOS:**
 ```bash
+conda activate chrono
 source setup_chrono_env.sh
-python3 chrono/src/demos/python/mbs/demo_MBS_revolute.py
+python chrono/src/demos/python/mbs/demo_MBS_revolute.py
 ```
 
 **Windows:**
 ```powershell
+conda activate chrono
 python chrono\src\demos\python\mbs\demo_MBS_revolute.py
 ```
 
@@ -630,6 +653,8 @@ Project Chrono는 **SI 단위계**를 사용합니다:
 | 증상 | 원인 | 해결 |
 |------|------|------|
 | `ModuleNotFoundError: No module named 'pychrono'` | PYTHONPATH 미설정 | 환경변수에 빌드 디렉토리 추가 |
+| `segmentation fault` (segfault) | `python3`가 빌드와 다른 Python 버전을 가리킴 | `python3` 대신 **`python`** 사용, conda 환경 활성화 확인 |
+| `ModuleNotFoundError: No module named 'numpy'` + segfault | 시스템 Python에 numpy 미설치 | conda 환경에서 `python`으로 실행 (`.venv` 비활성화) |
 | 데이터 파일을 못 찾음 | 데이터 경로 미설정 | 코드에 `chrono.SetChronoDataPath(...)` 추가 |
 | Irrlicht 창이 안 열림 | GUI 환경 없음 | X11/데스크톱 환경에서 실행 |
 
