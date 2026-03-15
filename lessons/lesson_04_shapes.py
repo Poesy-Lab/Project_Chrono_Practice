@@ -71,8 +71,8 @@ sphere.SetPos(chrono.ChVector3d(-3, 6, 0))
 sphere.GetVisualShape(0).SetColor(chrono.ChColor(0.9, 0.2, 0.2))  # 빨강
 sys.AddBody(sphere)
 
-print(f"\n구(Sphere) 생성:")
-print(f"  반지름: 0.4 m, 밀도: 7800 kg/m³ (철)")
+print("\n구(Sphere) 생성:")
+print("  반지름: 0.4 m, 밀도: 7800 kg/m³ (철)")
 print(f"  자동 계산된 질량: {sphere.GetMass():.2f} kg")
 
 # ── 상자(Box) ──
@@ -83,8 +83,8 @@ box.SetPos(chrono.ChVector3d(0, 5, 0))
 box.GetVisualShape(0).SetColor(chrono.ChColor(0.2, 0.6, 0.9))  # 파랑
 sys.AddBody(box)
 
-print(f"\n상자(Box) 생성:")
-print(f"  크기: 0.8 x 0.8 x 0.8 m, 밀도: 600 kg/m³ (나무)")
+print("\n상자(Box) 생성:")
+print("  크기: 0.8 x 0.8 x 0.8 m, 밀도: 600 kg/m³ (나무)")
 print(f"  자동 계산된 질량: {box.GetMass():.2f} kg")
 
 # ── 실린더(Cylinder) ──
@@ -104,22 +104,24 @@ cylinder.SetPos(chrono.ChVector3d(3, 7, 0))
 cylinder.GetVisualShape(0).SetColor(chrono.ChColor(0.9, 0.8, 0.1))  # 노랑
 sys.AddBody(cylinder)
 
-print(f"\n실린더(Cylinder) 생성:")
-print(f"  반지름: 0.3 m, 높이: 1.0 m, 밀도: 2700 kg/m³ (알루미늄)")
+print("\n실린더(Cylinder) 생성:")
+print("  반지름: 0.3 m, 높이: 1.0 m, 밀도: 2700 kg/m³ (알루미늄)")
 print(f"  자동 계산된 질량: {cylinder.GetMass():.2f} kg")
 
 # ── 추가 물체들 (높은 곳에서 떨어뜨리기) ──
 # 작은 구 여러 개
-print(f"\n작은 구 5개 추가 생성 (높이 10~14m)")
+print("\n작은 구 5개 추가 생성 (높이 10~14m)")
 small_balls = []
 for i in range(5):
     sb = chrono.ChBodyEasySphere(0.2, 3000, True, True, material)
     sb.SetPos(chrono.ChVector3d(-2 + i, 10 + i, 0.5 * i))
-    sb.GetVisualShape(0).SetColor(chrono.ChColor(0.6 + i * 0.08, 0.3, 0.8 - i * 0.1))
+    sb.GetVisualShape(0).SetColor(
+        chrono.ChColor(0.6 + i * 0.08, 0.3, 0.8 - i * 0.1)
+    )
     sys.AddBody(sb)
     small_balls.append(sb)
 
-print(f"\n총 물체 수: {sys.GetBodies().size()} (바닥 포함)")
+print(f"\n총 물체 수: {len(sys.GetBodies())} (바닥 포함)")
 
 # ──────────────────────────────────────────────────
 # 4단계: 시각화
@@ -164,7 +166,7 @@ print(f"\n시뮬레이션 종료! (총 {sys.GetChTime():.2f}초)")
 print(f"  구(철) 최종 높이:       {sphere.GetPos().y:.3f} m")
 print(f"  상자(나무) 최종 높이:   {box.GetPos().y:.3f} m")
 print(f"  실린더(알루미늄) 최종 높이: {cylinder.GetPos().y:.3f} m")
-print(f"""
+print("""
 핵심 정리:
   1. ChBodyEasySphere/Box/Cylinder 로 한 줄로 물체 생성 가능
   2. 밀도(density)를 넣으면 질량과 관성이 자동 계산됨

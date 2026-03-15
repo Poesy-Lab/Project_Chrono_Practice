@@ -88,7 +88,7 @@ for i, (mat, name, color) in enumerate(materials):
 
     # 경사면 (기울어진 상자)
     ramp = chrono.ChBody()
-    ramp.SetPos(chrono.ChVector3d(0, 1.5, z_offset))
+    ramp.SetPos(chrono.ChVector3d(-1, 2, z_offset))
     ramp.SetFixed(True)
     ramp.EnableCollision(True)
 
@@ -97,17 +97,31 @@ for i, (mat, name, color) in enumerate(materials):
     q.SetFromAngleZ(ramp_rad)
     ramp.SetRot(q)
 
-    ramp.AddCollisionShape(chrono.ChCollisionShapeBox(mat, 8, 0.3, 2))
-    ramp_shape = chrono.ChVisualShapeBox(8, 0.3, 2)
+    ramp.AddCollisionShape(chrono.ChCollisionShapeBox(mat, 6, 0.3, 2))
+    ramp_shape = chrono.ChVisualShapeBox(6, 0.3, 2)
     ramp_shape.SetColor(color)
     ramp.AddVisualShape(ramp_shape)
     sys.AddBody(ramp)
     ramps.append(ramp)
 
+    # 경사면 아래에 평평한 바닥 (공이 굴러온 후 마찰 차이를 보기 위해)
+    flat = chrono.ChBody()
+    flat.SetPos(chrono.ChVector3d(5, 0, z_offset))
+    flat.SetFixed(True)
+    flat.EnableCollision(True)
+    flat.AddCollisionShape(chrono.ChCollisionShapeBox(mat, 12, 0.3, 2))
+    flat_shape = chrono.ChVisualShapeBox(12, 0.3, 2)
+    flat_shape.SetColor(chrono.ChColor(
+        min(color.R + 0.15, 1.0),
+        min(color.G + 0.15, 1.0),
+        min(color.B + 0.15, 1.0)
+    ))
+    flat.AddVisualShape(flat_shape)
+    sys.AddBody(flat)
+
     # 경사면 위에 구 올려놓기
-    # 경사면 윗부분 위치 계산
-    ball_x = -2.5 * math.cos(ramp_rad)
-    ball_y = 1.5 + 2.5 * math.sin(ramp_rad) + 0.5
+    ball_x = -1 - 2.0 * math.cos(ramp_rad)
+    ball_y = 2 + 2.0 * math.sin(ramp_rad) + 0.4
     ball = chrono.ChBodyEasySphere(0.3, 2000, True, True, mat)
     ball.SetPos(chrono.ChVector3d(ball_x, ball_y, z_offset))
     ball.GetVisualShape(0).SetColor(chrono.ChColor(0.9, 0.2, 0.2))
@@ -177,7 +191,7 @@ vis.SetWindowSize(1280, 720)
 vis.SetWindowTitle('Lesson 06: Friction & Restitution')
 vis.Initialize()
 vis.AddSkyBox()
-vis.AddCamera(chrono.ChVector3d(5, 8, 20), chrono.ChVector3d(5, 1, 0))
+vis.AddCamera(chrono.ChVector3d(3, 6, 16), chrono.ChVector3d(3, 1, 0))
 vis.AddTypicalLights()
 
 print("시각화 준비 완료!")

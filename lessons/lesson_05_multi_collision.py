@@ -64,21 +64,21 @@ print("\n볼링 핀 배치:")
 pins = []
 pin_positions = [
     # 1열 (가장 앞)
-    (5, 0),
+    (3, 0),
     # 2열
-    (6, -0.5), (6, 0.5),
+    (3.5, -0.3), (3.5, 0.3),
     # 3열
-    (7, -1), (7, 0), (7, 1),
+    (4.0, -0.6), (4.0, 0), (4.0, 0.6),
     # 4열 (가장 뒤)
-    (8, -1.5), (8, -0.5), (8, 0.5), (8, 1.5),
+    (4.5, -0.9), (4.5, -0.3), (4.5, 0.3), (4.5, 0.9),
 ]
 
 for i, (px, pz) in enumerate(pin_positions):
-    # 실린더를 핀으로 사용 (반지름 0.15m, 높이 0.8m)
+    # 실린더를 핀으로 사용 (반지름 0.06m, 높이 0.4m)
     pin = chrono.ChBodyEasyCylinder(
-        chrono.ChAxis_Y, 0.15, 0.8, 800, True, True, material
+        chrono.ChAxis_Y, 0.06, 0.4, 700, True, True, material
     )
-    pin.SetPos(chrono.ChVector3d(px, 0.4, pz))
+    pin.SetPos(chrono.ChVector3d(px, 0.2, pz))
     pin.GetVisualShape(0).SetColor(chrono.ChColor(0.95, 0.95, 0.9))  # 흰색
     sys.AddBody(pin)
     pins.append(pin)
@@ -88,23 +88,25 @@ print(f"  {len(pins)}개 핀 배치 완료 (피라미드 형태)")
 # ──────────────────────────────────────────────────
 # 4단계: 볼링 공 만들기 (★ 초기 속도로 발사!)
 # ──────────────────────────────────────────────────
-# 볼링공: 무거운 구 (밀도 높게)
-ball = chrono.ChBodyEasySphere(0.4, 5000, True, True, material)
-ball.SetPos(chrono.ChVector3d(-8, 0.4, 0))    # 왼쪽에서 시작
+# 볼링공: 실제 볼링공과 비슷한 크기/무게
+#   실제 볼링공: 반지름 ~0.11m, 질량 ~7kg → 밀도 약 12500
+#   여기서는 시각적으로 잘 보이도록 약간 크게 만듦
+ball = chrono.ChBodyEasySphere(0.15, 12000, True, True, material)
+ball.SetPos(chrono.ChVector3d(-5, 0.15, 0))   # 왼쪽에서 시작
 
 # ★ 새로운 개념: 초기 속도 설정!
 #   SetPosDt() = 속도(position derivative = 위치의 시간 미분)
-#   x방향으로 8 m/s로 발사 (핀을 향해)
-ball.SetPosDt(chrono.ChVector3d(8, 0, 0))
+#   x방향으로 6 m/s로 발사 (핀을 향해)
+ball.SetPosDt(chrono.ChVector3d(6, 0, 0))
 
 ball.GetVisualShape(0).SetColor(chrono.ChColor(0.1, 0.1, 0.8))  # 진한 파랑
 sys.AddBody(ball)
 
 print(f"\n볼링 공 생성:")
 print(f"  질량: {ball.GetMass():.2f} kg")
-print(f"  초기 위치: x = -8.0 m (왼쪽)")
-print(f"  초기 속도: 8.0 m/s (오른쪽으로 →)")
-print(f"  운동량: {ball.GetMass() * 8.0:.1f} kg·m/s")
+print(f"  초기 위치: x = -5.0 m (왼쪽)")
+print(f"  초기 속도: 6.0 m/s (오른쪽으로 →)")
+print(f"  운동량: {ball.GetMass() * 6.0:.1f} kg·m/s")
 
 # ──────────────────────────────────────────────────
 # 5단계: 시각화
@@ -119,7 +121,7 @@ vis.SetWindowTitle('Lesson 05: Bowling Collision')
 vis.Initialize()
 vis.AddSkyBox()
 # 카메라를 위에서 비스듬히 내려다보는 각도로
-vis.AddCamera(chrono.ChVector3d(0, 10, 15), chrono.ChVector3d(2, 0, 0))
+vis.AddCamera(chrono.ChVector3d(0, 5, 8), chrono.ChVector3d(2, 0, 0))
 vis.AddTypicalLights()
 
 print("시각화 준비 완료!")
@@ -145,13 +147,14 @@ while vis.Run():
 # ──────────────────────────────────────────────────
 # 7단계: 결과 분석
 # ──────────────────────────────────────────────────
-# 쓰러진 핀 세기: 원래 위치(y=0.4)에서 많이 벗어났으면 쓰러진 것
-fallen = sum(1 for p in pins if abs(p.GetPos().y - 0.4) > 0.2 or abs(p.GetPos().x - p.GetPos().x) > 1)
+# 쓰러진 핀 세기: 원래 높이(y=0.2)에서 벗어났으면 쓰러진 것
+fallen = sum(1 for p in pins if abs(p.GetPos().y - 0.2) > 0.1)
 
 print(f"\n시뮬레이션 종료! (총 {sys.GetChTime():.2f}초)")
+print(f"  쓰러진 핀: {fallen} / {len(pins)}")
 print(f"  볼링공 최종 위치: ({ball.GetPos().x:.1f}, {ball.GetPos().y:.1f}, {ball.GetPos().z:.1f})")
 print(f"  볼링공 최종 속도: {ball.GetPosDt().x:.2f} m/s")
-print(f"""
+print("""
 핵심 정리:
   1. SetPosDt() 로 물체에 초기 속도를 줄 수 있음
   2. 여러 물체가 자동으로 서로 충돌/반응함
