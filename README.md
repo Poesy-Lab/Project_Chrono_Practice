@@ -83,21 +83,23 @@ Project Chrono는 **멀티바디 물리 시뮬레이션 엔진**입니다.
 | 도구 | 용도 | 다운로드 |
 |------|------|----------|
 | **Git** | 소스 코드 다운로드 | https://git-scm.com/downloads |
-| **CMake** (3.28+) | 빌드 설정 도구 | https://cmake.org/download/ |
 | **Anaconda/Miniconda** | Python 환경 관리 | https://www.anaconda.com/download 또는 https://docs.conda.io/en/latest/miniconda.html |
-| **C++ 컴파일러** | Chrono 빌드 | Windows: Visual Studio / Linux: GCC / macOS: Xcode CLT |
+| **CMake** (3.28+) | 빌드 설정 도구 (소스 빌드 시만) | https://cmake.org/download/ |
+| **C++ 컴파일러** | Chrono 빌드 (소스 빌드 시만) | Windows: Visual Studio / Linux: GCC / macOS: Xcode CLT |
+
+> **Windows 사용자**: conda로 PyChrono를 바로 설치할 수 있어 CMake/C++ 컴파일러가 필요 없습니다. (→ 2-B 방법 A 참고)
 
 #### conda 환경 생성 (모든 OS 공통, 가장 먼저!)
 
 ```bash
-conda create -n chrono python=3.11 numpy -y
+conda create -n chrono python=3.12 numpy -y
 conda activate chrono
 ```
 
 > **왜 conda 환경을 쓰나요?**
 > PyChrono는 빌드 시 사용된 Python 버전에 종속됩니다. 시스템 Python 버전은 OS마다 다르고,
 > Homebrew/apt 업데이트로 바뀔 수 있어서 팀원 간 충돌이 생깁니다.
-> conda로 Python 3.11을 고정하면 모든 OS에서 동일하게 동작합니다.
+> conda로 Python 3.12를 고정하면 모든 OS에서 동일하게 동작합니다.
 >
 > **주의:** conda 환경에서는 `python3`가 아닌 **`python`** 명령어를 사용하세요.
 > `python3`는 시스템 Python을 가리킬 수 있어 버전 불일치로 segfault가 발생합니다.
@@ -106,7 +108,69 @@ conda activate chrono
 
 ### 2-B. Windows 설치
 
-#### Step 1: 필수 도구 설치
+Windows에서는 **두 가지 방법**으로 설치할 수 있습니다:
+
+| | 방법 A: conda 설치 (권장) | 방법 B: 소스 빌드 (고급) |
+|---|---|---|
+| 난이도 | 쉬움 (명령어 3줄) | 어려움 (CMake + Visual Studio) |
+| 소요 시간 | 약 5분 | 30분~1시간 |
+| 필요 도구 | Anaconda만 | Visual Studio, CMake, SWIG, Eigen |
+| 포함 모듈 | Core, Irrlicht, Vehicle, Robot, FEA | 모든 모듈 선택 가능 |
+| GPU 모듈 (DEM/FSI) | 미포함 | CUDA 있으면 가능 |
+| VSG (Vulkan 시각화) | 미포함 | 빌드 가능 |
+
+> **Phase 1~3 학습에는 방법 A로 충분합니다.** GPU 모듈이나 VSG가 필요해지면 그때 방법 B를 시도하세요.
+
+---
+
+#### 방법 A: conda로 설치 (권장)
+
+CMake, Visual Studio, C++ 컴파일러 모두 필요 없습니다.
+
+##### Step 1: Anaconda 설치
+
+- https://www.anaconda.com/download 에서 다운로드 및 설치
+
+##### Step 2: PyChrono 설치
+
+Anaconda Prompt를 열고:
+
+```powershell
+conda create -n chrono python=3.12 -c conda-forge -y
+conda activate chrono
+conda install projectchrono::pychrono -c conda-forge
+```
+
+> **주의**: `pip install pychrono`는 완전히 다른 패키지입니다. 반드시 위의 conda 명령어를 사용하세요.
+
+##### Step 3: 설치 확인
+
+```powershell
+conda activate chrono
+python -c "import pychrono; print('PyChrono OK')"
+python -c "import pychrono.irrlicht; print('Irrlicht OK')"
+python -c "import pychrono.vehicle; print('Vehicle OK')"
+```
+
+세 줄 모두 에러 없이 출력되면 설치 완료입니다.
+
+##### Step 4: 레슨 실행
+
+```powershell
+conda activate chrono
+python lessons/phase1/lesson_01_hello_chrono.py
+```
+
+> **Chrono 데이터 파일 경로**: conda 설치의 경우 데이터 파일이 conda 환경 안에 포함되어 있어
+> `chrono.SetChronoDataPath()`를 별도로 설정하지 않아도 됩니다.
+
+---
+
+#### 방법 B: 소스 빌드 (고급)
+
+> GPU 모듈(DEM, FSI)이나 VSG 시각화가 필요할 때, 또는 최신 개발 버전을 쓰고 싶을 때 사용합니다.
+
+##### Step 1: 필수 도구 설치
 
 1. **Visual Studio 2022** (Community, 무료)
    - https://visualstudio.microsoft.com/ko/downloads/
@@ -121,31 +185,41 @@ conda activate chrono
 
 4. **Anaconda** (Python 환경 관리)
    - https://www.anaconda.com/download
-   - 설치 후: `conda create -n chrono python=3.11 numpy -y`
+   - 설치 후: `conda create -n chrono python=3.12 numpy -y`
 
 5. **SWIG** (PyChrono 빌드 시 필요)
    - https://www.swig.org/download.html → swigwin 다운로드
    - 압축 풀고 경로를 환경변수 `PATH`에 추가
 
-#### Step 2: Chrono 소스 다운로드
+##### Step 2: Chrono 소스 및 Eigen3 다운로드
 
 ```powershell
 cd C:\Users\%USERNAME%\Documents
 git clone https://github.com/projectchrono/chrono.git
+git clone --branch 3.4.0 https://gitlab.com/libeigen/eigen.git eigen3
 mkdir chrono_build
 ```
 
-#### Step 3: 의존성 설치 (Eigen3)
+##### Step 3: CMake 설정
+
+> **중요**: Anaconda Prompt에서 `conda activate chrono`를 먼저 실행한 상태에서 진행하세요.
+
+**방법 B-1: 커맨드라인 (복사-붙여넣기로 간편)**
 
 ```powershell
-# Eigen3 다운로드 (헤더만 있는 라이브러리)
-cd C:\Users\%USERNAME%\Documents
-git clone --branch 3.4.0 https://gitlab.com/libeigen/eigen.git eigen3
+cd C:\Users\%USERNAME%\Documents\chrono_build
+cmake -G "Visual Studio 17 2022" ^
+  -DCMAKE_INSTALL_PREFIX=..\chrono_install ^
+  -DEIGEN3_INCLUDE_DIR=..\eigen3 ^
+  -DCH_ENABLE_MODULE_IRRLICHT:BOOL=ON ^
+  -DCH_ENABLE_MODULE_VEHICLE:BOOL=ON ^
+  -DCH_ENABLE_MODULE_POSTPROCESS:BOOL=ON ^
+  -DCH_ENABLE_MODULE_PYTHON:BOOL=ON ^
+  -DBUILD_DEMOS:BOOL=ON ^
+  ..\chrono
 ```
 
-#### Step 4: CMake 설정 (GUI 사용)
-
-> **중요**: CMake 실행 전에 Anaconda Prompt에서 `conda activate chrono`를 먼저 실행하세요.
+**방법 B-2: CMake GUI (변수를 눈으로 확인하고 싶을 때)**
 
 1. **CMake GUI** 실행 (`cmake-gui`)
 2. Source 경로: `C:/Users/사용자명/Documents/chrono`
@@ -160,7 +234,7 @@ git clone --branch 3.4.0 https://gitlab.com/libeigen/eigen.git eigen3
 | `CH_ENABLE_MODULE_IRRLICHT` | `ON` |
 | `CH_ENABLE_MODULE_VEHICLE` | `ON` |
 | `CH_ENABLE_MODULE_POSTPROCESS` | `ON` |
-| `CH_ENABLE_MODULE_PYTHON` | `ON` (PyChrono 원할 경우) |
+| `CH_ENABLE_MODULE_PYTHON` | `ON` |
 | `BUILD_DEMOS` | `ON` |
 
 > **Irrlicht**: Configure 후 자동으로 다운로드됩니다. 안 되면 수동으로:
@@ -169,13 +243,13 @@ git clone --branch 3.4.0 https://gitlab.com/libeigen/eigen.git eigen3
 6. **Configure** 다시 클릭 → 오류 없으면 **Generate** 클릭
 7. **Open Project** 클릭 → Visual Studio 열림
 
-#### Step 5: 빌드
+##### Step 4: 빌드
 
 - Visual Studio에서 상단 드롭다운을 **Release**로 변경
 - 메뉴 → **빌드** → **솔루션 빌드** (Ctrl+Shift+B)
 - 빌드 완료까지 10~30분 소요
 
-#### Step 6: 환경 변수 설정
+##### Step 5: 환경 변수 설정
 
 Anaconda Prompt에서 매 세션마다:
 ```powershell
@@ -184,7 +258,7 @@ $env:PYTHONPATH = "C:\Users\사용자명\Documents\chrono_build\bin\Release"
 $env:PATH += ";C:\Users\사용자명\Documents\chrono_build\bin\Release"
 ```
 
-#### Step 7: 설치 확인
+##### Step 6: 설치 확인
 
 ```powershell
 conda activate chrono
@@ -498,13 +572,18 @@ python -c "import pychrono.vsg3d; print('VSG OK')"
 
 ### 2-G. PyChrono만 빠르게 설치 (conda, 모든 OS)
 
-소스 빌드 없이 Python만 쓰고 싶다면:
+소스 빌드 없이 Python만 쓰고 싶다면 (Windows 방법 A와 동일):
 
 ```bash
-conda install -c conda-forge -c projectchrono pychrono
+conda create -n chrono python=3.12 -c conda-forge -y
+conda activate chrono
+conda install projectchrono::pychrono -c conda-forge
 ```
 
-> 주의: conda 버전은 최신이 아닐 수 있고, GPU 모듈이 포함되지 않을 수 있습니다.
+> **포함 모듈**: Core, Irrlicht, Vehicle, Robot, FEA, Postprocess
+> **미포함**: VSG (Vulkan 시각화), GPU 모듈 (DEM, FSI, Sensor)
+>
+> **주의**: `pip install pychrono`는 완전히 다른 패키지입니다. 반드시 위의 conda 명령어를 사용하세요.
 
 ---
 

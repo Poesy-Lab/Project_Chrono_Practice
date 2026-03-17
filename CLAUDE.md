@@ -16,7 +16,7 @@
 - 레슨 실행 시 반드시 `conda activate chrono` 후 `python` 명령어를 사용합니다.
 - **`python3` 명령어를 사용하지 마세요** — 시스템 Python을 가리켜 버전 불일치/segfault가 발생합니다.
 - `.venv` 등 다른 가상환경과 혼용하지 마세요.
-- conda 환경 생성: `conda create -n chrono python=3.11 numpy -y`
+- conda 환경 생성: `conda create -n chrono python=3.12 numpy -y`
 
 ```bash
 # 모든 OS 공통 실행 방법
@@ -35,7 +35,7 @@ python lessons/phaseN/lesson_XX_주제.py
 
 ### Step 0: conda 환경 생성
 ```bash
-conda create -n chrono python=3.11 numpy -y
+conda create -n chrono python=3.12 numpy -y
 conda activate chrono
 ```
 
