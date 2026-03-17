@@ -122,6 +122,7 @@ print("\n3D 시각화 초기화 중...")
 
 if USE_VSG:
     vis = chronovsg.ChVisualSystemVSG()
+    vis.SetCameraVertical(chrono.CameraVerticalDir_Y)
 else:
     vis = chronoirr.ChVisualSystemIrrlicht()
 

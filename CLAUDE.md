@@ -200,6 +200,7 @@ import pychrono.irrlicht as chronoirr
 # 시각화 설정
 if USE_VSG:
     vis = chronovsg.ChVisualSystemVSG()
+    vis.SetCameraVertical(chrono.CameraVerticalDir_Y)  # Y-up (레슨 기본)
 else:
     vis = chronoirr.ChVisualSystemIrrlicht()
 
@@ -216,6 +217,7 @@ else:
     vis.AddCamera(chrono.ChVector3d(...), chrono.ChVector3d(...))
     vis.AddTypicalLights()
 ```
+> **주의**: VSG는 기본 Z-up이므로 Y-up 시뮬레이션에서는 반드시 `SetCameraVertical(CameraVerticalDir_Y)` 설정 필요
 
 ## PyChrono API 주의사항
 - `ChBody`에 `GetFixed()` 없음 → `SetFixed()`만 존재

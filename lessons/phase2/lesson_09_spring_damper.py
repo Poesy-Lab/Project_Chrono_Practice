@@ -275,6 +275,7 @@ if IS_MACOS_IRRLICHT:
 
 if USE_VSG:
     vis = chronovsg.ChVisualSystemVSG()
+    vis.SetCameraVertical(chrono.CameraVerticalDir_Y)
 else:
     vis = chronoirr.ChVisualSystemIrrlicht()
 
