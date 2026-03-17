@@ -683,6 +683,9 @@ Project Chrono는 **SI 단위계**를 사용합니다:
 | `Cannot use default video driver - fall back to OpenGL` | macOS 기본 드라이버 미지원 | 정상 동작, OpenGL 폴백은 예상된 것 |
 | 시뮬레이션이 순식간에 끝남 (애니메이션 안 보임) | macOS OpenGL에서 vsync 미지원 | `ChRealtimeStepTimer` 사용 (코드 참고) |
 | Irrlicht 창 크기 크게 설정 시 segfault | OpenGL 폴백의 해상도 제한 | 창 크기를 1280x720 이하로 설정 |
+| 스프링 코일(`ChVisualShapeSpring`)이 안 보임 | OpenGL 폴백에서 선(line) 렌더링 미지원 | 작은 구 마커 체인으로 대체하여 시각화 |
+| matplotlib 그래프가 빈 화면만 표시 | Irrlicht 종료 후 GUI 백엔드 충돌 | `matplotlib.use('Agg')` 설정 후 `plt.savefig()`로 PNG 저장 |
+| matplotlib에서 한글 깨짐 (Glyph missing 경고) | 기본 폰트(DejaVu Sans)가 한글 미지원 | 그래프 라벨은 영어로 작성 |
 
 ### Windows 전용
 

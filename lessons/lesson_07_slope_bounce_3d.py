@@ -1,10 +1,4 @@
-""" 터미널에 입력 """
-cd ~/Documents/Project_Chrono_Practice/lessons
-nano lesson_07_slope_bounce_3d.py
-
-""" ----------------------------------------------- """
-
-""" 열린 나노에 입력 후 ctrl+o, enter, ctrl+x
+"""
 lesson_07_slope_bounce_3d.py
 
 설명:
@@ -169,6 +163,7 @@ vis.AddCamera(chrono.ChVector3d(0, 4.5, 11))
 # =========================================================
 dt = 0.002
 print_time = 0.0
+realtime_timer = chrono.ChRealtimeStepTimer()
 
 while vis.Run():
     vis.BeginScene()
@@ -176,6 +171,7 @@ while vis.Run():
     vis.EndScene()
 
     system.DoStepDynamics(dt)
+    realtime_timer.Spin(dt)
 
     t = system.GetChTime()
 
@@ -196,9 +192,3 @@ while vis.Run():
             f"steel_vel =({steel_vel.x:.3f}, {steel_vel.y:.3f}, {steel_vel.z:.3f})"
         )
         print_time += 0.5
-      
-""" ----------------------------------------------- 나노 닫은 후 입력 """
-cd ~/Documents/Project_Chrono_Practice
-conda activate chrono
-source setup_chrono_env.sh
-python lessons/lesson_07_slope_bounce_3d.py

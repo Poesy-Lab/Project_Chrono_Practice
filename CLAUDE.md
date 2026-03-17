@@ -193,6 +193,9 @@ Project_Chrono_Practice/
 - **Retina 디스플레이**: 렌더링이 창의 왼쪽 아래 1/4만 채움 — Irrlicht가 macOS HiDPI를 지원하지 않는 알려진 제한사항 (코드로 해결 불가)
 - **vsync 미지원**: macOS OpenGL 폴백에서는 vsync가 안 걸려서 시뮬레이션이 순식간에 끝남 → 반드시 `ChRealtimeStepTimer`를 사용하여 실시간 동기화 필요
 - **창 크기 제한**: 1280x720 초과 시 segfault 발생 가능 (OpenGL 폴백 한계)
+- **선(line) 기반 시각화 안 됨**: `ChVisualShapeSpring`, `ChVisualShapeSegment` 등 선으로 그리는 시각 요소가 macOS OpenGL 폴백에서 렌더링되지 않음 → 스프링 등은 작은 구(ChVisualShapeSphere) 마커 체인으로 대체
+- **matplotlib + Irrlicht 충돌**: Irrlicht 창 종료 후 `plt.show()`가 빈 화면만 표시됨 → `matplotlib.use('Agg')`로 비대화형 백엔드 설정 후 `plt.savefig()`로 PNG 저장, `os.system("open ...")`으로 열기
+- **matplotlib 한글 폰트**: 기본 폰트(DejaVu Sans)가 한글 미지원 → 그래프 라벨은 영어 사용
 - 시각화 레슨 작성 시 반드시 아래 패턴 사용:
 ```python
 realtime_timer = chrono.ChRealtimeStepTimer()
