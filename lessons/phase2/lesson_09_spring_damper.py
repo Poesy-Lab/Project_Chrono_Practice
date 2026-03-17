@@ -208,8 +208,10 @@ spring_1.SetRestLength(rest_length)
 spring_1.SetSpringCoefficient(k1)
 spring_1.SetDampingCoefficient(c1)
 
-# 참고: ChVisualShapeSpring은 선(line) 기반이라 macOS OpenGL 폴백에서 렌더링 안 됨
-# 대안으로 스프링 경로를 따라 작은 구 마커를 배치하여 연결 관계를 시각화
+# 스프링 코일 시각화
+# - VSG / Irrlicht(Windows/Linux): ChVisualShapeSpring 정상 동작
+# - Irrlicht(macOS): 선 렌더링 안 됨 → 구 마커 체인으로 보완
+spring_1.AddVisualShape(chrono.ChVisualShapeSpring(0.1, 80, 15))
 
 sys.AddLink(spring_1)
 
@@ -219,47 +221,51 @@ force_functor = MySpringForce()
 
 spring_2 = chrono.ChLinkTSDA()
 spring_2.Initialize(body_2, ground, True,
-                    chrono.ChVector3d(0, 0, 0),      # body_2의 로컬 연결점
-                    chrono.ChVector3d(1, 0, 0))       # ground의 로컬 연결점
+                    chrono.ChVector3d(0, 0, 0),
+                    chrono.ChVector3d(1, 0, 0))
 
 spring_2.SetRestLength(rest_length)
 spring_2.RegisterForceFunctor(force_functor)
+
+spring_2.AddVisualShape(chrono.ChVisualShapeSpring(0.1, 80, 15))
 
 sys.AddLink(spring_2)
 
 
 # =============================================================================
-# 스프링 시각화 대체: 구 마커 체인
-# - macOS OpenGL 폴백에서 선 렌더링이 안 되므로, 작은 구를 일렬로 배치
-# - 각 구는 독립 ChBody로, 매 프레임 위치를 고정점↔물체 사이에 보간
+# 스프링 시각화 보완 (macOS Irrlicht 전용): 구 마커 체인
+# - macOS Irrlicht OpenGL에서만 선 렌더링이 안 됨
+# - macOS + Irrlicht 조합일 때만 구 마커 생성
 # =============================================================================
 
-NUM_MARKERS = 5     # 스프링당 마커 수
+import platform
+IS_MACOS_IRRLICHT = (platform.system() == 'Darwin' and not USE_VSG)
+
+NUM_MARKERS = 5
 marker_radius = 0.06
 
 spring1_markers = []
 spring2_markers = []
 
-for i in range(NUM_MARKERS):
-    # Spring 1 마커 (빨간색 계열)
-    m1 = chrono.ChBody()
-    m1.SetFixed(True)       # 매 프레임 수동으로 위치 갱신
-    m1.EnableCollision(False)
-    s1 = chrono.ChVisualShapeSphere(marker_radius)
-    s1.SetColor(chrono.ChColor(0.9, 0.3, 0.3))
-    m1.AddVisualShape(s1)
-    sys.AddBody(m1)
-    spring1_markers.append(m1)
+if IS_MACOS_IRRLICHT:
+    for i in range(NUM_MARKERS):
+        m1 = chrono.ChBody()
+        m1.SetFixed(True)
+        m1.EnableCollision(False)
+        s1 = chrono.ChVisualShapeSphere(marker_radius)
+        s1.SetColor(chrono.ChColor(0.9, 0.3, 0.3))
+        m1.AddVisualShape(s1)
+        sys.AddBody(m1)
+        spring1_markers.append(m1)
 
-    # Spring 2 마커 (파란색 계열)
-    m2 = chrono.ChBody()
-    m2.SetFixed(True)
-    m2.EnableCollision(False)
-    s2 = chrono.ChVisualShapeSphere(marker_radius)
-    s2.SetColor(chrono.ChColor(0.3, 0.3, 0.9))
-    m2.AddVisualShape(s2)
-    sys.AddBody(m2)
-    spring2_markers.append(m2)
+        m2 = chrono.ChBody()
+        m2.SetFixed(True)
+        m2.EnableCollision(False)
+        s2 = chrono.ChVisualShapeSphere(marker_radius)
+        s2.SetColor(chrono.ChColor(0.3, 0.3, 0.9))
+        m2.AddVisualShape(s2)
+        sys.AddBody(m2)
+        spring2_markers.append(m2)
 
 
 # =============================================================================
@@ -329,25 +335,25 @@ while vis.Run():
     sys.DoStepDynamics(dt)
     realtime_timer.Spin(dt)     # macOS 실시간 속도 동기화 (필수)
 
-    # 스프링 마커 위치 갱신: 고정점과 물체 사이를 균등 보간
-    p1_top = chrono.ChVector3d(-1, 0, 0)    # spring1 고정점
-    p1_bot = body_1.GetPos()                # spring1 물체 위치
-    p2_top = chrono.ChVector3d(1, 0, 0)     # spring2 고정점
-    p2_bot = body_2.GetPos()                # spring2 물체 위치
+    # 스프링 마커 위치 갱신 (macOS Irrlicht 전용)
+    if IS_MACOS_IRRLICHT:
+        p1_top = chrono.ChVector3d(-1, 0, 0)
+        p1_bot = body_1.GetPos()
+        p2_top = chrono.ChVector3d(1, 0, 0)
+        p2_bot = body_2.GetPos()
 
-    for i in range(NUM_MARKERS):
-        t_ratio = (i + 1) / (NUM_MARKERS + 1)  # 균등 분할 (0, 1 제외)
-        # 선형 보간: top + t * (bot - top)
-        spring1_markers[i].SetPos(chrono.ChVector3d(
-            p1_top.x + t_ratio * (p1_bot.x - p1_top.x),
-            p1_top.y + t_ratio * (p1_bot.y - p1_top.y),
-            p1_top.z + t_ratio * (p1_bot.z - p1_top.z)
-        ))
-        spring2_markers[i].SetPos(chrono.ChVector3d(
-            p2_top.x + t_ratio * (p2_bot.x - p2_top.x),
-            p2_top.y + t_ratio * (p2_bot.y - p2_top.y),
-            p2_top.z + t_ratio * (p2_bot.z - p2_top.z)
-        ))
+        for i in range(NUM_MARKERS):
+            t_ratio = (i + 1) / (NUM_MARKERS + 1)
+            spring1_markers[i].SetPos(chrono.ChVector3d(
+                p1_top.x + t_ratio * (p1_bot.x - p1_top.x),
+                p1_top.y + t_ratio * (p1_bot.y - p1_top.y),
+                p1_top.z + t_ratio * (p1_bot.z - p1_top.z)
+            ))
+            spring2_markers[i].SetPos(chrono.ChVector3d(
+                p2_top.x + t_ratio * (p2_bot.x - p2_top.x),
+                p2_top.y + t_ratio * (p2_bot.y - p2_top.y),
+                p2_top.z + t_ratio * (p2_bot.z - p2_top.z)
+            ))
 
     # 시뮬레이션 위치 기록
     y1 = body_1.GetPos().y
