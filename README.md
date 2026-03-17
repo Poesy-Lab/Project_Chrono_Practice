@@ -560,17 +560,36 @@ sys.Add(joint)
 
 ### 패턴 4: 3D 시각화 설정
 
+> **모든 레슨에서 VSG/Irrlicht 자동 분기 패턴을 사용합니다.**
+> VSG가 설치된 환경(macOS 권장)에서는 Vulkan 렌더링, 미설치 환경에서는 Irrlicht 폴백.
+
 ```python
+# 시각화 시스템 자동 선택 (VSG 우선, Irrlicht 폴백)
+try:
+    import pychrono.vsg3d as chronovsg
+    USE_VSG = True
+except ImportError:
+    USE_VSG = False
 import pychrono.irrlicht as chronoirr
 
-vis = chronoirr.ChVisualSystemIrrlicht()
+# 시각화 생성
+if USE_VSG:
+    vis = chronovsg.ChVisualSystemVSG()
+else:
+    vis = chronoirr.ChVisualSystemIrrlicht()
+
 vis.AttachSystem(sys)                           # 시스템 연결
-vis.SetWindowSize(1024, 768)                    # 창 크기
+vis.SetWindowSize(1280, 720)                    # 창 크기
 vis.SetWindowTitle('My Simulation')             # 창 제목
-vis.Initialize()
-vis.AddSkyBox()                                 # 하늘 배경
-vis.AddCamera(chrono.ChVector3d(3, 3, 3))       # 카메라 위치
-vis.AddTypicalLights()                          # 조명
+
+if USE_VSG:
+    vis.AddCamera(chrono.ChVector3d(3, 3, 3))   # VSG: 카메라를 먼저 설정
+    vis.Initialize()
+else:
+    vis.Initialize()
+    vis.AddSkyBox()                              # 하늘 배경
+    vis.AddCamera(chrono.ChVector3d(3, 3, 3))    # 카메라 위치
+    vis.AddTypicalLights()                       # 조명
 ```
 
 ### 패턴 5: 시뮬레이션 루프
@@ -804,12 +823,14 @@ Project Chrono는 **SI 단위계**를 사용합니다:
 Project_Chrono_Practice/
 │
 ├── lessons/                         # [학습] 우리가 작성하는 학습 코드
-│   ├── phase1/                      #   Phase 1: 기초 (lesson 01~07)
+│   ├── phase1/                      #   Phase 1: 기초 (lesson 01~06)
 │   │   ├── lesson_01_hello_chrono.py
 │   │   └── ...
-│   └── phase2/                      #   Phase 2: 메커니즘 (lesson 08~12)
-│       ├── lesson_09_spring_damper.py
-│       └── ...
+│   ├── phase2/                      #   Phase 2: 메커니즘 (lesson 07~12)
+│   │   ├── lesson_09_spring_damper.py
+│   │   └── ...
+│   └── extras/                      #   보너스 예제 (로드맵 외)
+│       └── lesson_ex01_slope_bounce_3d.py
 │
 ├── chrono/                          # [소스] Chrono 엔진 (git clone, .gitignore됨)
 │   ├── src/demos/python/            #   Python 데모 예제들

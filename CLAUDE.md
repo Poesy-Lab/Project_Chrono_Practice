@@ -165,8 +165,9 @@ python lessons/phase1/lesson_01_hello_chrono.py
 ```
 Project_Chrono_Practice/
 ├── lessons/                 # 학습 코드 (Git 추적, 팀 공유)
-│   ├── phase1/              # Phase 1: 기초 (lesson 01~07)
-│   └── phase2/              # Phase 2: 메커니즘 (lesson 08~12)
+│   ├── phase1/              # Phase 1: 기초 (lesson 01~06)
+│   ├── phase2/              # Phase 2: 메커니즘 (lesson 07~12)
+│   └── extras/              # 보너스 예제 (로드맵 외)
 ├── chrono/                  # Chrono 소스 (각자 clone, Git 제외)
 ├── chrono_build/            # 빌드 결과물 (각자 빌드, Git 제외)
 ├── chrono_install/          # 설치 디렉토리 (Git 제외)
@@ -179,12 +180,42 @@ Project_Chrono_Practice/
 ```
 
 ## 코딩 규칙
-- 학습 코드는 `lessons/` 디렉토리에 작성
+- 학습 코드는 `lessons/phase1/`, `lessons/phase2/` 등 Phase별 디렉토리에 작성
+- 로드맵 외 보너스 예제는 `lessons/extras/`에 `lesson_exNN_주제.py` 형식으로 작성
 - 파일명: `lesson_XX_주제.py` 형식
 - 각 레슨 파일 상단에 한글 주석으로 학습 목표, 실행 방법 명시
 - GPU 필요 레슨: 파일명에 `_gpu` 접미사 (예: `lesson_16_dem_gpu.py`)
 - **크로스 플랫폼**: 파일 경로는 `os.path.join()` 또는 `pathlib.Path` 사용, 절대 경로 하드코딩 금지
 - 데이터 경로: `chrono.GetChronoDataPath()` 사용
+- **시각화 코드 작성 시 반드시 VSG/Irrlicht 자동 분기 패턴 사용** (팀원 호환성):
+```python
+# 시각화 시스템 자동 선택 (VSG 우선, Irrlicht 폴백)
+try:
+    import pychrono.vsg3d as chronovsg
+    USE_VSG = True
+except ImportError:
+    USE_VSG = False
+import pychrono.irrlicht as chronoirr
+
+# 시각화 설정
+if USE_VSG:
+    vis = chronovsg.ChVisualSystemVSG()
+else:
+    vis = chronoirr.ChVisualSystemIrrlicht()
+
+vis.AttachSystem(sys)
+vis.SetWindowSize(1280, 720)
+vis.SetWindowTitle("제목")
+
+if USE_VSG:
+    vis.AddCamera(chrono.ChVector3d(...), chrono.ChVector3d(...))
+    vis.Initialize()    # VSG: AddCamera → Initialize 순서
+else:
+    vis.Initialize()    # Irrlicht: Initialize → AddCamera 순서
+    vis.AddSkyBox()
+    vis.AddCamera(chrono.ChVector3d(...), chrono.ChVector3d(...))
+    vis.AddTypicalLights()
+```
 
 ## PyChrono API 주의사항
 - `ChBody`에 `GetFixed()` 없음 → `SetFixed()`만 존재

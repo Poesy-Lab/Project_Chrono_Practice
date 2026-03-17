@@ -1,16 +1,15 @@
 """
-lesson_07_slope_bounce_3d.py
+lesson_ex01_slope_bounce_3d.py  (보너스 예제 — 로드맵 외)
 
 설명:
 - 넓은 경사면 위로 서로 다른 재질의 공 2개를 동시에 떨어뜨리는 3D 시뮬레이션
-- 빨간 공: 고무 (반발 큼)
-- 은색 공: 강철 (반발 작음)
+- 빨간 공: 고무 (반발 큼), 은색 공: 강철 (반발 작음)
+- Phase 1 재질/충돌 개념을 3D 경사면에 응용한 실습 예제
 
 실행:
-    cd ~/Documents/Project_Chrono_Practice
     conda activate chrono
     source setup_chrono_env.sh
-    python lessons/phase1/lesson_07_slope_bounce_3d.py
+    python lessons/extras/lesson_ex01_slope_bounce_3d.py
 """
 
 import math
