@@ -173,8 +173,8 @@ spring_1.Initialize(body_1, ground, True,
                     chrono.ChVector3d(-1,0,0))
 
 spring_1.SetRestLength(rest_length)
-spring_1.SetSpringCoefficient(spring_coef)
-spring_1.SetDampingCoefficient(damping_coef)
+spring_1.SetSpringCoefficient(k1)
+spring_1.SetDampingCoefficient(c1)
 
 sys.AddLink(spring_1)
 
@@ -253,7 +253,7 @@ while vis.Run():
     y2 = body_2.GetPos().y
 
     # theory solution
-    x_theory = x0 * np.exp(-zeta*wn*time) * np.cos(wd*time)
+    x_theory = x0 * np.exp(-zeta1*wn1*time) * np.cos(wd1*time)
     y_theory = x_theory + y_eq
 
     time_list.append(time)
