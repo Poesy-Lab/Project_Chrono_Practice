@@ -41,6 +41,13 @@ case "$OS_TYPE" in
         if [ -f "${HOMEBREW_PREFIX}/opt/libomp/lib/libomp.dylib" ]; then
             export DYLD_LIBRARY_PATH="${HOMEBREW_PREFIX}/opt/libomp/lib:${DYLD_LIBRARY_PATH}"
         fi
+
+        # VSG (Vulkan Scene Graph) 라이브러리 — 빌드된 경우에만
+        VSG_LIB_DIR="$HOME/Packages/vsg/lib"
+        if [ -d "${VSG_LIB_DIR}" ]; then
+            export DYLD_LIBRARY_PATH="${VSG_LIB_DIR}:${DYLD_LIBRARY_PATH}"
+            export VSG_FILE_PATH="$HOME/Packages/vsg/share/vsgExamples"
+        fi
         ;;
 
     *)

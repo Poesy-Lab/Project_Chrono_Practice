@@ -143,7 +143,8 @@ python lessons/phase1/lesson_01_hello_chrono.py
 | 모듈 | Linux | macOS (Intel) | macOS (Apple Silicon) | Windows |
 |------|:-----:|:------------:|:--------------------:|:-------:|
 | Core | O | O | O | O |
-| Irrlicht (시각화) | O | O | O | O |
+| Irrlicht (시각화) | O | O※ | O※ | O |
+| **VSG (Vulkan 시각화)** | **O** | **O** | **O** | **O** |
 | Vehicle | O | O | O | O |
 | Postprocess | O | O | O | O |
 | FEA | O | O | O | O |
@@ -156,6 +157,7 @@ python lessons/phase1/lesson_01_hello_chrono.py
 | Pardiso MKL | O | O | X | O |
 
 *O* = NVIDIA GPU + CUDA Toolkit 필요
+*O※* = macOS OpenGL 폴백 제한 있음 (VSG 권장)
 
 ---
 
@@ -208,6 +210,66 @@ while vis.Run():
     sys.DoStepDynamics(step_size)
     realtime_timer.Spin(step_size)  # 실시간 속도 동기화 (macOS 필수)
 ```
+
+## VSG (Vulkan Scene Graph) 시각화 — macOS 권장
+
+macOS에서 Irrlicht의 OpenGL 폴백 제한을 해결하려면 **VSG 모듈**을 사용할 수 있습니다.
+VSG는 Vulkan API 기반으로, macOS에서 MoltenVK를 통해 Metal로 변환되어 동작합니다.
+
+### VSG 빌드 방법 (macOS)
+```bash
+# 1. VulkanSDK 설치
+brew install vulkan-headers vulkan-loader vulkan-tools
+
+# 2. VSG 라이브러리 빌드 (Chrono 제공 스크립트)
+mkdir -p /tmp/vsg_build && cd /tmp/vsg_build
+cp chrono/contrib/build-scripts/macos/buildVSG.sh .
+sed -i '' 's/BUILDDEBUG=ON/BUILDDEBUG=OFF/' buildVSG.sh  # 빌드 시간 단축
+bash buildVSG.sh   # ~/Packages/vsg/ 에 설치됨
+
+# 3. Chrono 재빌드 (VSG ON)
+cd chrono_build
+cmake -DCH_ENABLE_MODULE_VSG:BOOL=ON \
+  -Dvsg_DIR:PATH=$HOME/Packages/vsg/lib/cmake/vsg \
+  -DvsgImGui_DIR:PATH=$HOME/Packages/vsg/lib/cmake/vsgImGui \
+  -DvsgXchange_DIR:PATH=$HOME/Packages/vsg/lib/cmake/vsgXchange \
+  -Dglslang_DIR:PATH=$HOME/Packages/vsg/lib/cmake/glslang .
+ninja -j$(sysctl -n hw.ncpu)
+```
+
+### VSG 사용법 (Python)
+```python
+import pychrono.vsg3d as vsg  # 주의: 'vsg'가 아니라 'vsg3d'
+
+vis = vsg.ChVisualSystemVSG()
+vis.AttachSystem(sys)
+vis.SetWindowSize(1280, 720)
+vis.SetWindowTitle("My Simulation - VSG")
+vis.AddCamera(chrono.ChVector3d(3, 3, 3))  # Initialize() 전에 호출!
+vis.Initialize()
+```
+
+### Irrlicht/VSG 자동 분기 패턴
+```python
+try:
+    import pychrono.vsg3d as chronovsg
+    vis = chronovsg.ChVisualSystemVSG()
+except ImportError:
+    import pychrono.irrlicht as chronoirr
+    vis = chronoirr.ChVisualSystemIrrlicht()
+```
+
+### VSG vs Irrlicht 비교 (macOS)
+| 항목 | Irrlicht | VSG |
+|------|----------|-----|
+| 텍스처/재질 | 제한적 | 정상 |
+| Retina 디스플레이 | 1/4만 렌더링 | 정상 |
+| 선(line) 렌더링 | 안 됨 | 정상 |
+| vsync | 미지원 | 지원 |
+| GUI 패널 | 없음 | ImGui 통합 |
+| 추가 빌드 필요 | 아니오 | 예 (선택사항) |
+
+> **팀원 영향 없음**: VSG는 선택적 모듈. Windows/Linux 팀원은 Irrlicht로 계속 사용 가능.
 
 ## 참고 문서
 - API: https://api.projectchrono.org/

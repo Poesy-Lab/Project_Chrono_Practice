@@ -381,7 +381,85 @@ ninja -j$(nproc)
 
 ---
 
-### 2-F. PyChrono만 빠르게 설치 (conda, 모든 OS)
+### 2-F. VSG 시각화 모듈 설치 (선택사항, macOS 권장)
+
+> **VSG(Vulkan Scene Graph)**는 Vulkan 기반의 고품질 시각화 모듈입니다.
+> macOS에서 Irrlicht의 OpenGL 폴백 제한(Retina 1/4 렌더링, 선 렌더링 안 됨, vsync 미지원)을
+> 해결할 수 있습니다. **Windows/Linux에서도 사용 가능**하지만, Irrlicht만으로도 충분합니다.
+>
+> **팀원 영향 없음**: VSG는 선택적 추가 모듈로, 기존 Irrlicht 코드에 영향을 주지 않습니다.
+
+#### Step 1: Vulkan SDK 설치
+
+**macOS:**
+```bash
+brew install vulkan-headers vulkan-loader vulkan-tools
+```
+
+**Linux:**
+```bash
+sudo apt-get install -y libvulkan-dev vulkan-tools
+```
+
+**Windows:**
+- https://vulkan.lunarg.com/sdk/home 에서 VulkanSDK 설치
+
+#### Step 2: VSG 라이브러리 빌드
+
+Chrono에서 제공하는 빌드 스크립트를 사용합니다:
+
+```bash
+mkdir -p /tmp/vsg_build && cd /tmp/vsg_build
+
+# OS에 맞는 스크립트 복사
+cp chrono/contrib/build-scripts/macos/buildVSG.sh .    # macOS
+# cp chrono/contrib/build-scripts/linux/buildVSG.sh .   # Linux
+
+bash buildVSG.sh   # ~/Packages/vsg/ 에 설치됨 (약 5~10분)
+```
+
+#### Step 3: Chrono 재빌드 (VSG 모듈 활성화)
+
+```bash
+cd chrono_build
+VSG_DIR="$HOME/Packages/vsg"
+
+cmake \
+  -DCH_ENABLE_MODULE_VSG:BOOL=ON \
+  -Dvsg_DIR:PATH=${VSG_DIR}/lib/cmake/vsg \
+  -DvsgImGui_DIR:PATH=${VSG_DIR}/lib/cmake/vsgImGui \
+  -DvsgXchange_DIR:PATH=${VSG_DIR}/lib/cmake/vsgXchange \
+  -Dglslang_DIR:PATH=${VSG_DIR}/lib/cmake/glslang \
+  .
+
+ninja -j$(nproc)     # Linux
+# ninja -j$(sysctl -n hw.ncpu)  # macOS
+```
+
+#### Step 4: 확인
+
+```bash
+conda activate chrono
+source setup_chrono_env.sh
+python -c "import pychrono.vsg3d; print('VSG OK')"
+```
+
+> **주의**: Python 모듈명은 `pychrono.vsg3d`입니다 (`pychrono.vsg`가 아님).
+
+#### VSG vs Irrlicht 비교
+
+| 항목 | Irrlicht | VSG |
+|------|----------|-----|
+| 텍스처/재질 렌더링 | macOS에서 제한적 | 정상 |
+| Retina 디스플레이 | 1/4만 렌더링 | 전체 화면 정상 |
+| 선(line) 기반 시각화 | macOS에서 안 됨 | 정상 |
+| GUI 패널 (ImGui) | 없음 | 통합 지원 |
+| 추가 빌드 필요? | 아니오 | 예 (선택사항) |
+| 모든 OS 지원? | 예 | 예 |
+
+---
+
+### 2-G. PyChrono만 빠르게 설치 (conda, 모든 OS)
 
 소스 빌드 없이 Python만 쓰고 싶다면:
 
@@ -393,7 +471,7 @@ conda install -c conda-forge -c projectchrono pychrono
 
 ---
 
-### 2-G. Docker로 설치 (고급, Linux/Windows)
+### 2-H. Docker로 설치 (고급, Linux/Windows)
 
 ```bash
 docker pull uwsbel/projectchrono:latest
@@ -758,7 +836,8 @@ Project_Chrono_Practice/
 | 모듈 | Linux | Windows | macOS Intel | macOS Apple Silicon |
 |------|:-----:|:-------:|:-----------:|:-------------------:|
 | Core (물리 엔진) | O | O | O | O |
-| Irrlicht (3D 시각화) | O | O | O | O |
+| Irrlicht (3D 시각화) | O | O | O※ | O※ |
+| **VSG (Vulkan 시각화)** | **O** | **O** | **O** | **O** |
 | Vehicle (차량) | O | O | O | O |
 | FEA (유한요소) | O | O | O | O |
 | Robot (로봇) | O | O | O | O |
@@ -771,6 +850,7 @@ Project_Chrono_Practice/
 | Pardiso MKL (솔버) | O | O | O | X |
 
 **O*** = NVIDIA GPU + CUDA Toolkit 필요
+**O※** = macOS에서 OpenGL 폴백으로 동작 (Retina/선 렌더링 제한 → VSG 권장)
 
 > **GPU가 없어도 걱정 마세요!**
 > Phase 1~3의 모든 학습 과정(물리 기초, 메커니즘, 차량/로봇/FEA)은
