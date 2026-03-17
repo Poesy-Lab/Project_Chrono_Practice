@@ -25,6 +25,13 @@ import matplotlib
 matplotlib.use('Agg')           # Irrlicht 창과의 충돌 방지를 위해 비대화형 백엔드 사용
 
 import pychrono as chrono
+
+# 시각화 시스템 자동 선택 (VSG 우선, Irrlicht 폴백)
+try:
+    import pychrono.vsg3d as chronovsg
+    USE_VSG = True
+except ImportError:
+    USE_VSG = False
 import pychrono.irrlicht as chronoirr
 import numpy as np
 import matplotlib.pyplot as plt
@@ -260,16 +267,23 @@ for i in range(NUM_MARKERS):
 # - macOS: 창 크기 1280x720 이하, ChRealtimeStepTimer 필수
 # =============================================================================
 
-vis = chronoirr.ChVisualSystemIrrlicht()
+if USE_VSG:
+    vis = chronovsg.ChVisualSystemVSG()
+else:
+    vis = chronoirr.ChVisualSystemIrrlicht()
+
 vis.AttachSystem(sys)
+vis.SetWindowSize(1024, 720)
+vis.SetWindowTitle("Lesson 09 - Spring-Damper Comparison")
 
-vis.SetWindowSize(1024, 720)     # macOS OpenGL 폴백: 1280x720 초과 시 segfault 가능
-vis.SetWindowTitle("Lesson 08 - Spring-Damper Comparison")
-
-vis.Initialize()
-vis.AddSkyBox()
-vis.AddCamera(chrono.ChVector3d(0, 0, 6))
-vis.AddTypicalLights()
+if USE_VSG:
+    vis.AddCamera(chrono.ChVector3d(0, 0, 6))
+    vis.Initialize()
+else:
+    vis.Initialize()
+    vis.AddSkyBox()
+    vis.AddCamera(chrono.ChVector3d(0, 0, 6))
+    vis.AddTypicalLights()
 
 
 # =============================================================================
@@ -304,7 +318,8 @@ while vis.Run():
     # 종료 조건
     if time > time_end:
         print("\nSimulation finished")
-        vis.GetDevice().closeDevice()
+        if not USE_VSG:
+            vis.GetDevice().closeDevice()
         break
 
     vis.BeginScene()

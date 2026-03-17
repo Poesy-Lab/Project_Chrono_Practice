@@ -25,6 +25,13 @@ Lesson 06: 재질과 마찰 - 미끄러운 바닥 vs 거친 바닥
 
 import math
 import pychrono as chrono
+
+# 시각화 시스템 자동 선택 (VSG 우선, Irrlicht 폴백)
+try:
+    import pychrono.vsg3d as chronovsg
+    USE_VSG = True
+except ImportError:
+    USE_VSG = False
 import pychrono.irrlicht as chronoirr
 
 print("=" * 55)
@@ -184,15 +191,23 @@ for i, (mat, name, color) in enumerate(bounce_mats):
 # ──────────────────────────────────────────────────
 print("\n3D 시각화 초기화 중...")
 
-vis = chronoirr.ChVisualSystemIrrlicht()
+if USE_VSG:
+    vis = chronovsg.ChVisualSystemVSG()
+else:
+    vis = chronoirr.ChVisualSystemIrrlicht()
+
 vis.AttachSystem(sys)
 vis.SetWindowSize(1280, 720)
-# 참고: macOS Retina에서는 렌더링이 창의 일부만 채울 수 있습니다.
 vis.SetWindowTitle('Lesson 06: Friction & Restitution')
-vis.Initialize()
-vis.AddSkyBox()
-vis.AddCamera(chrono.ChVector3d(3, 6, 16), chrono.ChVector3d(3, 1, 0))
-vis.AddTypicalLights()
+
+if USE_VSG:
+    vis.AddCamera(chrono.ChVector3d(3, 6, 16), chrono.ChVector3d(3, 1, 0))
+    vis.Initialize()
+else:
+    vis.Initialize()
+    vis.AddSkyBox()
+    vis.AddCamera(chrono.ChVector3d(3, 6, 16), chrono.ChVector3d(3, 1, 0))
+    vis.AddTypicalLights()
 
 print("시각화 준비 완료!")
 print("\n" + "─" * 55)

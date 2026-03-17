@@ -31,6 +31,13 @@ Lesson 03: 3D 시각화 - Irrlicht로 시뮬레이션을 눈으로 보기!
 """
 
 import pychrono as chrono
+
+# 시각화 시스템 자동 선택 (VSG 우선, Irrlicht 폴백)
+try:
+    import pychrono.vsg3d as chronovsg
+    USE_VSG = True
+except ImportError:
+    USE_VSG = False
 import pychrono.irrlicht as chronoirr
 
 print("=" * 55)
@@ -124,26 +131,23 @@ ball_yellow = create_ball(
 # 이 부분이 이번 레슨의 핵심입니다!
 print("\n3D 시각화 초기화 중...")
 
-vis = chronoirr.ChVisualSystemIrrlicht()
+if USE_VSG:
+    vis = chronovsg.ChVisualSystemVSG()
+else:
+    vis = chronoirr.ChVisualSystemIrrlicht()
+
 vis.AttachSystem(sys)               # 물리 시스템과 연결
-
 vis.SetWindowSize(1280, 720)        # 창 크기 (가로 x 세로)
-# 참고: macOS Retina에서는 렌더링이 창의 일부만 채울 수 있습니다.
-#   이는 Irrlicht가 HiDPI를 지원하지 않는 알려진 제한사항입니다.
 vis.SetWindowTitle('Lesson 03: Bouncing Balls')  # 창 제목
-vis.Initialize()                    # 초기화
 
-# 하늘 배경
-vis.AddSkyBox()
-
-# 카메라 설정
-vis.AddCamera(
-    chrono.ChVector3d(0, 5, 12),    # 카메라 위치 (약간 위에서 비스듬히)
-    chrono.ChVector3d(0, 2, 0)      # 바라보는 지점
-)
-
-# 조명
-vis.AddTypicalLights()
+if USE_VSG:
+    vis.AddCamera(chrono.ChVector3d(0, 5, 12), chrono.ChVector3d(0, 2, 0))
+    vis.Initialize()
+else:
+    vis.Initialize()
+    vis.AddSkyBox()
+    vis.AddCamera(chrono.ChVector3d(0, 5, 12), chrono.ChVector3d(0, 2, 0))
+    vis.AddTypicalLights()
 
 print("시각화 준비 완료!")
 print("\n" + "─" * 55)

@@ -25,6 +25,13 @@ Lesson 04: 다양한 형태의 물체 - 상자, 구, 실린더
 """
 
 import pychrono as chrono
+
+# 시각화 시스템 자동 선택 (VSG 우선, Irrlicht 폴백)
+try:
+    import pychrono.vsg3d as chronovsg
+    USE_VSG = True
+except ImportError:
+    USE_VSG = False
 import pychrono.irrlicht as chronoirr
 
 print("=" * 55)
@@ -128,16 +135,23 @@ print(f"\n총 물체 수: {len(sys.GetBodies())} (바닥 포함)")
 # ──────────────────────────────────────────────────
 print("\n3D 시각화 초기화 중...")
 
-vis = chronoirr.ChVisualSystemIrrlicht()
+if USE_VSG:
+    vis = chronovsg.ChVisualSystemVSG()
+else:
+    vis = chronoirr.ChVisualSystemIrrlicht()
+
 vis.AttachSystem(sys)
 vis.SetWindowSize(1280, 720)
-# 참고: macOS Retina에서는 렌더링이 창의 일부만 채울 수 있습니다.
-#   이는 Irrlicht가 HiDPI를 지원하지 않는 알려진 제한사항입니다.
 vis.SetWindowTitle('Lesson 04: Various Shapes')
-vis.Initialize()
-vis.AddSkyBox()
-vis.AddCamera(chrono.ChVector3d(0, 6, 18), chrono.ChVector3d(0, 2, 0))
-vis.AddTypicalLights()
+
+if USE_VSG:
+    vis.AddCamera(chrono.ChVector3d(0, 6, 18), chrono.ChVector3d(0, 2, 0))
+    vis.Initialize()
+else:
+    vis.Initialize()
+    vis.AddSkyBox()
+    vis.AddCamera(chrono.ChVector3d(0, 6, 18), chrono.ChVector3d(0, 2, 0))
+    vis.AddTypicalLights()
 
 print("시각화 준비 완료!")
 print("\n" + "─" * 55)

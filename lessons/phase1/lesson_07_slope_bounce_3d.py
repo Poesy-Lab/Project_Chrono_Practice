@@ -15,6 +15,13 @@ lesson_07_slope_bounce_3d.py
 
 import math
 import pychrono as chrono
+
+# 시각화 시스템 자동 선택 (VSG 우선, Irrlicht 폴백)
+try:
+    import pychrono.vsg3d as chronovsg
+    USE_VSG = True
+except ImportError:
+    USE_VSG = False
 import pychrono.irrlicht as chronoirr
 
 
@@ -147,15 +154,24 @@ print("=" * 70)
 # =========================================================
 # 7. Irrlicht 3D 시각화
 # =========================================================
-vis = chronoirr.ChVisualSystemIrrlicht()
+if USE_VSG:
+    vis = chronovsg.ChVisualSystemVSG()
+else:
+    vis = chronoirr.ChVisualSystemIrrlicht()
+
 vis.AttachSystem(system)
 vis.SetWindowSize(1280, 720)
 vis.SetWindowTitle("Lesson 07 - Two Balls on Wide Ramp")
-vis.Initialize()
-vis.AddLogo()
-vis.AddSkyBox()
-vis.AddTypicalLights()
-vis.AddCamera(chrono.ChVector3d(0, 4.5, 11))
+
+if USE_VSG:
+    vis.AddCamera(chrono.ChVector3d(0, 4.5, 11))
+    vis.Initialize()
+else:
+    vis.Initialize()
+    vis.AddLogo()
+    vis.AddSkyBox()
+    vis.AddTypicalLights()
+    vis.AddCamera(chrono.ChVector3d(0, 4.5, 11))
 
 
 # =========================================================
