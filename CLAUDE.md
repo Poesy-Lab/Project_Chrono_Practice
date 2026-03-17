@@ -1,9 +1,12 @@
-# CLAUDE.md - Project Chrono 학습 프로젝트
+# CLAUDE.md - Project Chrono 시뮬레이션 레이어
 
 ## 프로젝트 개요
-이 프로젝트는 Project Chrono(멀티바디 물리 시뮬레이션 엔진)를 **완전 초보자** 팀이 학습하기 위한 공간입니다.
-GitHub로 팀원 간 공유되며, 멤버들은 다양한 환경(Windows/Linux/macOS, GPU 유무)을 사용합니다.
-**팀원의 사전 지식**: 물리 시뮬레이션, C++/Python 엔지니어링 소프트웨어에 대한 경험 없음.
+이 프로젝트는 **AI 친화적 설계 표현 파이프라인**의 **시뮬레이션 레이어**입니다.
+- **파이프라인**: 온톨로지(지식 레이어) → **Project Chrono(시뮬레이션 레이어)** → AI(전처리 레이어)
+- **최종 목표**: Project Chrono로 **드론/로버/환경** 가상환경을 구축하고, 시뮬레이션 결과(CSV/JSON/Mesh)를 온톨로지/AI 레이어에 전달
+- **현재 단계**: Chrono 입문 학습 (4인 캡스톤 팀, 전원 초보)
+- **팀원의 사전 지식**: 물리 시뮬레이션, C++/Python 엔지니어링 소프트웨어에 대한 경험 없음
+- GitHub로 팀원 간 공유, 다양한 환경(Windows/Linux/macOS, GPU 유무) 사용
 
 ---
 
@@ -167,6 +170,8 @@ Project_Chrono_Practice/
 ├── lessons/                 # 학습 코드 (Git 추적, 팀 공유)
 │   ├── phase1/              # Phase 1: 기초 (lesson 01~06)
 │   ├── phase2/              # Phase 2: 메커니즘 (lesson 07~12)
+│   ├── phase3/              # Phase 3: 로버/드론/환경 (lesson 13~20)
+│   ├── phase4/              # Phase 4: 자동화 파이프라인 (lesson 21~24, 2학기)
 │   └── extras/              # 보너스 예제 (로드맵 외)
 ├── chrono/                  # Chrono 소스 (각자 clone, Git 제외)
 ├── chrono_build/            # 빌드 결과물 (각자 빌드, Git 제외)
@@ -218,6 +223,27 @@ else:
     vis.AddTypicalLights()
 ```
 > **주의**: VSG는 기본 Z-up이므로 Y-up 시뮬레이션에서는 반드시 `SetCameraVertical(CameraVerticalDir_Y)` 설정 필요
+
+## 시뮬레이션 대상 모델링 참고사항
+
+### 로버 (Chrono 내장 모델 활용)
+- Chrono::Robot 내장: `robot.Curiosity(system)`, `robot.CuriosityDCMotorControl()`
+- Chrono::Vehicle 내장: HMMWV, Gator 등 차량 모델
+- Terrain 위 주행 → 힘/토크/궤적 데이터 수집
+- 참고 데모: `chrono/src/demos/python/robot/demo_ROBOT_Curiosity_Rigid.py`
+
+### 드론 (프리미티브 조합으로 직접 구성)
+- Chrono에 드론 전용 모듈 없음 → ChBody + 조인트 + 모터 + Force Functor로 구성
+- **드론 바디**: 중앙 ChBody(프레임) + 암 ChBody × 4 (ChLinkLockLock으로 강체 연결)
+- **프로펠러**: ChLinkMotorRotationSpeed로 회전, 추력은 커스텀 Force Functor (RPM 비례 상향력)
+- **비행역학**: 4개 추력 벡터 차등 조합 → yaw/pitch/roll 제어
+- 참고 패턴: lesson_09의 ForceFunctor 사용법과 동일 구조
+
+### 환경
+- **RigidTerrain**: 평탄/높이맵 기반 강체 지형 (로버 주행용)
+- **SCMTerrain**: 변형 가능 토양 (바퀴 자국, 착륙 충격)
+- **외력**: `ChForce`로 바람 적용, `SetGravitationalAcceleration()`으로 중력 변경 (달: 1.62, 화성: 3.72)
+- **환경 파라미터**: 온도, 기압 등은 시뮬레이션 메타데이터로 기록 (물리 엔진에 직접 영향 없음)
 
 ## PyChrono API 주의사항
 - `ChBody`에 `GetFixed()` 없음 → `SetFixed()`만 존재
