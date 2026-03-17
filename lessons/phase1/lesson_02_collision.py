@@ -22,7 +22,7 @@ Lesson 02: 충돌과 바닥 - 공이 바닥에 부딪혀 튕기기
 실행 방법:
   conda activate chrono
   source setup_chrono_env.sh
-  python lessons/lesson_02_collision.py
+  python lessons/phase1/lesson_02_collision.py
 ==========================================================
 """
 

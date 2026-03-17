@@ -1,5 +1,5 @@
 """
-lessons_8_spring.py
+lesson_09_spring_damper.py
 
 설명:
 - 스프링-댐퍼 시스템의 자유진동과 강제진동을 비교하는 시뮬레이션
@@ -17,7 +17,7 @@ lessons_8_spring.py
     cd ~/Documents/Pneuma/Project_Chrono_Practice
     conda activate chrono
     source setup_chrono_env.sh
-    python lessons/lessons_8_spring.py
+    python lessons/phase2/lesson_09_spring_damper.py
 """
 
 import os

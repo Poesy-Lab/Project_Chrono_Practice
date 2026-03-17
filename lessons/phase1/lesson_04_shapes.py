@@ -20,7 +20,7 @@ Lesson 04: 다양한 형태의 물체 - 상자, 구, 실린더
 실행 방법:
   conda activate chrono
   source setup_chrono_env.sh
-  python lessons/lesson_04_shapes.py
+  python lessons/phase1/lesson_04_shapes.py
 ==========================================================
 """
 

@@ -26,7 +26,7 @@ Lesson 03: 3D 시각화 - Irrlicht로 시뮬레이션을 눈으로 보기!
 실행 방법:
   conda activate chrono
   source setup_chrono_env.sh
-  python lessons/lesson_03_visualization.py
+  python lessons/phase1/lesson_03_visualization.py
 ==========================================================
 """
 

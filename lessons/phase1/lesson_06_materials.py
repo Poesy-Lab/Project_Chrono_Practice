@@ -19,7 +19,7 @@ Lesson 06: 재질과 마찰 - 미끄러운 바닥 vs 거친 바닥
 실행 방법:
   conda activate chrono
   source setup_chrono_env.sh
-  python lessons/lesson_06_materials.py
+  python lessons/phase1/lesson_06_materials.py
 ==========================================================
 """
 

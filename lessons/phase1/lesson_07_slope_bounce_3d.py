@@ -10,7 +10,7 @@ lesson_07_slope_bounce_3d.py
     cd ~/Documents/Project_Chrono_Practice
     conda activate chrono
     source setup_chrono_env.sh
-    python lessons/lesson_07_slope_bounce_3d.py
+    python lessons/phase1/lesson_07_slope_bounce_3d.py
 """
 
 import math

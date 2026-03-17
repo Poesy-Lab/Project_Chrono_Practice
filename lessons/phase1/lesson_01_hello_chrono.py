@@ -11,7 +11,7 @@ Lesson 01: Hello Chrono - 자유낙하 시뮬레이션
 실행 방법:
   conda activate chrono
   source setup_chrono_env.sh
-  python lessons/lesson_01_hello_chrono.py
+  python lessons/phase1/lesson_01_hello_chrono.py
 ==========================================================
 """
 

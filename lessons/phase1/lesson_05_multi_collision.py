@@ -19,7 +19,7 @@ Lesson 05: 물체 간 충돌 - 볼링처럼 물체끼리 부딪히기
 실행 방법:
   conda activate chrono
   source setup_chrono_env.sh
-  python lessons/lesson_05_multi_collision.py
+  python lessons/phase1/lesson_05_multi_collision.py
 ==========================================================
 """
 

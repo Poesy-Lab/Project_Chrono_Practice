@@ -522,14 +522,14 @@ while sys.GetChTime() < 10.0:
 ```bash
 conda activate chrono          # conda로 빌드한 경우 반드시 먼저 활성화
 source setup_chrono_env.sh
-python lessons/lesson_01_hello_chrono.py
+python lessons/phase1/lesson_01_hello_chrono.py
 ```
 
 **Windows:**
 ```powershell
 conda activate chrono          # conda로 빌드한 경우 반드시 먼저 활성화
 # 환경변수 설정 후:
-python lessons/lesson_01_hello_chrono.py
+python lessons/phase1/lesson_01_hello_chrono.py
 ```
 
 > **주의: `python3` 대신 `python`을 사용하세요!**
@@ -726,8 +726,12 @@ Project Chrono는 **SI 단위계**를 사용합니다:
 Project_Chrono_Practice/
 │
 ├── lessons/                         # [학습] 우리가 작성하는 학습 코드
-│   ├── lesson_01_hello_chrono.py    #   첫 번째 시뮬레이션
-│   └── ...
+│   ├── phase1/                      #   Phase 1: 기초 (lesson 01~07)
+│   │   ├── lesson_01_hello_chrono.py
+│   │   └── ...
+│   └── phase2/                      #   Phase 2: 메커니즘 (lesson 08~12)
+│       ├── lesson_09_spring_damper.py
+│       └── ...
 │
 ├── chrono/                          # [소스] Chrono 엔진 (git clone, .gitignore됨)
 │   ├── src/demos/python/            #   Python 데모 예제들

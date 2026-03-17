@@ -19,7 +19,7 @@ GitHub로 팀원 간 공유되며, 멤버들은 다양한 환경(Windows/Linux/m
 # 모든 OS 공통 실행 방법
 conda activate chrono
 source setup_chrono_env.sh   # Linux/macOS만
-python lessons/lesson_XX_주제.py
+python lessons/phaseN/lesson_XX_주제.py
 ```
 
 ---
@@ -133,7 +133,7 @@ cmake --build . --config Release
 ```bash
 conda activate chrono
 source setup_chrono_env.sh   # Linux/macOS
-python lessons/lesson_01_hello_chrono.py
+python lessons/phase1/lesson_01_hello_chrono.py
 ```
 
 ---
@@ -163,6 +163,8 @@ python lessons/lesson_01_hello_chrono.py
 ```
 Project_Chrono_Practice/
 ├── lessons/                 # 학습 코드 (Git 추적, 팀 공유)
+│   ├── phase1/              # Phase 1: 기초 (lesson 01~07)
+│   └── phase2/              # Phase 2: 메커니즘 (lesson 08~12)
 ├── chrono/                  # Chrono 소스 (각자 clone, Git 제외)
 ├── chrono_build/            # 빌드 결과물 (각자 빌드, Git 제외)
 ├── chrono_install/          # 설치 디렉토리 (Git 제외)
