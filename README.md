@@ -204,6 +204,8 @@ mkdir chrono_build
 
 > **중요**: Anaconda Prompt에서 `conda activate chrono`를 먼저 실행한 상태에서 진행하세요.
 
+window에서 고생중인 누군가가 미래에 다운받을 당신을 위해 남기는 글: 아래 B-1 실행전에 반드시 irrlicht-1.8.5가 폴더에 있는지 확인하고 없으면 직접 사이트 들어가서 다운로드 하고 압축을 푼 뒤 실행시켜야 합니다-J. KIm
+
 **방법 B-1: 커맨드라인 (복사-붙여넣기로 간편)**
 
 ```powershell
