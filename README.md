@@ -204,7 +204,34 @@ mkdir chrono_build
 
 > **중요**: Anaconda Prompt에서 `conda activate chrono`를 먼저 실행한 상태에서 진행하세요.
 
-window에서 고생중인 누군가가 미래에 다운받을 당신을 위해 남기는 글: 아래 B-1 실행전에 반드시 irrlicht-1.8.5가 폴더에 있는지 확인하고 없으면 직접 사이트 들어가서 다운로드 하고 압축을 푼 뒤 실행시켜야 합니다-J. KIm
+window에서 고생중인 누군가가 미래에 다운받을 당신을 위해 남기는 글: 아래 B-1 실행전에 반드시 irrlicht-1.8.5가 documents 폴더에 있는지 확인하고 없으면 직접 사이트 들어가서 다운로드 하고 압축을 푼 뒤 실행시켜야 합니다-J. KIm
+1. irrlicht 직접 다운로드 후 압축을 documents에 풀기
+2. chrono_build 하위에 있는 모든 파일 삭제
+3. 아래 코드를 입력하여 swig 다운로드(만약 없다면)
+4. ```powershell
+   conda install -c conda-forge swig
+   ```
+5. B-1A 실행 (실행후 --Found Irrlicht 확인 되어야 함)
+6. 
+
+**방법 B-1A(학교 컴퓨터에 설치시 26.03.24): 커맨드라인 (복사-붙여넣기로 간편)**
+
+```powershell
+cd C:\Users\%USERNAME%\Documents\chrono_build
+cmake -G "Visual Studio 18 2026" ^
+  -DCMAKE_INSTALL_PREFIX="C:/Users/user/Documents/chrono_install" ^
+  -DEIGEN3_INCLUDE_DIR="C:/Users/user/Documents/eigen3" ^
+  -DIrrlicht_ROOT="C:/Users/user/Documents/irrlicht-1.8.5" ^
+  -DIRRLICHT_INCLUDE_DIR="C:/Users/user/Documents/irrlicht-1.8.5/include" ^
+  -DIRRLICHT_LIBRARY="C:/Users/user/Documents/irrlicht-1.8.5/lib/Win64-visualStudio/Irrlicht.lib" ^
+  -DSWIG_EXECUTABLE="C:/Users/user/anaconda3/envs/chrono/Library/bin/swig.exe" ^
+  -DCH_ENABLE_MODULE_IRRLICHT:BOOL=ON ^
+  -DCH_ENABLE_MODULE_VEHICLE:BOOL=ON ^
+  -DCH_ENABLE_MODULE_POSTPROCESS:BOOL=ON ^
+  -DCH_ENABLE_MODULE_PYTHON:BOOL=ON ^
+  -DBUILD_DEMOS:BOOL=ON ^
+  "C:/Users/user/Documents/chrono"
+```
 
 **방법 B-1: 커맨드라인 (복사-붙여넣기로 간편)**
 
