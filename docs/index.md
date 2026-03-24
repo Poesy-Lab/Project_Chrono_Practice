@@ -15,34 +15,34 @@
 ```mermaid
 flowchart TD
     subgraph CORE["🟢 Core — 물리 엔진의 심장"]
-        SYS["[[core/system|시스템 ChSystem]]"]
-        BODY["[[core/rigid_bodies|강체 ChBody]]"]
-        COL["[[core/collisions|충돌 Collision]]"]
-        LINK["[[core/links|조인트 Links]]"]
-        MOTOR["[[core/motors|모터 Motors]]"]
-        LOAD["[[core/loads|힘/스프링 Loads]]"]
-        SOLVER["[[core/solver|솔버/적분기]]"]
-        MATH["[[core/math|수학 도구]]"]
+        SYS["시스템 ChSystem"]
+        BODY["강체 ChBody"]
+        COL["충돌 Collision"]
+        LINK["조인트 Links"]
+        MOTOR["모터 Motors"]
+        LOAD["힘/스프링 Loads"]
+        SOLVER["솔버/적분기"]
+        MATH["수학 도구"]
     end
 
     subgraph APP["🟢 응용 모듈"]
-        VEH["[[vehicle/index|🚗 Vehicle]]"]
-        ROB["[[robot/index|🤖 Robot]]"]
-        VIS["[[visualization/index|🖥️ Visualization]]"]
-        FEA_M["[[fea/index|🔩 FEA]]"]
-        POST["[[postprocess/index|📊 Postprocess]]"]
+        VEH["🚗 Vehicle"]
+        ROB["🤖 Robot"]
+        VIS["🖥️ Visualization"]
+        FEA_M["🔩 FEA"]
+        POST["📊 Postprocess"]
     end
 
     subgraph EXT["🟡 확장 모듈"]
-        SENS["[[sensor/index|📷 Sensor 🎮]]"]
-        FSI_M["[[fsi/index|💧 FSI 🎮]]"]
-        MODAL["[[modal/index|〰️ Modal]]"]
-        PARS["[[parsers/index|📄 Parsers]]"]
+        SENS["📷 Sensor 🎮"]
+        FSI_M["💧 FSI 🎮"]
+        MODAL["〰️ Modal"]
+        PARS["📄 Parsers"]
     end
 
     subgraph ADV["🔴 고급 모듈"]
-        DEM_M["[[dem/index|⚙️ DEM 🎮]]"]
-        MC["[[multicore/index|🔀 Multicore]]"]
+        DEM_M["⚙️ DEM 🎮"]
+        MC["🔀 Multicore"]
     end
 
     CORE --> APP
@@ -62,12 +62,12 @@ flowchart TD
 flowchart LR
     subgraph core["Chrono Core"]
         direction TB
-        S["[[core/system|ChSystem]]<br/>물리 세계"] --> B["[[core/rigid_bodies|ChBody]]<br/>강체"]
-        B --> C["[[core/collisions|Collision]]<br/>충돌"]
-        B --> L["[[core/links|Links]]<br/>조인트"]
-        L --> M["[[core/motors|Motors]]<br/>모터"]
-        L --> F["[[core/loads|Loads]]<br/>힘/스프링"]
-        S --> SV["[[core/solver|Solver]]<br/>솔버"]
+        S["ChSystem<br/>물리 세계"] --> B["ChBody<br/>강체"]
+        B --> C["Collision<br/>충돌"]
+        B --> L["Links<br/>조인트"]
+        L --> M["Motors<br/>모터"]
+        L --> F["Loads<br/>힘/스프링"]
+        S --> SV["Solver<br/>솔버"]
     end
 ```
 
@@ -93,11 +93,11 @@ flowchart LR
 
 ```mermaid
 flowchart LR
-    V["[[vehicle/index|Vehicle]]"] --> W["[[vehicle/wheeled|바퀴 차량]]"]
-    V --> T["[[vehicle/tracked|궤도 차량]]"]
-    V --> TR["[[vehicle/terrain|지형 Terrain]]"]
-    V --> PW["[[vehicle/powertrain|동력계]]"]
-    V --> DR["[[vehicle/driver|운전자 입력]]"]
+    V["Vehicle"] --> W["바퀴 차량"]
+    V --> T["궤도 차량"]
+    V --> TR["지형 Terrain"]
+    V --> PW["동력계"]
+    V --> DR["운전자 입력"]
 ```
 
 | 주제 | 문서 | 설명 |
