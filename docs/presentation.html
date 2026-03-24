@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 친화적 설계 표현 — 시뮬레이션 레이어</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/white.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/github.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;800&family=JetBrains+Mono:wght@400;600&family=Outfit:wght@300;600;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f8f9fc;
+  --bg-card: #ffffff;
+  --bg-code: #f1f3f8;
+  --accent: #1565c0;
+  --accent2: #e65100;
+  --accent3: #2e7d32;
+  --accent4: #6a1b9a;
+  --text: #1a1a2e;
+  --text-dim: #5a6577;
+  --border: #dfe3ec;
+}
+.reveal { font-family: 'Noto Sans KR', sans-serif; font-weight: 400; color: var(--text); font-size: 22px; }
+.reveal .slides { text-align: left; }
+.reveal .slides section { padding: 28px 44px; height: 100%; box-sizing: border-box; display: flex !important; flex-direction: column; }
+.reveal h1, .reveal h2, .reveal h3 { font-family: 'Outfit','Noto Sans KR',sans-serif; font-weight: 800; text-transform: none; letter-spacing: -0.02em; color: var(--text); margin: 0 0 4px; }
+.reveal h1 { font-size: 2em; }
+.reveal h2 { font-size: 1.35em; }
+.reveal h3 { font-size: 0.85em; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+.reveal code, .reveal pre { font-family: 'JetBrains Mono', monospace; }
+.reveal pre { width: 100%; font-size: 0.52em; box-shadow: none; background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; margin: 8px 0; }
+.reveal pre code { padding: 12px 16px; max-height: 320px; }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 3px; font-size: 0.5em; font-weight: 700; font-family: 'JetBrains Mono',monospace; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.tag-blue { background: #e3f2fd; color: var(--accent); }
+.tag-orange { background: #fff3e0; color: var(--accent2); }
+.tag-green { background: #e8f5e9; color: var(--accent3); }
+.tag-purple { background: #f3e5f5; color: var(--accent4); }
+.accent-line { width: 48px; height: 3px; background: var(--accent); margin: 6px 0 14px; border-radius: 2px; }
+.card-grid { display: grid; gap: 10px; flex: 1; }
+.card-grid-2 { grid-template-columns: 1fr 1fr; }
+.card-grid-3 { grid-template-columns: repeat(3, 1fr); }
+.card-grid-4 { grid-template-columns: repeat(4, 1fr); }
+.card-grid-5 { grid-template-columns: repeat(5, 1fr); }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 14px; border-top: 3px solid var(--accent); }
+.card-orange { border-top-color: var(--accent2); }
+.card-green { border-top-color: var(--accent3); }
+.card-purple { border-top-color: var(--accent4); }
+.card h4 { font-family: 'Outfit',sans-serif; font-weight: 700; font-size: 0.72em; margin: 0 0 4px; }
+.card p, .card .desc { font-size: 0.55em; color: var(--text-dim); margin: 0; line-height: 1.5; }
+.card .icon { font-size: 1.4em; margin-bottom: 4px; }
+.flow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; justify-content: center; margin: 10px 0; }
+.flow-node { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 8px 14px; font-size: 0.55em; font-weight: 600; }
+.flow-node.active { border-color: var(--accent); color: var(--accent); background: #e3f2fd; }
+.flow-arrow { color: var(--text-dim); font-size: 0.7em; }
+.styled-table { width: 100%; border-collapse: collapse; font-size: 0.55em; }
+.styled-table th { background: var(--accent); color: #fff; padding: 8px 10px; text-align: center; font-weight: 700; }
+.styled-table th:first-child { text-align: left; border-radius: 6px 0 0 0; }
+.styled-table th:last-child { border-radius: 0 6px 0 0; }
+.styled-table td { padding: 8px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+.styled-table td:first-child { text-align: left; font-weight: 600; }
+.styled-table tr:hover td { background: #f0f5ff; }
+.side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; flex: 1; }
+.tree { font-family: 'JetBrains Mono',monospace; font-size: 0.48em; line-height: 1.6; background: var(--bg-code); border: 1px solid var(--border); border-radius: 6px; padding: 12px 16px; white-space: pre; }
+.tree .hl { color: var(--accent); font-weight: 700; }
+.tree .g { color: var(--accent3); font-weight: 600; }
+.tree .dim { color: var(--text-dim); }
+.mono { font-family: 'JetBrains Mono',monospace; }
+.small { font-size: 0.55em; }
+.dim { color: var(--text-dim); }
+.text-center { text-align: center; }
+.mt { margin-top: 10px; }
+
+/* Mermaid */
+.mermaid { text-align: center; margin: 8px 0; }
+.mermaid svg { max-height: 360px; }
+
+/* Timeline as table */
+.gantt-table { width: 100%; border-collapse: collapse; font-size: 0.58em; }
+.gantt-table td, .gantt-table th { padding: 8px 10px; text-align: left; vertical-align: middle; }
+.gantt-table th { font-weight: 700; color: var(--text); border-bottom: 2px solid var(--text); font-size: 0.9em; }
+.gantt-bar { height: 22px; border-radius: 4px; display: inline-block; }
+.gantt-table .phase-name { font-weight: 700; white-space: nowrap; }
+.gantt-table .phase-detail { color: var(--text-dim); font-size: 0.9em; }
+.gantt-table .phase-status { font-size: 0.9em; }
+
+/* Lesson grid */
+.lesson-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.lesson-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; padding: 10px 12px; border-left: 3px solid var(--accent); }
+.lesson-item .num { font-family: 'JetBrains Mono',monospace; color: var(--accent); font-weight: 700; font-size: 0.7em; }
+.lesson-item .title { font-weight: 700; font-size: 0.68em; margin: 2px 0; }
+.lesson-item .detail { color: var(--text-dim); font-size: 0.55em; }
+
+/* Roadmap */
+.roadmap-flow { display: flex; gap: 8px; flex: 1; }
+.roadmap-phase { flex: 1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; font-size: 0.5em; position: relative; border-top: 3px solid var(--accent); }
+.roadmap-phase.rp-orange { border-top-color: var(--accent2); }
+.roadmap-phase.rp-purple { border-top-color: var(--accent4); }
+.roadmap-phase h5 { font-family: 'Outfit',sans-serif; font-weight: 700; font-size: 1em; margin: 0 0 6px; }
+.roadmap-phase ul { margin: 0; padding-left: 14px; color: var(--text-dim); line-height: 1.5; }
+.roadmap-phase::after { content: '→'; position: absolute; right: -11px; top: 50%; transform: translateY(-50%); color: var(--text-dim); font-size: 1em; z-index: 1; }
+.roadmap-phase:last-child::after { content: ''; }
+
+/* Title slide */
+.title-slide { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; flex: 1; }
+.title-slide h1 { font-size: 2.2em; line-height: 1.2; color: var(--text); }
+.title-slide .subtitle { font-size: 0.85em; color: var(--accent); font-family: 'JetBrains Mono',monospace; margin-top: 10px; padding: 5px 12px; border: 1px solid var(--accent); border-radius: 4px; display: inline-block; background: #e3f2fd; }
+.title-slide .meta { font-size: 0.5em; color: var(--text-dim); margin-top: 24px; font-family: 'JetBrains Mono',monospace; }
+
+/* Closing */
+.closing { text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center; flex: 1; }
+.closing h1 { font-size: 2.4em; color: var(--accent); }
+.link-list { list-style: none; padding: 0; font-size: 0.6em; text-align: left; }
+.link-list li { padding: 6px 0; border-bottom: 1px solid var(--border); }
+.link-list .label { color: var(--text-dim); font-size: 0.85em; }
+.link-list .url { color: var(--accent); font-family: 'JetBrains Mono',monospace; font-size: 0.9em; }
+
+/* Section num */
+.section-num { font-family: 'Outfit',sans-serif; font-size: 0.45em; font-weight: 800; color: var(--accent); opacity: 0.25; position: absolute; top: 14px; right: 24px; }
+
+/* Slide note box */
+.note-box { background: #e3f2fd; border-left: 3px solid var(--accent); border-radius: 0 6px 6px 0; padding: 8px 14px; font-size: 0.55em; color: var(--text); margin: 8px 0; }
+.note-box.orange { background: #fff3e0; border-left-color: var(--accent2); }
+.note-box.green { background: #e8f5e9; border-left-color: var(--accent3); }
+
+/* Override reveal background */
+.reveal .slide-background { background-color: var(--bg) !important; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ===== SLIDE 1: TITLE ===== -->
+<section>
+  <div class="title-slide">
+    <span class="tag tag-blue">캡스톤디자인 · 3주차</span>
+    <h1>AI 친화적 설계 표현을 위한<br>가상환경 구축</h1>
+    <div class="subtitle">시뮬레이션 레이어 — Project Chrono</div>
+    <div class="meta">2026.03.17 · 김진성 · 박도희 · 박종민 · 박호진</div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 2: PIPELINE (온톨로지 → 시뮬레이션) ===== -->
+<section>
+  <span class="section-num">01</span>
+  <span class="tag tag-blue">프로젝트 개요</span>
+  <h2>전체 파이프라인 — 온톨로지 기반 양방향 구조</h2>
+  <div class="accent-line"></div>
+
+  <div class="mermaid">
+    flowchart LR
+      subgraph KE["① 지식공학 레이어"]
+        K1["OWL 온톨로지\n파라미터 범위 정의"]
+        K2["Scenario Sampler\n시나리오 자동 생성"]
+        K3["Triple Store\nApache Jena Fuseki"]
+      end
+      subgraph SIM["② 시뮬레이션 레이어 ★"]
+        S1["Chrono::Vehicle\n로버 · 드론"]
+        S2["Chrono::Terrain\n지형 모델"]
+        S3["Physics Engine\n동역학 시뮬레이션"]
+      end
+      subgraph PP["③ 전처리 레이어"]
+        P1["BRepNet · GNN\nPointNet++ · MLP"]
+        P2["Input X\nAI 입력 벡터"]
+      end
+      K1 --> K2
+      K2 -->|"시나리오 설정\nVehicle+Terrain+Physics"| S1
+      K2 -->|"파라미터 주입"| S2
+      S1 --> S3
+      S2 --> S3
+      S3 -->|"Raw Data\nCSV · JSON · Mesh"| K3
+      K3 -->|"SPARQL 질의"| P1
+      P1 --> P2
+
+      style KE fill:#fff3e0,stroke:#e65100,stroke-width:2px
+      style SIM fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+      style PP fill:#e8f5e9,stroke:#2e7d32,stroke-width:2px
+  </div>
+
+  <div class="note-box orange">
+    <strong>핵심</strong>: 온톨로지가 시뮬레이션의 <strong>설정 생성기</strong>이자 <strong>결과 저장소</strong>로 기능하는 양방향 아키텍처.
+    캡스톤 팀은 <strong style="color:var(--accent);">② 시뮬레이션 레이어</strong>를 담당합니다.
+  </div>
+</section>
+
+<!-- ===== SLIDE 3: 시뮬레이션 3대상 ===== -->
+<section>
+  <span class="section-num">01</span>
+  <span class="tag tag-blue">프로젝트 개요</span>
+  <h2>시뮬레이션 대상 — 3가지</h2>
+  <div class="accent-line"></div>
+
+  <div class="card-grid card-grid-3">
+    <div class="card">
+      <div class="icon">🚀</div>
+      <h4>로버 (Rover)</h4>
+      <p class="desc">Curiosity · Viper 탐사 로버<br><code style="font-size:0.9em; color:var(--accent);">Chrono::Vehicle/Robot</code> 내장 모델<br>서스펜션 · 바퀴 · 차체 구동</p>
+    </div>
+    <div class="card card-orange">
+      <div class="icon">🚁</div>
+      <h4>드론 (UAV)</h4>
+      <p class="desc">멀티콥터 무인기<br><code style="font-size:0.9em; color:var(--accent2);">ChBody + 조인트 + 모터</code><br>+ Force Functor로 추력 생성</p>
+    </div>
+    <div class="card card-green">
+      <div class="icon">🌍</div>
+      <h4>환경 (Environment)</h4>
+      <p class="desc">지형 + 외력<br><code style="font-size:0.9em; color:var(--accent3);">RigidTerrain · SCMTerrain</code><br>바람 · 중력(달/화성) · 온도</p>
+    </div>
+  </div>
+
+  <div class="flow mt">
+    <div class="flow-node">온톨로지<br><span class="dim small">파라미터 범위</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">Scenario Sampler<br><span class="dim small">자동 시나리오 생성</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node active">Chrono 시뮬레이션<br><span class="small">물리 엔진 실행</span></div>
+    <span class="flow-arrow">→</span>
+    <div class="flow-node">결과 출력<br><span class="dim small">CSV · JSON · Mesh</span></div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 4: TIMELINE (간트) ===== -->
+<section>
+  <span class="section-num">01</span>
+  <span class="tag tag-blue">프로젝트 개요</span>
+  <h2>캡스톤 일정</h2>
+  <div class="accent-line"></div>
+
+  <table class="gantt-table">
+    <thead>
+      <tr><th style="width:22%;">Phase</th><th style="width:28%;">기간</th><th style="width:35%;">목표</th><th style="width:15%;">상태</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="phase-name" style="color:var(--accent3);">Phase 1: 기초</span></td>
+        <td>1학기 Week 1~2 (3월)</td>
+        <td>물리 세계 생성 · 충돌 · 재질 · 시각화</td>
+        <td><span class="phase-status">✅ 완료</span></td>
+      </tr>
+      <tr>
+        <td><span class="phase-name" style="color:var(--accent);">Phase 2: 메커니즘</span></td>
+        <td>1학기 Week 3~6 (3~4월)</td>
+        <td>조인트 · 스프링 · 모터 · 기어</td>
+        <td><span class="phase-status">🔄 진행 중</span></td>
+      </tr>
+      <tr>
+        <td><span class="phase-name" style="color:var(--accent2);">Phase 3: 응용</span></td>
+        <td>1학기 Week 7~14 (5~6월)</td>
+        <td>로버 → 드론 → 환경 순차 학습</td>
+        <td><span class="phase-status">📋 예정</span></td>
+      </tr>
+      <tr>
+        <td><span class="phase-name" style="color:var(--accent4);">Phase 4: 자동화</span></td>
+        <td>2학기 (9~12월)</td>
+        <td>파라미터화 · 배치 실행 · 데이터 출력</td>
+        <td><span class="phase-status">📋 예정</span></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="note-box mt">
+    <strong>1학기</strong>: Chrono 숙달 (기초 → 메커니즘 → 로버/드론/환경) &nbsp;|&nbsp;
+    <strong>2학기</strong>: 온톨로지 연동 자동화 파이프라인 구축
+  </div>
+</section>
+
+<!-- ===== SLIDE 5: CHRONO 소개 ===== -->
+<section>
+  <span class="section-num">02</span>
+  <span class="tag tag-orange">Project Chrono</span>
+  <h2>Project Chrono란?</h2>
+  <div class="accent-line" style="background:var(--accent2);"></div>
+
+  <p style="font-size:0.65em; color:var(--text-dim); margin:0 0 10px;">
+    오픈소스 <strong>멀티바디 물리 시뮬레이션 엔진</strong> ·
+    <code class="small" style="color:var(--accent);">projectchrono.org</code> ·
+    PyChrono (Python API) · Vehicle/Robot/Terrain 모듈 내장
+  </p>
+
+  <div class="card-grid card-grid-5">
+    <div class="card" style="text-align:center; padding:10px;">
+      <div class="icon">⚙️</div>
+      <h4 style="font-size:0.65em;">System</h4>
+      <p class="desc" style="font-size:0.5em;">시뮬레이션 세계</p>
+    </div>
+    <div class="card card-orange" style="text-align:center; padding:10px;">
+      <div class="icon">📦</div>
+      <h4 style="font-size:0.65em;">Body</h4>
+      <p class="desc" style="font-size:0.5em;">강체 물체</p>
+    </div>
+    <div class="card card-green" style="text-align:center; padding:10px;">
+      <div class="icon">🔗</div>
+      <h4 style="font-size:0.65em;">Joint</h4>
+      <p class="desc" style="font-size:0.5em;">조인트 연결</p>
+    </div>
+    <div class="card card-purple" style="text-align:center; padding:10px;">
+      <div class="icon">💨</div>
+      <h4 style="font-size:0.65em;">Force</h4>
+      <p class="desc" style="font-size:0.5em;">힘 · 외력</p>
+    </div>
+    <div class="card" style="text-align:center; padding:10px; border-top-color:var(--accent2);">
+      <div class="icon">🧮</div>
+      <h4 style="font-size:0.65em;">Solver</h4>
+      <p class="desc" style="font-size:0.5em;">계산 엔진</p>
+    </div>
+  </div>
+
+  <div class="mermaid mt">
+    flowchart LR
+      A["System 생성"] --> B["Body 추가"]
+      B --> C["Joint 연결"]
+      C --> D["Force 적용"]
+      D --> E["Solver 실행\n(시뮬레이션 루프)"]
+      style E fill:#e3f2fd,stroke:#1565c0,stroke-width:2px
+  </div>
+</section>
+
+<!-- ===== SLIDE 6: Chrono 활용 분야 (다이어그램) ===== -->
+<section>
+  <span class="section-num">02</span>
+  <span class="tag tag-orange">Project Chrono</span>
+  <h2>Chrono가 시뮬레이션 레이어에 필요한 이유</h2>
+  <div class="accent-line" style="background:var(--accent2);"></div>
+
+  <div class="mermaid">
+    flowchart TB
+      subgraph VEH["Chrono::Vehicle / Robot"]
+        V1["Curiosity Rover\n서스펜션 · 바퀴 · 차체"]
+        V2["Viper Lunar Rover\n달 탐사 로버"]
+        V3["Custom Drone\n멀티로터 · 프레임 · 프로펠러"]
+      end
+      subgraph TER["Chrono::Terrain"]
+        T1["RigidTerrain\nHeight Map 기반"]
+        T2["SCMTerrain\n변형 가능 토양"]
+      end
+      subgraph PHY["Chrono::Physics"]
+        PH1["다물체 동역학\n조인트 · 힘 · 접촉"]
+        PH2["타이어-지형 상호작용\n반력 · 마찰 · 침하"]
+      end
+      V1 --> PHY
+      V2 --> PHY
+      V3 --> PHY
+      T1 --> PHY
+      T2 --> PHY
+      PHY -->|"출력"| OUT["CSV 시계열\nJSON 설정\nMesh 형상"]
+
+      style VEH fill:#e3f2fd,stroke:#1565c0
+      style TER fill:#e8f5e9,stroke:#2e7d32
+      style PHY fill:#fff3e0,stroke:#e65100
+      style OUT fill:#fce4ec,stroke:#c62828
+  </div>
+
+  <div class="note-box">
+    로버/드론/환경 시뮬레이션에 필요한 Vehicle, Terrain, Physics 모듈이 모두 내장되어 있어 별도 엔진 없이 통합 시뮬레이션 가능
+  </div>
+</section>
+
+<!-- ===== SLIDE 7: 설치 개요 ===== -->
+<section>
+  <span class="section-num">03</span>
+  <span class="tag tag-green">설치 & GitHub</span>
+  <h2>Chrono 설치 — 3개 OS 지원</h2>
+  <div class="accent-line" style="background:var(--accent3);"></div>
+
+  <div style="background:var(--bg-card); border:1px solid var(--accent3); border-radius:6px; padding:8px 14px; font-size:0.58em; margin-bottom:10px;">
+    <strong style="color:var(--accent3);">공통:</strong> &nbsp;
+    <code>conda create -n chrono python=3.11 numpy -y</code>
+    &nbsp;→&nbsp; <span class="dim">항상 <code>python</code> 사용 (<code>python3</code> ❌)</span>
+  </div>
+
+  <div class="card-grid card-grid-3">
+    <div class="card" style="text-align:center;">
+      <h4>🪟 Windows</h4>
+      <p class="desc">Visual Studio 2022<br>CMake GUI<br>SWIG · Eigen3</p>
+    </div>
+    <div class="card card-green" style="text-align:center;">
+      <h4>🐧 Linux</h4>
+      <p class="desc">apt-get 패키지<br>Ninja 빌드<br>GCC 컴파일러</p>
+    </div>
+    <div class="card card-orange" style="text-align:center;">
+      <h4>🍎 macOS</h4>
+      <p class="desc">Homebrew<br>Xcode CLT<br>libomp (OpenMP)</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 8: OS 비교 ===== -->
+<section>
+  <span class="section-num">03</span>
+  <span class="tag tag-green">설치 & GitHub</span>
+  <h2>OS별 특징 비교</h2>
+  <div class="accent-line" style="background:var(--accent3);"></div>
+
+  <table class="styled-table">
+    <thead><tr><th>기능</th><th>Windows</th><th>Linux</th><th>macOS</th></tr></thead>
+    <tbody>
+      <tr><td>CUDA / GPU 가속</td><td>✅ 지원</td><td>✅ 지원</td><td style="color:var(--accent2);">❌ 불가</td></tr>
+      <tr><td>Irrlicht 시각화</td><td>✅ 정상</td><td>✅ 정상</td><td style="color:#e65100;">⚠️ OpenGL 폴백</td></tr>
+      <tr><td>VSG (Vulkan)</td><td>✅ 가능</td><td>✅ 가능</td><td style="color:var(--accent3); font-weight:700;">✅ 권장</td></tr>
+      <tr><td>빌드 난이도</td><td>보통</td><td style="color:var(--accent3);">쉬움</td><td>보통</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note-box green mt">
+    macOS에서는 <strong>VSG(Vulkan)</strong> 빌드로 Irrlicht의 OpenGL 폴백 제한(Retina, 선 렌더링) 해결.
+    코드에서 <code>try: import pychrono.vsg3d</code> → 자동 분기.
+  </div>
+</section>
+
+<!-- ===== SLIDE 9: GitHub ===== -->
+<section>
+  <span class="section-num">03</span>
+  <span class="tag tag-green">설치 & GitHub</span>
+  <h2>GitHub 협업 환경</h2>
+  <div class="accent-line" style="background:var(--accent3);"></div>
+
+  <div class="side-by-side">
+    <div class="tree"><span class="hl">Project_Chrono_Practice/</span>
+├── lessons/
+│   ├── <span class="g">phase1/</span>    <span class="dim">← 기초 (01~06) ✅</span>
+│   ├── <span class="g">phase2/</span>    <span class="dim">← 메커니즘 (07~12) 🔄</span>
+│   ├── phase3/    <span class="dim">← 로버/드론/환경</span>
+│   ├── phase4/    <span class="dim">← 자동화 (2학기)</span>
+│   └── extras/    <span class="dim">← 보너스 예제</span>
+├── chrono/        <span class="dim">← 소스 (각자 clone)</span>
+├── chrono_build/  <span class="dim">← 빌드 (각자)</span>
+├── docs/          <span class="dim">← 문서/발표</span>
+├── CLAUDE.md
+└── README.md</div>
+
+    <div>
+      <div class="card" style="margin-bottom:8px;">
+        <h4 style="font-size:0.65em;">👥 팀원 4명 콜라보레이터</h4>
+        <p class="desc">Windows / Linux / macOS 혼합 환경<br>conda로 Python 버전 통일 (3.11)</p>
+      </div>
+      <div class="card" style="border-top-color:var(--accent);">
+        <h4 style="font-size:0.65em;">🔗 Repository</h4>
+        <p class="desc"><code style="color:var(--accent); font-size:1.1em;">github.com/Poesy-Lab/<br>Project_Chrono_Practice</code></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 10: API 패턴 ===== -->
+<section>
+  <span class="section-num">04</span>
+  <span class="tag tag-purple">Chrono 기본 구성</span>
+  <h2>PyChrono 핵심 5단계 패턴</h2>
+  <div class="accent-line" style="background:var(--accent4);"></div>
+
+  <pre><code class="language-python"># ① 시스템 생성
+sys = chrono.ChSystemNSC()
+sys.SetGravitationalAcceleration(chrono.ChVector3d(0, -9.81, 0))
+
+# ② 물체 추가
+body = chrono.ChBodyEasySphere(0.5, 1000, True, True, material)
+sys.AddBody(body)
+
+# ③ 조인트 연결
+joint = chrono.ChLinkRevolute()
+joint.Initialize(body_A, body_B, frame)
+sys.Add(joint)
+
+# ④ 시각화 (VSG 우선, Irrlicht 폴백 — 자동 분기)
+try:
+    import pychrono.vsg3d as chronovsg
+    vis = chronovsg.ChVisualSystemVSG()
+except ImportError:
+    vis = chronoirr.ChVisualSystemIrrlicht()
+
+# ⑤ 시뮬레이션 루프
+while vis.Run():
+    vis.BeginScene(); vis.Render(); vis.EndScene()
+    sys.DoStepDynamics(0.005)</code></pre>
+</section>
+
+<!-- ===== SLIDE 11: 시각화 비교 (Mermaid) ===== -->
+<section>
+  <span class="section-num">04</span>
+  <span class="tag tag-purple">Chrono 기본 구성</span>
+  <h2>시각화 시스템 비교: Irrlicht vs VSG</h2>
+  <div class="accent-line" style="background:var(--accent4);"></div>
+
+  <table class="styled-table">
+    <thead><tr><th>기능</th><th>Irrlicht (OpenGL)</th><th>VSG (Vulkan) ★</th></tr></thead>
+    <tbody>
+      <tr><td>텍스처 / 재질</td><td>macOS 제한적</td><td style="color:var(--accent3); font-weight:600;">정상 렌더링</td></tr>
+      <tr><td>Retina 디스플레이</td><td style="color:var(--accent2);">1/4만 렌더링</td><td style="color:var(--accent3); font-weight:600;">전체 화면</td></tr>
+      <tr><td>선(line) 렌더링</td><td style="color:var(--accent2);">macOS 안 됨</td><td style="color:var(--accent3); font-weight:600;">정상</td></tr>
+      <tr><td>GUI 패널</td><td>없음</td><td style="color:var(--accent3); font-weight:600;">ImGui 통합</td></tr>
+      <tr><td>추가 빌드 필요?</td><td style="color:var(--accent3);">아니오</td><td>예 (선택사항)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="note-box mt">
+    코드에서 <code>try: import pychrono.vsg3d</code> 패턴으로 VSG 자동 선택.
+    <strong>Windows/Linux</strong> 팀원은 Irrlicht로 정상 동작, <strong>macOS</strong>는 VSG 권장.
+  </div>
+</section>
+
+<!-- ===== SLIDE 12: Phase 1 완료 ===== -->
+<section>
+  <span class="section-num">05</span>
+  <span class="tag tag-green">학습 결과</span>
+  <h2>Phase 1 완료: 물리 세계 만들기</h2>
+  <div class="accent-line" style="background:var(--accent3);"></div>
+
+  <div class="lesson-grid">
+    <div class="lesson-item"><span class="num">01</span><div class="title">Hello Chrono</div><div class="detail">시스템 생성 · 자유낙하</div></div>
+    <div class="lesson-item"><span class="num">02</span><div class="title">충돌과 바닥</div><div class="detail">접촉 재질 · 반발 계수</div></div>
+    <div class="lesson-item"><span class="num">03</span><div class="title">3D 시각화</div><div class="detail">Irrlicht/VSG · 카메라 · 조명</div></div>
+    <div class="lesson-item"><span class="num">04</span><div class="title">다양한 형태</div><div class="detail">구 · 상자 · 실린더 · 밀도</div></div>
+    <div class="lesson-item"><span class="num">05</span><div class="title">다중 충돌</div><div class="detail">볼링 · 초기속도 · 운동량</div></div>
+    <div class="lesson-item"><span class="num">06</span><div class="title">재질과 마찰</div><div class="detail">마찰 비교 · 경사면 · 반발</div></div>
+  </div>
+
+  <div class="note-box green mt">
+    6개 레슨 완료 — 시스템/물체/충돌/재질/시각화 기초 습득. 모든 코드에 VSG/Irrlicht 자동 분기 적용.
+  </div>
+</section>
+
+<!-- ===== SLIDE 13: Phase 2 진행 ===== -->
+<section>
+  <span class="section-num">05</span>
+  <span class="tag tag-blue">학습 결과</span>
+  <h2>Phase 2 진행 중: 메커니즘</h2>
+  <div class="accent-line"></div>
+
+  <div class="side-by-side">
+    <div>
+      <h3 style="font-size:0.65em; margin-bottom:6px;">스프링-댐퍼: Force Functor 패턴</h3>
+      <pre style="font-size:0.95em;"><code class="language-python">class MySpringForce(chrono.ForceFunctor):
+    def evaluate(self, time, rest_length,
+                 length, vel, link):
+        Fs = -k * (length - rest_length)
+        Fd = -c * vel
+        Fext = F_amp * np.sin(F_freq * time)
+        return Fs + Fd + Fext</code></pre>
+      <div class="note-box mt" style="font-size:0.9em;">
+        <strong>남은 학습:</strong> 회전 조인트 · 진자 · 모터 · 4절링크 · 기어
+      </div>
+    </div>
+    <div>
+      <h3 style="font-size:0.65em; margin-bottom:6px;">Phase 3과의 연결</h3>
+      <div class="mermaid" style="font-size:0.9em;">
+        flowchart TB
+          J["조인트"] --> R["로버 서스펜션\n바퀴 회전축"]
+          S["스프링-댐퍼"] --> R
+          M["모터"] --> D["드론 프로펠러\n회전 구동"]
+          J --> D
+          F["Force Functor"] --> D
+          F --> E["환경 외력\n바람 · 중력"]
+          style R fill:#e3f2fd,stroke:#1565c0
+          style D fill:#fff3e0,stroke:#e65100
+          style E fill:#e8f5e9,stroke:#2e7d32
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 14: 향후 로드맵 ===== -->
+<section>
+  <span class="section-num">05</span>
+  <span class="tag tag-orange">학습 계획</span>
+  <h2>향후 학습 계획</h2>
+  <div class="accent-line" style="background:var(--accent2);"></div>
+
+  <div class="roadmap-flow">
+    <div class="roadmap-phase">
+      <h5 style="color:var(--accent);">Phase 2</h5>
+      <ul>
+        <li>회전 조인트</li>
+        <li>진자 운동</li>
+        <li>스프링/댐퍼 ✅</li>
+        <li>모터 구동</li>
+        <li>기어/풀리</li>
+      </ul>
+    </div>
+    <div class="roadmap-phase rp-orange">
+      <h5 style="color:var(--accent2);">Phase 3</h5>
+      <ul>
+        <li>🚀 로버 시뮬레이션</li>
+        <li>🚀 로버 + 지형</li>
+        <li>🚁 드론 바디 모델링</li>
+        <li>🚁 프로펠러/추력</li>
+        <li>🚁 비행 역학</li>
+        <li>🌍 지형 모델링</li>
+        <li>🌍 외력/교란</li>
+        <li>🔗 통합 시나리오</li>
+      </ul>
+    </div>
+    <div class="roadmap-phase rp-purple">
+      <h5 style="color:var(--accent4);">Phase 4 (2학기)</h5>
+      <ul>
+        <li>파라미터화</li>
+        <li>배치 실행</li>
+        <li>CSV/JSON/Mesh 출력</li>
+        <li>온톨로지 연동</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note-box orange mt" style="text-align:center;">
+    <strong>최종 목표</strong>: 온톨로지 파라미터 → 드론/로버/환경 자동 시뮬레이션 → 결과 데이터 → 온톨로지/AI 레이어 전달
+  </div>
+</section>
+
+<!-- ===== SLIDE 15: CLOSING ===== -->
+<section>
+  <div class="closing">
+    <span class="tag tag-blue" style="font-size:0.55em;">Q & A</span>
+    <h1 style="margin-top:14px;">감사합니다</h1>
+    <div class="accent-line" style="margin:12px auto; width:60px;"></div>
+    <ul class="link-list" style="max-width:420px; margin-top:20px;">
+      <li><span class="label">GitHub</span><br><span class="url">github.com/Poesy-Lab/Project_Chrono_Practice</span></li>
+      <li><span class="label">Project Chrono</span><br><span class="url">projectchrono.org</span></li>
+      <li><span class="label">API Docs</span><br><span class="url">api.projectchrono.org</span></li>
+    </ul>
+  </div>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'base',
+    themeVariables: {
+      fontSize: '14px',
+      fontFamily: 'Noto Sans KR, sans-serif',
+      primaryColor: '#e3f2fd',
+      primaryBorderColor: '#1565c0',
+      primaryTextColor: '#1a1a2e',
+      lineColor: '#5a6577',
+      secondaryColor: '#fff3e0',
+      tertiaryColor: '#e8f5e9'
+    }
+  });
+
+  Reveal.initialize({
+    hash: true,
+    center: false,
+    width: 1280,
+    height: 720,
+    margin: 0.02,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    plugins: [ RevealHighlight ]
+  });
+
+  Reveal.on('ready', async () => {
+    await mermaid.run({ querySelector: '.mermaid' });
+  });
+</script>
+</body>
+</html>
