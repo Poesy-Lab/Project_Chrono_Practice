@@ -170,8 +170,9 @@ Project_Chrono_Practice/
 ├── lessons/                 # 학습 코드 (Git 추적, 팀 공유)
 │   ├── phase1/              # Phase 1: 기초 (lesson 01~06)
 │   ├── phase2/              # Phase 2: 메커니즘 (lesson 07~12)
-│   ├── phase3/              # Phase 3: 로버/드론/환경 (lesson 13~20)
-│   ├── phase4/              # Phase 4: 자동화 파이프라인 (lesson 21~24, 2학기)
+│   ├── phase3/              # Phase 3: 차량과 지형 (lesson 13~18)
+│   ├── phase4/              # Phase 4: 응용 시뮬레이션 (lesson 19~24)
+│   ├── phase5/              # Phase 5: 자동화 파이프라인 (lesson 25~28, 2학기)
 │   └── extras/              # 보너스 예제 (로드맵 외)
 ├── chrono/                  # Chrono 소스 (각자 clone, Git 제외)
 ├── chrono_build/            # 빌드 결과물 (각자 빌드, Git 제외)
@@ -223,6 +224,89 @@ else:
     vis.AddTypicalLights()
 ```
 > **주의**: VSG는 기본 Z-up이므로 Y-up 시뮬레이션에서는 반드시 `SetCameraVertical(CameraVerticalDir_Y)` 설정 필요
+
+## Chrono::Vehicle 모듈 참고사항 (Phase 3 핵심 — 지형 포함)
+
+### 아키텍처
+- **템플릿 기반**: 차량 = 서브시스템 조합 (섀시 + 서스펜션 + 타이어 + 드라이브라인 + 조향)
+- **JSON 설정**: 모든 차량 파라미터를 JSON 파일로 정의/변경 가능
+- **Python 바인딩**: `import pychrono.vehicle as veh`
+
+### 내장 차량 모델 (Python 데모 제공)
+| 모델 | 유형 | 데모 파일 |
+|------|------|-----------|
+| HMMWV | 군용 트럭 | `demo_VEH_HMMWV.py` |
+| Sedan | 승용차 | `demo_VEH_WheeledJSON.py` |
+| Gator | ATV | `demo_VEH_Gator.py` |
+| CityBus | 버스 | `demo_VEH_CityBus.py` |
+| UAZBUS | 밴 | `demo_VEH_UAZBUS.py` |
+| MAN 10t | 대형 트럭 | `demo_VEH_MAN_10t.py` |
+| M113 | 궤도 차량 | `demo_VEH_M113.py` |
+| ARTcar | 소형 연구용 | `demo_VEH_ARTcar.py` |
+
+### 서스펜션 유형
+- Double Wishbone, MacPherson Strut, Multi-link, Rigid Axle
+- Semi-trailing Arm, Leaf-spring, SAE Leaf-spring
+
+### 타이어 모델
+| 모델 | 특징 | 사용 지형 |
+|------|------|-----------|
+| Rigid | 강체 타이어 (빠름) | RigidTerrain, SCMTerrain |
+| TMeasy | 준경험적 모델 (적절한 정확도) | RigidTerrain |
+| Pacejka (PAC89/PAC02) | 정밀 타이어 역학 | RigidTerrain |
+| FEA | 유한요소 변형 타이어 (느림) | SCMTerrain, GranularTerrain |
+
+### 조향 컨트롤러
+- `ChPathFollowerDriver`: 경로 추종 PID 컨트롤러
+- `ChInteractiveDriverIRR`: 키보드 실시간 조작
+- `ChDataDriver`: 미리 정의된 입력 시퀀스
+
+## 지형(Terrain) 클래스 참고사항 — Vehicle 모듈의 일부
+
+> 지형 클래스(RigidTerrain, SCMTerrain 등)는 별도의 "Chrono::Terrain" 모듈이 아닙니다.
+> Chrono::Vehicle 모듈의 `chrono::vehicle` 네임스페이스에 포함되어 있으며,
+> `import pychrono.vehicle as veh`로 함께 import됩니다.
+
+### 지형 유형
+| 유형 | 클래스 | 특징 | 호환 타이어 |
+|------|--------|------|------------|
+| 평면 지형 | `FlatTerrain` | 무한 수평면, 가장 빠름 | 준경험적 타이어만 |
+| 강체 지형 | `RigidTerrain` | 박스/메시/높이맵 패치 조합 | 모든 타이어 |
+| SCM 토양 | `SCMTerrain` | 실시간 변형 (바퀴 자국), 토양 파라미터 | Rigid/FEA 타이어 |
+| 입자 지형 | `GranularTerrain` | DEM 입자 기반 (GPU 필요) | Rigid/FEA 타이어 |
+| CRG 도로 | `CRGTerrain` | OpenCRG 도로 프로파일 | 준경험적 타이어만 |
+| CRM 지형 | `CRMTerrain` | SPH 기반 연속 모델 (GPU 필요) | Rigid/FEA 타이어 |
+
+### 지형 데이터 위치
+- JSON 정의: `chrono/data/vehicle/terrain/`
+- 높이맵: `chrono/data/vehicle/terrain/height_maps/`
+- 메시: `chrono/data/vehicle/terrain/meshes/`
+- 텍스처: `chrono/data/vehicle/terrain/textures/`
+
+### 주요 Python 데모 (학습 순서 추천)
+```
+# 1. 기본 차량 구동
+chrono/src/demos/python/vehicle/demo_VEH_HMMWV.py
+
+# 2. 지형 패치 조합
+chrono/src/demos/python/vehicle/demo_VEH_RigidTerrain.py
+
+# 3. 서스펜션 테스트
+chrono/src/demos/python/vehicle/demo_VEH_SuspensionTestRig.py
+
+# 4. 조향/경로 추종
+chrono/src/demos/python/vehicle/demo_VEH_SteeringController.py
+
+# 5. JSON 커스텀 차량
+chrono/src/demos/python/vehicle/demo_VEH_WheeledJSON.py
+
+# 6. 변형 토양
+chrono/src/demos/python/vehicle/demo_VEH_DeformableSoil.py
+
+# 7. 로버 (Chrono::Robot)
+chrono/src/demos/python/robot/demo_ROBOT_Curiosity_Rigid.py
+chrono/src/demos/python/robot/demo_ROBOT_Viper_Rigid.py
+```
 
 ## 시뮬레이션 대상 모델링 참고사항
 

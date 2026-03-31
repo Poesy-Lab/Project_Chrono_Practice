@@ -194,20 +194,18 @@ flowchart LR
 ```mermaid
 flowchart TD
     P1["✅ Phase 1: Core 기초<br/>강체, 충돌, 재질, 시각화<br/><i>lesson 01~06</i>"]
-    P2["🔄 Phase 2: Core 메커니즘<br/>조인트, 모터, 스프링, 기어<br/><i>lesson 07~12</i>"]
-    P3R["📋 Phase 3a: 로버<br/>Vehicle/Robot 모듈<br/>Curiosity + Terrain<br/><i>lesson 13~14</i>"]
-    P3D["📋 Phase 3b: 드론<br/>Core 직접 구성<br/>ChBody + Motor + ForceFunctor<br/><i>lesson 15~17</i>"]
-    P3E["📋 Phase 3c: 환경<br/>지형 + 외력 + 중력변경<br/><i>lesson 18~20</i>"]
-    P4["📋 Phase 4: 자동화<br/>Parsers → 배치실행 → Postprocess<br/><i>lesson 21~24</i>"]
+    P2["✅ Phase 2: Core 메커니즘<br/>조인트, 모터, 스프링, 기어<br/><i>lesson 07~12</i>"]
+    P3["📋 Phase 3: 차량과 지형<br/>Chrono::Vehicle 모듈<br/>HMMWV, 지형, 타이어, 조향<br/><i>lesson 13~18</i>"]
+    P4["📋 Phase 4: 응용 시뮬레이션<br/>로버, 드론, 환경<br/><i>lesson 19~24</i>"]
+    P5["📋 Phase 5: 자동화<br/>Parsers → 배치실행 → Postprocess<br/><i>lesson 25~28 (2학기)</i>"]
 
-    P1 --> P2 --> P3R --> P3D --> P3E --> P4
+    P1 --> P2 --> P3 --> P4 --> P5
 
     style P1 fill:#4caf50,color:#fff
-    style P2 fill:#ff9800,color:#fff
-    style P3R fill:#2196f3,color:#fff
-    style P3D fill:#2196f3,color:#fff
-    style P3E fill:#2196f3,color:#fff
-    style P4 fill:#9c27b0,color:#fff
+    style P2 fill:#4caf50,color:#fff
+    style P3 fill:#2196f3,color:#fff
+    style P4 fill:#2196f3,color:#fff
+    style P5 fill:#9c27b0,color:#fff
 ```
 
 ---
