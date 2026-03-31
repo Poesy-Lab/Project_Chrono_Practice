@@ -7,11 +7,11 @@
 
 ## 렌더러 비교
 
-| 렌더러 | 문서 | 특징 |
-|---|---|---|
-| Irrlicht | [[irrlicht]] | 기본 제공, macOS OpenGL 폴백 제한 |
-| VSG (Vulkan) | [[vsg]] | 고품질, macOS 권장, 빌드 필요 |
-| POV-Ray | [[povray]] | 오프라인 레이트레이싱 |
+| 렌더러          | 문서           | 특징                        |
+| ------------ | ------------ | ------------------------- |
+| Irrlicht     | [[irrlicht]] | 기본 제공, macOS OpenGL 폴백 제한 |
+| VSG (Vulkan) | [[vsg]]      | 고품질, macOS 권장, 빌드 필요      |
+| POV-Ray      | [[povray]]   | 오프라인 레이트레이싱               |
 
 ## 관련 레슨
 

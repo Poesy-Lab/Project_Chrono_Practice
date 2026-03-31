@@ -68,19 +68,21 @@ flowchart LR
         L --> M["Motors<br/>모터"]
         L --> F["Loads<br/>힘/스프링"]
         S --> SV["Solver<br/>솔버"]
+        S --> MT["Math<br/>수학 도구"]
     end
 ```
 
-| 주제 | 문서 | 핵심 클래스 | 설명 |
-|---|---|---|---|
-| 시스템 | [[core/system]] | `ChSystemNSC`, `ChSystemSMC` | 시뮬레이션 세계의 그릇 |
-| 강체 | [[core/rigid_bodies]] | `ChBody`, `ChBodyEasy*` | 물체 생성과 속성 |
-| 충돌 | [[core/collisions]] | `ChCollisionShape*`, `ChContactMaterial*` | 충돌 감지와 접촉 재질 |
-| 조인트 | [[core/links]] | `ChLinkRevolute`, `ChLinkLockLock` 외 20+ | 물체 간 연결/구속 |
-| 모터 | [[core/motors]] | `ChLinkMotorRotation*`, `ChLinkMotorLinear*` | 회전/직선 액추에이터 |
-| 힘/스프링 | [[core/loads]] | `ChLinkTSDA`, `ChForce`, `ForceFunctor` | 외력, 스프링-댐퍼 |
-| 솔버 | [[core/solver]] | `PSOR`, `APGD`, `HHT` | 방정식 풀기, 시간 적분 |
-| 수학 도구 | [[core/math]] | `ChVector3d`, `ChQuaterniond`, `ChFunction*` | 벡터, 회전, 시간 함수 |
+| 주제    | 문서                    | 핵심 클래스                                       | 설명            |
+| ----- | --------------------- | -------------------------------------------- | ------------- |
+| 개요    | [[core/index]]        | —                                            | Core 전체 개요, C++↔Python 가이드 |
+| 시스템   | [[core/system]]       | `ChSystemNSC`, `ChSystemSMC`                 | 시뮬레이션 세계의 그릇  |
+| 강체    | [[core/rigid_bodies]] | `ChBody`, `ChBodyEasy*`                      | 물체 생성과 속성     |
+| 충돌    | [[core/collisions]]   | `ChCollisionShape*`, `ChContactMaterial*`    | 충돌 감지와 접촉 재질  |
+| 조인트   | [[core/links]]        | `ChLinkRevolute`, `ChLinkLockLock` 외 20+     | 물체 간 연결/구속    |
+| 모터    | [[core/motors]]       | `ChLinkMotorRotation*`, `ChLinkMotorLinear*` | 회전/직선 액추에이터   |
+| 힘/스프링 | [[core/loads]]        | `ChLinkTSDA`, `ChForce`, `ForceFunctor`      | 외력, 스프링-댐퍼    |
+| 솔버    | [[core/solver]]       | `PSOR`, `APGD`, `HHT`                        | 방정식 풀기, 시간 적분 |
+| 수학 도구 | [[core/math]]         | `ChVector3d`, `ChQuaterniond`, `ChFunction*` | 벡터, 회전, 시간 함수 |
 
 ---
 
@@ -100,14 +102,14 @@ flowchart LR
     V --> DR["운전자 입력"]
 ```
 
-| 주제 | 문서 | 설명 |
-|---|---|---|
-| 개요 | [[vehicle/index]] | 템플릿 기반 아키텍처, JSON 정의 |
-| 바퀴 차량 | [[vehicle/wheeled]] | 서스펜션, 스티어링, 타이어, 구동계 |
-| 궤도 차량 | [[vehicle/tracked]] | 궤도판, 스프로킷, 아이들러 |
-| 지형 | [[vehicle/terrain]] | Rigid, SCM(변형토양), 높이맵 등 7종 |
-| 동력계 | [[vehicle/powertrain]] | 엔진, 변속기 |
-| 운전자 | [[vehicle/driver]] | 키보드, 경로 추종, 데이터 파일 |
+| 주제    | 문서                     | 설명                         |
+| ----- | ---------------------- | -------------------------- |
+| 개요    | [[vehicle/index]]      | 템플릿 기반 아키텍처, JSON 정의       |
+| 바퀴 차량 | [[vehicle/wheeled]]    | 서스펜션, 스티어링, 타이어, 구동계       |
+| 궤도 차량 | [[vehicle/tracked]]    | 궤도판, 스프로킷, 아이들러            |
+| 지형    | [[vehicle/terrain]]    | Rigid, SCM(변형토양), 높이맵 등 7종 |
+| 동력계   | [[vehicle/powertrain]] | 엔진, 변속기                    |
+| 운전자   | [[vehicle/driver]]     | 키보드, 경로 추종, 데이터 파일         |
 
 **내장 차량 모델 19종**: HMMWV, Sedan, Gator, M113 등 → [[vehicle/models|모델 카탈로그]]
 
@@ -118,14 +120,14 @@ flowchart LR
 > Curiosity/Viper 로버, LittleHexy 드론 등 내장 모델.
 > 📖 [공식 매뉴얼](https://api.projectchrono.org/group__robot__models.html)
 
-| 모델 | 문서 | 종류 | 우선순위 |
-|---|---|---|:---:|
-| Curiosity | [[robot/curiosity]] | 화성 로버 (6륜) | 🟢 |
-| Viper | [[robot/viper]] | 달 로버 (4륜) | 🟢 |
-| LittleHexy | [[robot/littlehexy]] | 헥사콥터 (6프로펠러) | 🟡 |
-| Turtlebot | [[robot/turtlebot]] | 2륜 차동구동 | 🟡 |
-| RoboSimian | [[robot/robosimian]] | 4족 보행 | 🔴 |
-| Industrial | [[robot/industrial]] | 로봇팔 (6축) | 🔴 |
+| 모델         | 문서                   | 종류           | 우선순위 |
+| ---------- | -------------------- | ------------ | :--: |
+| Curiosity  | [[robot/curiosity]]  | 화성 로버 (6륜)   |  🟢  |
+| Viper      | [[robot/viper]]      | 달 로버 (4륜)    |  🟢  |
+| LittleHexy | [[robot/littlehexy]] | 헥사콥터 (6프로펠러) |  🟡  |
+| Turtlebot  | [[robot/turtlebot]]  | 2륜 차동구동      |  🟡  |
+| RoboSimian | [[robot/robosimian]] | 4족 보행        |  🔴  |
+| Industrial | [[robot/industrial]] | 로봇팔 (6축)     |  🔴  |
 
 ---
 
@@ -134,11 +136,11 @@ flowchart LR
 > 시뮬레이션을 눈으로 보기.
 > 📖 [공식 매뉴얼](https://api.projectchrono.org/manual_visualization.html)
 
-| 렌더러 | 문서 | 특징 |
-|---|---|---|
-| Irrlicht | [[visualization/irrlicht]] | 기본 제공, macOS에서 제한적 |
-| VSG (Vulkan) | [[visualization/vsg]] | 고품질, macOS 권장 |
-| POV-Ray | [[visualization/povray]] | 오프라인 레이트레이싱 |
+| 렌더러          | 문서                         | 특징                 |
+| ------------ | -------------------------- | ------------------ |
+| Irrlicht     | [[visualization/irrlicht]] | 기본 제공, macOS에서 제한적 |
+| VSG (Vulkan) | [[visualization/vsg]]      | 고품질, macOS 권장      |
+| POV-Ray      | [[visualization/povray]]   | 오프라인 레이트레이싱        |
 
 ---
 
@@ -147,11 +149,11 @@ flowchart LR
 > 변형 가능한 물체(빔, 케이블, 쉘) 시뮬레이션.
 > 📖 [공식 매뉴얼](https://api.projectchrono.org/manual_fea.html)
 
-| 주제 | 문서 | 설명 |
-|---|---|---|
-| 개요 | [[fea/index]] | 노드, 요소, 메시 개념 |
-| 노드 | [[fea/nodes]] | 위치/회전 자유도 |
-| 요소 | [[fea/elements]] | 빔, 쉘, 케이블, 벽돌, 사면체 |
+| 주제  | 문서               | 설명                 |
+| --- | ---------------- | ------------------ |
+| 개요  | [[fea/index]]    | 노드, 요소, 메시 개념      |
+| 노드  | [[fea/nodes]]    | 위치/회전 자유도          |
+| 요소  | [[fea/elements]] | 빔, 쉘, 케이블, 벽돌, 사면체 |
 
 ---
 
