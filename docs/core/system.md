@@ -27,14 +27,14 @@ tags:
 
 Chrono는 접촉(Contact)을 처리하는 방식에 따라 두 가지 시스템을 제공한다.
 
-| | ChSystemNSC | ChSystemSMC |
-|---|---|---|
-| 정식 명칭 | Non-Smooth Contact | Smooth Contact |
-| 접촉 처리 | 상보성 문제(Complementarity) | 페널티 힘(Penalty Force) |
-| 속도 | 빠름 | 느림 |
-| 정확도 | 일반적 | 정밀 (부드러운 접촉) |
-| 적합한 경우 | 대부분의 시뮬레이션 | 고무/타이어, FEA 연동 |
-| 관통 허용 | 약간의 관통 후 복원 | 관통 시 반발력 적용 |
+|        | ChSystemNSC             | ChSystemSMC          |
+| ------ | ----------------------- | -------------------- |
+| 정식 명칭  | Non-Smooth Contact      | Smooth Contact       |
+| 접촉 처리  | 상보성 문제(Complementarity) | 페널티 힘(Penalty Force) |
+| 속도     | 빠름                      | 느림                   |
+| 정확도    | 일반적                     | 정밀 (부드러운 접촉)         |
+| 적합한 경우 | 대부분의 시뮬레이션              | 고무/타이어, FEA 연동       |
+| 관통 허용  | 약간의 관통 후 복원             | 관통 시 반발력 적용          |
 
 ### NSC — 상보성 조건(Complementarity)
 
