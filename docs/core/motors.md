@@ -1,3 +1,4 @@
+
 모터는 움직임이 있는 물체를 나타내는것으로, 크게 선형(linear), 회전(rotational)으로 나뉘며, 또한 3D(예시: body) 혹은 1D(예시: shaft)로 다시 나뉜다.
 
 ChLinkMotorRotation 커맨드와 ChLinkMotorLinear는 ChLinkMate에서 계승되므로 모든 이하 모터에 관한 고려는 이를 따른다.
@@ -25,7 +26,7 @@ ChLinkMotorRotation 커맨드와 ChLinkMotorLinear는 ChLinkMate에서 계승되
 
 회전 모터는 여러번 회전이 가능하며, 이때 Wrapped(최대 및 최소의 한계가 존재함)된 GetMotorAngelWrapped() 혹은 GetMotorAngle()옵션을 제공한다.
 
-상대 위치|속도|가속도는 다음과 같은 명령어로 불러올 수 있다. : [GetMotorAngle()](https://api.projectchrono.org/classchrono_1_1_ch_link_motor_rotation.html#a6b88645142bcc95635583160554f6749)
+상대 위치|속도|가속도는 다음과 같은 명령어로 불러올 수 있다. : [GetMotorAngle()](https://api.projectchrono.org/classchrono_1_1_ch_link_motor_rotation.html#a6b88645142bcc95635583160554f6749) | [GetMotorAngleDt()](https://api.projectchrono.org/classchrono_1_1_ch_link_motor_rotation.html#a692a8953d5e383d220fb6ff379e6e924) | [GetMotorAngleDt2()](https://api.projectchrono.org/classchrono_1_1_ch_link_motor_rotation.html#ab0faf2a0035a29ec826ad045fbfdf8de) 
 
 
 기본적으로 모든 회전 모터는 고정된 z축으로 회전하는 조건을 가지고 있으나 [SetSpindleConstraint()](https://api.projectchrono.org/classchrono_1_1_ch_link_motor_rotation.html#abc15d05136796ed470a4cac1f601d4b4) 를 통해 다음과 같은 옵션을 줄 수 있다.
@@ -40,6 +41,35 @@ ChLinkMotorRotation 커맨드와 ChLinkMotorLinear는 ChLinkMate에서 계승되
 * ChSystem 에 모터 추가
 * 모터의 기능을 설명하는 [ChFunction](https://api.projectchrono.org/classchrono_1_1_ch_function.html) 물체 결합; 방법들의 이름은 특정 클래스에 따라 달라짐.
 
+```예시:
+// Create the motor
+
+auto rotmotor = chrono_types::make_shared<ChLinkMotorRotationSpeed>();
+
+// Connect the rotor and the stator and add the motor to the system:
+
+rotmotor->Initialize(rotor, // body A
+
+stator, // body B
+
+[ChFramed](https://api.projectchrono.org/namespacechrono.html#a209d63c1393d62e275160b8b343ff923)([ChVector3d](https://api.projectchrono.org/namespacechrono.html#a5897c517250e24238a2138abb26bc31b)(1,0,0)) // motor frame, in abs. coords
+
+);
+
+// Add the motor to the system
+
+mphysicalSystem.Add(rotmotor);
+
+// Create a ChFunction to be used for the motor: for example a constant
+
+// angular speed, in [rad/s], ex. 1 PI/s =180°/s
+
+auto mwspeed = chrono_types::make_shared<ChFunctionConst>(CH_PI);
+
+// Let the motor use our motion function:
+
+rotmotor->SetSpeedFunction(mwspeed);
+```
 
 **3D Linear Motors**
 이러한 모터들은 병진과 회전 운동등을 하는 두개의 ChBodyFrame 의 파트를 연결한다.(예: ChBody나 ChNodeFEAxyzrot). (데자뷰가 느껴진다면 정상입니다! 아까 본거 그대로 여기도 적혀있음)
@@ -85,3 +115,34 @@ ChLinkMotorRotation 커맨드와 ChLinkMotorLinear는 ChLinkMate에서 계승되
 1. 모터는 선형이랑 회전형 있음: 레일따라 움직이거나 회전하거나. 1차원이랑 3차원에서 구현 가능
 2. 제약조건 우리가 설정할 수 있음. 어디 고정되어있는지랑 어떻게 어디까지 움직일지등등
 3. 모터에 가해진 속도, 힘, 위치등 불러올 수 있음
+
+
+***여기부터 수정 전 기존에 있던 내용 - J. Kim***
+---
+title: "모터 (Motors)"
+author: ""
+last_modified: "2026-03-31"
+tags:
+  - chrono
+  - core
+---
+
+# 모터 (Motors)
+
+조인트에 모터를 달아 속도/각도/힘을 제어.
+
+## 관련 클래스
+
+| 클래스 | 설명 |
+|--------|------|
+| `ChLinkMotorRotationSpeed` | 일정 속도 회전 |
+| `ChLinkMotorRotationAngle` | 각도 궤적 추종 |
+| `ChLinkMotorLinearSpeed` | 직선 속도 제어 |
+
+## 참고
+
+- [공식 API 문서 (C++)](https://api.projectchrono.org/classchrono_1_1_ch_link_motor.html)
+- [Motors 매뉴얼 (C++)](https://api.projectchrono.org/motors.html)
+- Python 데모: `chrono/src/demos/python/mbs/demo_MBS_motors.py`
+- ← [[core/index|Core 개요로 돌아가기]]
+>>>>>>> 83310e34b74ed969542c1b0a7343c5f62aad54ad

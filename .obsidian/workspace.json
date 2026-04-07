@@ -1,0 +1,233 @@
+{
+  "main": {
+    "id": "01c83309edb770fe",
+    "type": "split",
+    "children": [
+      {
+        "id": "cc3ea87d48fb48b4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "a4a095158f612a22",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "lessons/phase2/jongmin/lesson_12_gear_pulley_studying.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "lesson_12_gear_pulley_studying"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "f8e249067f038add",
+    "type": "split",
+    "children": [
+      {
+        "id": "2ead3825f35b2940",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b4a21dd6df9b654a",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "파일 탐색기"
+            }
+          },
+          {
+            "id": "87b2b793f899b301",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "5cb4ca130f652988",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "26b2a93152e48412",
+    "type": "split",
+    "children": [
+      {
+        "id": "0ab3882f7cad187d",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "41eec530778eb875",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "docs/core/solver.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "solver 의 백링크"
+            }
+          },
+          {
+            "id": "b331e5756d5067dd",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "links.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links from links"
+            }
+          },
+          {
+            "id": "6602aad1f2f78d94",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "5cf422f7d30b5d79",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "028b5ed754080bab",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "links.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline of links"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:빠른 전환기 열기": false,
+      "graph:그래프 뷰 열기": false,
+      "canvas:새 캔버스 만들기": false,
+      "daily-notes:오늘의 일일 노트 열기": false,
+      "templates:템플릿 삽입": false,
+      "command-palette:명령어 팔레트 열기": false,
+      "bases:새 베이스 생성하기": false
+    }
+  },
+  "active": "a4a095158f612a22",
+  "lastOpenFiles": [
+    "lessons/phase2/jongmin/lesson_11_four_bar_linkage_studying.md",
+    "lessons/phase2/jongmin/lesson_12_gear_pulley_studying.md",
+    "lessons/phase2/jongmin/lesson_10_motor_studying.md",
+    "lessons/phase2/jongmin/lesson_09_spring_damper_studying.md",
+    "lessons/phase2/jongmin/lesson_08_pendulum_studying.md",
+    "lessons/phase2/jongmin/lesson_07_revolute_joint_studying.md",
+    "lessons/phase2/lesson_08_pendulum_plot.png",
+    "lessons/phase2/lesson_08_plot1_comparison.png",
+    "docs/index.md",
+    "docs/core/solver.md",
+    "lessons/phase2/lesson_12_gear_pulley_plot.png",
+    "lessons/phase2/lesson_10_motor_plot.png",
+    "lessons/phase2/lesson_08_plot2_analysis.png",
+    "docs/core/attachments/Pasted image 20260402142010.png",
+    "CLAUDE.md",
+    "lessons/phase2/lesson_11_slider_crank_plot.png",
+    "docs/core/attachments/Pasted image 20260402210917.png",
+    "docs/core/attachments/Pasted image 20260402211023.png",
+    "docs/core/attachments/Pasted image 20260402210926.png",
+    "docs/core/index.md",
+    "docs/core/links.md",
+    "docs/core/loads.md",
+    "docs/core/math.md",
+    "docs/core/motors.md",
+    "docs/core/rigid_bodies.md",
+    "docs/core/system.md",
+    "docs/core/collisions.md",
+    "lessons/phase2/jongmin",
+    "README.md",
+    "ss.py",
+    "lessons/ss.py",
+    "docs/core/attachments",
+    "ss",
+    "direct_solver_sparseqr.py",
+    "lessons/extras/direct_solver_sparseqr.py",
+    "docs/postprocess/index.md",
+    "docs/vehicle/tracked.md",
+    "docs/visualization/irrlicht.md",
+    "docs/visualization/povray.md",
+    "docs/visualization/index.md",
+    "docs/vehicle/driver.md",
+    "docs/dem/index.md",
+    "lessons/phase1/Jinseong/README.md",
+    "core"
+  ]
+}
