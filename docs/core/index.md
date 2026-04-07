@@ -8,16 +8,16 @@
 
 ## 하위 문서
 
-| 주제 | 문서 | 핵심 클래스 |
-|---|---|---|
-| 시스템 | [[system]] | `ChSystemNSC`, `ChSystemSMC` |
-| 강체 | [[rigid_bodies]] | `ChBody`, `ChBodyEasy*` |
-| 충돌 | [[collisions]] | `ChCollisionShape*`, `ChContactMaterial*` |
-| 조인트 | [[links]] | `ChLinkRevolute`, `ChLinkLockLock` 외 20+ |
-| 모터 | [[motors]] | `ChLinkMotorRotation*`, `ChLinkMotorLinear*` |
-| 힘/스프링 | [[loads]] | `ChLinkTSDA`, `ChForce`, `ForceFunctor` |
-| 솔버 | [[solver]] | `PSOR`, `APGD`, `HHT` |
-| 수학 도구 | [[math]] | `ChVector3d`, `ChQuaterniond`, `ChFunction*` |
+| 주제    | 문서               | 핵심 클래스                                       |
+| ----- | ---------------- | -------------------------------------------- |
+| 시스템   | [[system]]       | `ChSystemNSC`, `ChSystemSMC`                 |
+| 강체    | [[rigid_bodies]] | `ChBody`, `ChBodyEasy*`                      |
+| 충돌    | [[collisions]]   | `ChCollisionShape*`, `ChContactMaterial*`    |
+| 조인트   | [[links]]        | `ChLinkRevolute`, `ChLinkLockLock` 외 20+     |
+| 모터    | [[motors]]       | `ChLinkMotorRotation*`, `ChLinkMotorLinear*` |
+| 힘/스프링 | [[loads]]        | `ChLinkTSDA`, `ChForce`, `ForceFunctor`      |
+| 솔버    | [[solver]]       | `PSOR`, `APGD`, `HHT`                        |
+| 수학 도구 | [[math]]         | `ChVector3d`, `ChQuaterniond`, `ChFunction*` |
 
 ## 관련 레슨
 
