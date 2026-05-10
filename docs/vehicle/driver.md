@@ -13,11 +13,11 @@ tags:
 
 ## 관련 클래스
 
-| 클래스 | 설명 |
-|--------|------|
-| `ChInteractiveDriverIRR` | 키보드 실시간 조작 |
-| `ChPathFollowerDriver` | PID 경로 추종 |
-| `ChDataDriver` | 미리 정의된 입력 시퀀스 |
+| 클래스                      | 설명            |
+| ------------------------ | ------------- |
+| `ChInteractiveDriverIRR` | 키보드 실시간 조작    |
+| `ChPathFollowerDriver`   | PID 경로 추종     |
+| `ChDataDriver`           | 미리 정의된 입력 시퀀스 |
 
 ## 참고
 

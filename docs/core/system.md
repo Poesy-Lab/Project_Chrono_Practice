@@ -184,20 +184,20 @@ sys.SetTimestepperType(chrono.ChTimestepper.Type_HHT)
 
 ## 주요 메서드 정리
 
-| 메서드 | 설명 |
-|--------|------|
-| `AddBody(body)` / `Add(body)` | 강체 추가 |
-| `Add(link)` | 조인트/링크 추가 |
-| `Add(shaft)` | 1D 회전축 추가 |
-| `DoStepDynamics(dt)` | 시간을 dt초만큼 전진 |
-| `GetChTime()` | 현재 시뮬레이션 시간 |
-| `GetBodyCount()` | 시스템 내 물체 수 |
-| `SetGravitationalAcceleration(v)` | 중력 벡터 설정 |
-| `GetGravitationalAcceleration()` | 중력 벡터 조회 |
-| `SetSolverType(type)` | 솔버 변경 |
-| `SetTimestepperType(type)` | 적분기 변경 |
-| `SetMaxPenetrationRecoverySpeed(v)` | 관통 복원 속도 제한 |
-| `SetMinBounceSpeed(v)` | 최소 반발 속도 임계값 |
+| 메서드                                 | 설명           |
+| ----------------------------------- | ------------ |
+| `AddBody(body)` / `Add(body)`       | 강체 추가        |
+| `Add(link)`                         | 조인트/링크 추가    |
+| `Add(shaft)`                        | 1D 회전축 추가    |
+| `DoStepDynamics(dt)`                | 시간을 dt초만큼 전진 |
+| `GetChTime()`                       | 현재 시뮬레이션 시간  |
+| `GetBodyCount()`                    | 시스템 내 물체 수   |
+| `SetGravitationalAcceleration(v)`   | 중력 벡터 설정     |
+| `GetGravitationalAcceleration()`    | 중력 벡터 조회     |
+| `SetSolverType(type)`               | 솔버 변경        |
+| `SetTimestepperType(type)`          | 적분기 변경       |
+| `SetMaxPenetrationRecoverySpeed(v)` | 관통 복원 속도 제한  |
+| `SetMinBounceSpeed(v)`              | 최소 반발 속도 임계값 |
 
 ---
 
