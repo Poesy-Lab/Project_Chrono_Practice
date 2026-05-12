@@ -3,7 +3,18 @@
 # Usage: source setup_chrono_env.sh
 
 # ── 프로젝트 루트 자동 감지 ──
-CHRONO_BUILD_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/chrono_build"
+# Works when sourced from bash or zsh, even if the current directory is not the
+# project root.
+if [ -n "${BASH_SOURCE[0]:-}" ]; then
+    SCRIPT_PATH="${BASH_SOURCE[0]}"
+elif [ -n "${ZSH_VERSION:-}" ]; then
+    SCRIPT_PATH="${(%):-%x}"
+else
+    SCRIPT_PATH="$0"
+fi
+
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
+CHRONO_BUILD_DIR="${SCRIPT_DIR}/chrono_build"
 
 if [ ! -d "$CHRONO_BUILD_DIR" ]; then
     echo "ERROR: chrono_build/ directory not found."
