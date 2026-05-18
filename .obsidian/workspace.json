@@ -1,24 +1,24 @@
 {
   "main": {
-    "id": "01c83309edb770fe",
+    "id": "240febe6b0948435",
     "type": "split",
     "children": [
       {
-        "id": "cc3ea87d48fb48b4",
+        "id": "1abb29a539a3aefa",
         "type": "tabs",
         "children": [
           {
-            "id": "a4a095158f612a22",
+            "id": "8f065410900ed1ac",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "docs/vehicle/terrain.md",
+                "file": "docs/robot/viper.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "terrain"
+              "title": "viper"
             }
           }
         ]
@@ -27,15 +27,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "f8e249067f038add",
+    "id": "6bbcc688879e5ff9",
     "type": "split",
     "children": [
       {
-        "id": "2ead3825f35b2940",
+        "id": "0a03fcc55831e007",
         "type": "tabs",
         "children": [
           {
-            "id": "b4a21dd6df9b654a",
+            "id": "f109b54df396675d",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -48,7 +48,7 @@
             }
           },
           {
-            "id": "87b2b793f899b301",
+            "id": "64067fe35f6a6fc6",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -61,40 +61,40 @@
                 "sortOrder": "alphabetical"
               },
               "icon": "lucide-search",
-              "title": "Search"
+              "title": "검색"
             }
           },
           {
-            "id": "5cb4ca130f652988",
+            "id": "de1e88a82528c0ba",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
               "state": {},
               "icon": "lucide-bookmark",
-              "title": "Bookmarks"
+              "title": "북마크"
             }
           }
         ]
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 300
   },
   "right": {
-    "id": "26b2a93152e48412",
+    "id": "bc104c53b57ea78d",
     "type": "split",
     "children": [
       {
-        "id": "0ab3882f7cad187d",
+        "id": "0cf8581353821b01",
         "type": "tabs",
         "children": [
           {
-            "id": "41eec530778eb875",
+            "id": "1fa94ae1ec4d4069",
             "type": "leaf",
             "state": {
               "type": "backlink",
               "state": {
-                "file": "docs/core/solver.md",
+                "file": "docs/index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,25 +104,25 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "solver 의 백링크"
+              "title": "index 의 백링크"
             }
           },
           {
-            "id": "b331e5756d5067dd",
+            "id": "2479713ee594540f",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "links.md",
+                "file": "docs/index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from links"
+              "title": "index 의 나가는 링크"
             }
           },
           {
-            "id": "6602aad1f2f78d94",
+            "id": "a5e33b5cc8b34615",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -133,11 +133,11 @@
                 "searchQuery": ""
               },
               "icon": "lucide-tags",
-              "title": "Tags"
+              "title": "태그"
             }
           },
           {
-            "id": "5cf422f7d30b5d79",
+            "id": "ec098f569937d690",
             "type": "leaf",
             "state": {
               "type": "all-properties",
@@ -147,22 +147,22 @@
                 "searchQuery": ""
               },
               "icon": "lucide-archive",
-              "title": "All properties"
+              "title": "모든 속성"
             }
           },
           {
-            "id": "028b5ed754080bab",
+            "id": "9bc97a46de73b1b4",
             "type": "leaf",
             "state": {
               "type": "outline",
               "state": {
-                "file": "links.md",
+                "file": "docs/index.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of links"
+              "title": "index 의 개요"
             }
           }
         ]
@@ -183,53 +183,53 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "a4a095158f612a22",
+  "active": "8f065410900ed1ac",
   "lastOpenFiles": [
-    "lessons/phase1/jongmin/crm_terrain_vsg_demo.py",
-    "lessons/phase1/jongmin/crm_terrain_vsg_demo.py.py",
-    "lessons/phase1/jongmin/crm_terrain_minimal.py",
-    "lessons/phase1/jongmin/granular_terrain_demo.py",
-    "lessons/phase1/jongmin/scm_terrain_test.py",
-    "lessons/phase1/jongmin/terrain_test.py",
-    "docs/core/solver.md",
-    "docs/vehicle/terrain.md",
-    "docs/core/system.md",
-    "docs/core/rigid_bodies.md",
+    "docs/robot/attachments/Pasted image 20260518215023.png",
+    "docs/robot/attachments",
+    "docs/vehicle/Tracked/Practice Code.md",
+    "docs/vehicle/Tracked/5. Track Shoe Models.md",
+    "docs/vehicle/wheeled/7_experiment_plan.md",
+    "docs/vehicle/wheeled/6_simulation_loop.md",
+    "docs/vehicle/Tracked/0. Tracked Vehicles.md",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513023010.png",
+    "docs/vehicle/Tracked/Test Rigs.md",
+    "docs/vehicle/Tracked/4. Idler Models.md",
+    "docs/vehicle/Tracked/3. Sprocket Models.md",
+    "docs/vehicle/Tracked/2. Suspension Models.md",
+    "docs/vehicle/wheeled/3_tire.md",
+    "docs/vehicle/wheeled/0_index.md",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513023452.png",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513023447.png",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513023417.png",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513023410.png",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513023409.png",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513023004.png",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513022936.png",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260513022929.png",
+    "docs/vehicle/Tracked/1. Track Assembly.md",
+    "docs/vehicle/Tracked/attachments/Pasted image 20260512221316.png",
+    "docs/robot/littlehexy.md",
+    "docs/vehicle/wheeled/1_suspension.md",
+    "docs/vehicle/wheeled/4_driveline.md",
+    "docs/vehicle/wheeled/2_steering.md",
+    "docs/vehicle/Tracked/Idler Models.md",
+    "docs/vehicle/Tracked/Track Assembly.md",
+    "docs/vehicle/Tracked/attachments",
+    "docs/vehicle/driver.md",
+    "docs/vehicle/Tracked",
+    "docs/vehicle/wheeled/5_hmmwv_structure.md",
+    "docs/vehicle/wheeled.md",
+    "lessons/phase3/Dohee/lesson3_4_driveline_comparison.ipynb",
+    "lessons/phase3/Dohee/lesson3_3_tire_model_comparison.ipynb",
+    "lessons/phase3/Dohee/lesson3_2_steering_response.ipynb",
+    "lessons/phase3/Dohee/lesson3_1_hmmwv_basic.ipynb",
+    "lessons/phase3/Dohee",
+    "lessons/phase3",
+    "lessons/phase2/Dohee/lesson2_1_force_and_spring_examples.ipynb",
+    "docs/core/force_spring.md",
     "docs/core/motors.md",
     "docs/core/math.md",
-    "docs/core/loads.md",
-    "docs/core/links.md",
-    "docs/core/index.md",
-    "docs/core/collisions.md",
-    "docs/index.md",
-    "docs/vehicle/driver.md",
-    "docs/robot/curiosity.md",
-    "docs/fea/index.md",
-    "docs/fea/nodes.md",
-    "docs/fea/elements.md",
-    "docs/dem/index.md",
-    "docs/vehicle/tracked.md",
-    "docs/visualization/povray.md",
-    "docs/visualization/irrlicht.md",
-    "docs/visualization/index.md",
-    "docs/sensor/index.md",
-    "docs/tutorials/index.md",
-    "docs/vehicle/wheeled.md",
-    "README.md",
-    "docs/core/attachments/Pasted image 20260406002522.png",
-    "docs/core/attachments/Pasted image 20260406000733.png",
-    "docs/core/attachments/Pasted image 20260402142010.png",
-    "lessons/phase2/lesson_08_pendulum_plot.png",
-    "lessons/phase2/lesson_08_plot1_comparison.png",
-    "lessons/phase2/lesson_12_gear_pulley_plot.png",
-    "lessons/phase2/lesson_10_motor_plot.png",
-    "lessons/phase2/lesson_08_plot2_analysis.png",
-    "lessons/phase2/lesson_11_slider_crank_plot.png",
-    "docs/core/attachments/Pasted image 20260402210917.png",
-    "lessons/phase2/jongmin",
-    "ss.py",
-    "lessons/ss.py",
-    "docs/core/attachments",
-    "ss"
+    "docs/vehicle/models.md"
   ]
 }
