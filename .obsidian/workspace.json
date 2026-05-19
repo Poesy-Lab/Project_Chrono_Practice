@@ -183,6 +183,7 @@
       "bases:새 베이스 생성하기": false
     }
   },
+<<<<<<< Updated upstream
   "active": "8f065410900ed1ac",
   "lastOpenFiles": [
     "docs/robot/attachments/Pasted image 20260518215023.png",
@@ -231,5 +232,55 @@
     "docs/core/motors.md",
     "docs/core/math.md",
     "docs/vehicle/models.md"
+=======
+  "active": "b4a21dd6df9b654a",
+  "lastOpenFiles": [
+    "rover_test.py",
+    "docs/core/math.md",
+    "docs/vehicle/terrain.md",
+    "docs/index.md",
+    "docs/vehicle/powertrain.md",
+    "docs/robot/viper.md",
+    "docs/vehicle/driver.md",
+    "docs/vehicle/models.md",
+    "docs/core/motors.md",
+    "docs/core/system.md",
+    "docs/core/solver.md",
+    "docs/core/rigid_bodies.md",
+    "docs/core/loads.md",
+    "docs/core/links.md",
+    "docs/core/force_spring.md",
+    "docs/core/collisions.md",
+    "README.md",
+    "docs/vehicle/index.md",
+    "lessons/phase2/lesson_08_plot2_analysis.png",
+    "lessons/phase3/Hojin/results/powertrain_comparison/powertrain_simple_map.csv",
+    "lessons/phase3/Hojin/results/powertrain_comparison/powertrain_simple_engine.csv",
+    "lessons/phase3/Hojin/results/powertrain_comparison/powertrain_simple_cvt.csv",
+    "lessons/phase3/Hojin/results/powertrain_comparison/powertrain_shafts.csv",
+    "lessons/phase3/Hojin/results/powertrain_comparison/powertrain_comparison_summary.csv",
+    "lessons/phase3/Hojin/results/powertrain_comparison/figures/powertrain_speed.png",
+    "lessons/phase3/Hojin/results/powertrain_comparison/figures/powertrain_gear.png",
+    "lessons/phase3/Hojin/results/powertrain_comparison/figures/powertrain_engine_rpm.png",
+    "lessons/phase3/Hojin/results/powertrain_comparison/figures/powertrain_driveshaft_torque.png",
+    "lessons/phase3/Hojin/results/powertrain_comparison/powertrain_comparison_all_cases.csv",
+    "lessons/phase3/Hojin/results/powertrain_comparison/figures",
+    "lessons/phase3/Hojin/results/powertrain_comparison",
+    "lessons/phase3/Hojin/results",
+    "lessons/phase3/Hojin/lesson3_5_powertrain_comparison.py",
+    "docs/vehicle/powertrain/4_pychrono_json_workflow.md",
+    "docs/vehicle/powertrain/3_transmission_models.md",
+    "docs/vehicle/powertrain/2_engine_models.md",
+    "docs/vehicle/powertrain/1_architecture.md",
+    "docs/vehicle/powertrain/0_index.md",
+    "lessons/phase2/lesson_08_plot1_comparison.png",
+    "lessons/phase2/lesson_08_pendulum_plot.png",
+    "docs/vehicle/tracked.md",
+    "docs/core/index.md",
+    "docs/vehicle/wheeled/5_hmmwv_structure.md",
+    "docs/core/attachments/Pasted image 20260406002522.png",
+    "docs/core/attachments/Pasted image 20260406000733.png",
+    "docs/core/attachments/Pasted image 20260402142010.png"
+>>>>>>> Stashed changes
   ]
 }
