@@ -2,6 +2,7 @@ import pychrono as chrono
 import pychrono.vehicle as veh
 import pychrono.robot as robot
 from pychrono import irrlicht as chronoirr
+import matplotlib.pyplot as plt
 
 
 # =========================
@@ -48,7 +49,7 @@ terrain.Initialize()
 # =========================
 wall_mat = chrono.ChContactMaterialNSC()
 wall_mat.SetFriction(0.9)
-wall_mat.SetRestitution(0.25)
+wall_mat.SetRestitution(0.02)
 
 wall = chrono.ChBodyEasyBox(
     0.5,
@@ -60,10 +61,9 @@ wall = chrono.ChBodyEasyBox(
     wall_mat
 )
 
-# 공식 데모 로버 진행 방향 기준으로 앞쪽에 둠
 wall.SetPos(
     chrono.ChVector3d(
-        6.0,
+        7.0,
         0.0,
         1.0
     )
@@ -76,7 +76,7 @@ system.Add(wall)
 # =========================
 # Curiosity Rover
 # =========================
-driver = robot.CuriosityDCMotorControl()
+driver = robot.CuriositySpeedDriver(0.2, 7.0)
 
 rover = robot.Curiosity(system)
 rover.SetDriver(driver)
@@ -97,15 +97,15 @@ vis.AttachSystem(system)
 
 vis.SetCameraVertical(chrono.CameraVerticalDir_Z)
 vis.SetWindowSize(1280, 720)
-vis.SetWindowTitle("Curiosity Rover - RigidTerrain Wall Test")
+vis.SetWindowTitle("Curiosity Rover - Initial Impact Measurement")
 
 vis.Initialize()
 vis.AddLogo(chrono.GetChronoDataFile("logo_chrono_alpha.png"))
 vis.AddSkyBox()
 
 vis.AddCamera(
-    chrono.ChVector3d(0, 5, 3),
-    chrono.ChVector3d(3, 0, 0.5)
+    chrono.ChVector3d(0, 6, 4),
+    chrono.ChVector3d(4, 0, 0.6)
 )
 
 vis.AddTypicalLights()
@@ -121,6 +121,23 @@ vis.AddLightWithShadow(
 
 
 # =========================
+# Impact data
+# =========================
+time_list = []
+force_list = []
+impulse_list = []
+
+total_impulse = 0.0
+max_force = 0.0
+
+impact_started = False
+impact_start_time = None
+
+force_threshold = 100.0
+impact_window = 0.8
+
+
+# =========================
 # Simulation loop
 # =========================
 time_step = 2e-3
@@ -130,8 +147,6 @@ while vis.Run():
 
     time += time_step
 
-    # 공식 데모와 동일하게 driver는 steering만 건드림
-    # 직진 유지
     driver.SetSteering(0.0)
 
     rover.Update()
@@ -144,3 +159,51 @@ while vis.Run():
 
     terrain.Advance(time_step)
     system.DoStepDynamics(time_step)
+
+    contact_force = wall.GetContactForce()
+    force_magnitude = contact_force.Length()
+
+    if not impact_started and force_magnitude > force_threshold:
+        impact_started = True
+        impact_start_time = time
+        print(f"Impact started at {impact_start_time:.3f} s")
+
+    if impact_started:
+        local_time = time - impact_start_time
+
+        impulse_step = force_magnitude * time_step
+        total_impulse += impulse_step
+
+        if force_magnitude > max_force:
+            max_force = force_magnitude
+
+        time_list.append(local_time)
+        force_list.append(force_magnitude)
+        impulse_list.append(total_impulse)
+
+        if local_time >= impact_window:
+            break
+
+
+print("========== Initial Impact Result ==========")
+print(f"Impact duration   : {impact_window:.3f} s")
+print(f"Max contact force : {max_force:.3f} N")
+print(f"Impact impulse    : {total_impulse:.3f} N*s")
+print("===========================================")
+
+
+plt.figure()
+plt.plot(time_list, force_list)
+plt.xlabel("Time after impact [s]")
+plt.ylabel("Contact Force [N]")
+plt.title("Initial Wall Contact Force")
+plt.grid(True)
+
+plt.figure()
+plt.plot(time_list, impulse_list)
+plt.xlabel("Time after impact [s]")
+plt.ylabel("Impulse [N*s]")
+plt.title("Initial Impact Impulse")
+plt.grid(True)
+
+plt.show()
