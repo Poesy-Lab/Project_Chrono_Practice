@@ -1,0 +1,13 @@
+sequenceDiagram
+    participant Body as "ChBody / Collision Shape"
+    participant Solver as "Contact Solver"
+    participant Container as "Contact Container"
+    participant Reporter as "Contact Reporter"
+    participant Logger as "CSV Logger"
+    participant Graph as "Graph Generator"
+    Body->>Solver: "충돌 후보와 제약 조건 전달"
+    Solver->>Container: "접촉점, 법선, 접촉력 저장"
+    Container->>Reporter: "ReportAllContacts(callback)"
+    Reporter->>Logger: "접촉 개수, pair, 힘 성분 기록"
+    Logger->>Graph: "CSV 저장"
+    Graph->>Graph: "접촉력/개수/이벤트 그래프 생성"

@@ -1,0 +1,11 @@
+flowchart TB
+    Terrain["Environment / Terrain"] --> Ground["Ground<br/>Core fixed body"]
+    Terrain --> Obstacle["Obstacle<br/>fixed/dynamic body"]
+    Terrain --> Material["Contact Material"]
+    Terrain --> Rigid["RigidTerrain<br/>Chrono::Vehicle"]
+    Terrain --> SCM["SCMTerrain<br/>deformable soil"]
+    Terrain --> Field["Environment Field<br/>gravity / wind / slope"]
+    Rigid --> Patch["Box / Mesh / Heightmap Patch"]
+    SCM --> Soil["Soil Parameters<br/>Bekker / Mohr-Coulomb / Janosi"]
+    Material --> Friction["Friction"]
+    Material --> Restitution["Restitution"]
