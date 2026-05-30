@@ -1,0 +1,42 @@
+rover_vehicle renders:
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/rover_vehicle_component_overview.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/rover_visual_collision_shapes.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/rover_suspension_steering_components.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/tracked_vehicle_components.png
+rover_vehicle csv: /home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/outputs/csv/rover_vehicle_chassis_probe.csv
+rover_vehicle graph: /home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/rover_vehicle_chassis_probe_graph.png
+environment_terrain renders:
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/terrain_ground_obstacle_components.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/terrain_heightmap_component.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/terrain_scm_deformation_component.png
+environment_terrain csv: /home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/outputs/csv/environment_terrain_height_friction_sinkage.csv
+environment_terrain graphs:
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/terrain_height_sinkage_profile.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/terrain_contact_material_friction_map.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/terrain_contact_force_probe.png
+collision_contact renders:
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/collision_contact_components.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/collision_visual_vs_collision_shape.png
+collision_contact csv: /home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/outputs/csv/collision_contact_probe.csv
+collision_contact graphs:
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/collision_contact_force_graph.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/collision_contact_count_graph.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/collision_event_timeline_graph.png
+data_visualization renders:
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/renders/data_visualization_sensor_components.png
+data_visualization csv:
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/outputs/csv/data_visualization_state_log.csv
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/outputs/csv/data_visualization_control_log.csv
+data_visualization graphs:
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/data_visualization_state_trajectory.png
+/home/poesy/Documents/Project_Chrono_Practice/3-layer_report/Component/images/graphs/data_visualization_control_inputs.png
+
+=== running code/rover_vehicle/generate_rover_vehicle_components.py ===
+
+=== running code/environment_terrain/generate_environment_terrain_components.py ===
+
+=== running code/collision_contact/generate_collision_contact_components.py ===
+
+=== running code/data_visualization/generate_data_visualization_components.py ===
+
+All Component example generators completed.
