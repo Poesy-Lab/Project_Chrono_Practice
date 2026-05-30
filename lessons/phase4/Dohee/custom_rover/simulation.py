@@ -1,17 +1,18 @@
 import csv
+from dataclasses import replace
 
 import matplotlib.pyplot as plt
 import pychrono as chrono
 import pychrono.irrlicht as irr
 
 # config.py에서 시뮬레이션 설정, 결과 저장 경로, waypoint 정보를 불러온다.
-from config import CSV_PATH, PLOT_PATH, SIM_CONFIG, WAYPOINTS
+from config import CSV_PATH, PLOT_PATH, SIM_CONFIG, WAYPOINTS, get_result_paths
 
 # drivers.py에서 테스트용 controller들을 불러온다.
 # EXPERIMENTS: predefined profile dictionary
 # ProgrammedDriver: 시간 기반 입력 profile용 driver
 # WaypointDriver: waypoint 추종용 driver
-from drivers import EXPERIMENTS, ProgrammedDriver, WaypointDriver
+from drivers import EXPERIMENTS, ProgrammedDriver, RLDriver, WaypointDriver
 
 # rover.py에서 Custom Viper-style rover 모델 클래스를 불러온다.
 from rover import CustomViperRover
@@ -86,6 +87,9 @@ def build_driver(control_mode, experiment_name):
     if control_mode == "waypoints":
         return WaypointDriver(WAYPOINTS)
 
+    if control_mode == "rl":
+        return RLDriver(waypoints=WAYPOINTS)
+
     # profiles 모드:
     # straight, slalom, pivot_turn 같은 시간 기반 입력 profile을 사용한다.
     if experiment_name not in EXPERIMENTS:
@@ -151,7 +155,7 @@ def build_visual_system(system):
 # 4. CSV logging
 # =============================================================================
 
-def save_rows(rows):
+def save_rows(rows, csv_path=CSV_PATH):
     """
     시뮬레이션 중 기록한 로버 상태를 CSV 파일로 저장한다.
 
@@ -165,7 +169,7 @@ def save_rows(rows):
     CSV_PATH에 지정된 위치에 csv 파일이 생성된다.
     """
 
-    with open(CSV_PATH, "w", newline="", encoding="utf-8") as f:
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(
             f,
             fieldnames=[
@@ -173,6 +177,8 @@ def save_rows(rows):
                 "x",
                 "y",
                 "z",
+                "roll_deg",
+                "pitch_deg",
                 "yaw_deg",
                 "target_x",
                 "target_y",
@@ -196,7 +202,7 @@ def save_rows(rows):
 # 5. Path plot saving
 # =============================================================================
 
-def save_path_plot(rows):
+def save_path_plot(rows, plot_path=PLOT_PATH, show_plot=True, show_waypoints=True):
     """
     로버의 실제 주행 경로와 waypoint를 비교하는 plot을 저장한다.
 
@@ -219,8 +225,8 @@ def save_path_plot(rows):
     ys = [row["y"] for row in rows]
 
     # 기준 waypoint 경로
-    wx = [p[0] for p in WAYPOINTS]
-    wy = [p[1] for p in WAYPOINTS]
+    wx = [p[0] for p in WAYPOINTS] if show_waypoints else []
+    wy = [p[1] for p in WAYPOINTS] if show_waypoints else []
 
     # 새 figure 생성
     plt.figure(figsize=(8, 7))
@@ -229,14 +235,16 @@ def save_path_plot(rows):
     plt.plot(xs, ys, linewidth=2.0, color="#1f5fbf", label="rover path")
 
     # 시작 waypoint
-    plt.scatter(wx[0], wy[0], s=90, color="#36a852", label="start waypoint")
+    if show_waypoints:
+        plt.scatter(wx[0], wy[0], s=90, color="#36a852", label="start waypoint")
 
     # 중간 waypoint
-    if len(WAYPOINTS) > 2:
+    if show_waypoints and len(WAYPOINTS) > 2:
         plt.scatter(wx[1:-1], wy[1:-1], s=55, color="#e3b505", label="mid waypoints")
 
     # 최종 목표 waypoint
-    plt.scatter(wx[-1], wy[-1], s=90, color="#d93025", label="goal waypoint")
+    if show_waypoints:
+        plt.scatter(wx[-1], wy[-1], s=90, color="#d93025", label="goal waypoint")
 
     # 실제 시작 위치
     plt.scatter(xs[0], ys[0], s=70, color="#111111", marker="x", label="start pose")
@@ -247,7 +255,10 @@ def save_path_plot(rows):
     # 축 이름과 제목
     plt.xlabel("x position [m]")
     plt.ylabel("y position [m]")
-    plt.title("Custom Viper Rover Path vs Waypoints")
+    if show_waypoints:
+        plt.title("Custom Viper Rover Path vs Waypoints")
+    else:
+        plt.title("Custom Viper Rover Path")
 
     # x, y 축 비율을 동일하게 맞춰 실제 경로 왜곡을 줄인다.
     plt.axis("equal")
@@ -258,9 +269,49 @@ def save_path_plot(rows):
 
     # 여백 자동 조정 후 저장
     plt.tight_layout()
-    plt.savefig(PLOT_PATH, dpi=180)
-    plt.show()
+    plt.savefig(plot_path, dpi=180)
+    if show_plot:
+        plt.show()
     plt.close()
+
+
+def save_attitude_plot(rows, plot_path, show_plot=True):
+    if not rows:
+        return None
+
+    attitude_path = plot_path.with_name(plot_path.stem.replace("_path", "_attitude") + plot_path.suffix)
+    times = [row["time"] for row in rows]
+    rolls = [row["roll_deg"] for row in rows]
+    pitches = [row["pitch_deg"] for row in rows]
+    yaws = [row["yaw_deg"] for row in rows]
+    zs = [row["z"] for row in rows]
+
+    fig, axes = plt.subplots(3, 1, figsize=(10, 8), sharex=True)
+
+    axes[0].plot(times, rolls, color="#c44e52", label="roll")
+    axes[0].plot(times, pitches, color="#4c72b0", label="pitch")
+    axes[0].set_ylabel("angle [deg]")
+    axes[0].grid(True, alpha=0.3)
+    axes[0].legend()
+
+    axes[1].plot(times, yaws, color="#55a868", label="yaw")
+    axes[1].set_ylabel("yaw [deg]")
+    axes[1].grid(True, alpha=0.3)
+    axes[1].legend()
+
+    axes[2].plot(times, zs, color="#8172b2", label="z")
+    axes[2].set_xlabel("time [s]")
+    axes[2].set_ylabel("z [m]")
+    axes[2].grid(True, alpha=0.3)
+    axes[2].legend()
+
+    fig.suptitle("Custom Viper Rover Attitude Response")
+    fig.tight_layout()
+    fig.savefig(attitude_path, dpi=180)
+    if show_plot:
+        plt.show()
+    plt.close(fig)
+    return attitude_path
 
 
 # =============================================================================
@@ -283,7 +334,7 @@ def run_simulation():
     """
 
     # 현재 지원하는 control mode인지 확인한다.
-    if SIM_CONFIG.control_mode not in {"waypoints", "profiles"}:
+    if SIM_CONFIG.control_mode not in {"waypoints", "profiles", "rl"}:
         raise ValueError(f"Unknown control_mode: {SIM_CONFIG.control_mode}")
 
     # Chrono 물리 시스템 생성
@@ -324,7 +375,7 @@ def run_simulation():
         # ---------------------------------------------------------------------
         # 1) Controller update
         # ---------------------------------------------------------------------
-        if SIM_CONFIG.control_mode == "waypoints":
+        if SIM_CONFIG.control_mode in {"waypoints", "rl"}:
             # waypoint driver는 현재 rover 상태를 보고 다음 입력을 계산한다.
             inputs = driver.update(rover)
 
@@ -380,6 +431,8 @@ def run_simulation():
                     "x": state.x,
                     "y": state.y,
                     "z": state.z,
+                    "roll_deg": state.roll_deg,
+                    "pitch_deg": state.pitch_deg,
                     "yaw_deg": state.yaw_deg,
                     "target_x": state.target_x,
                     "target_y": state.target_y,
@@ -407,3 +460,104 @@ def run_simulation():
     save_path_plot(rows)
     if rows:
         print(f"[Done] Saved plot to {PLOT_PATH}")
+    attitude_path = save_attitude_plot(rows, PLOT_PATH, SIM_CONFIG.show_plots)
+    if attitude_path:
+        print(f"[Done] Saved attitude plot to {attitude_path}")
+
+
+def run_simulation_case(
+    config=None,
+    experiment_name=None,
+    control_mode=None,
+    terrain_mode=None,
+    enable_visualization=None,
+    show_plots=None,
+    results_dir=None,
+):
+    """Run one configured simulation case and return logged rows and output paths."""
+    cfg = replace(SIM_CONFIG) if config is None else replace(config)
+    if experiment_name is not None:
+        cfg.experiment_name = experiment_name
+    if control_mode is not None:
+        cfg.control_mode = control_mode
+    if terrain_mode is not None:
+        cfg.terrain_mode = terrain_mode
+    if enable_visualization is not None:
+        cfg.enable_visualization = enable_visualization
+    if show_plots is not None:
+        cfg.show_plots = show_plots
+
+    if cfg.control_mode not in {"waypoints", "profiles", "rl"}:
+        raise ValueError(f"Unknown control_mode: {cfg.control_mode}")
+    if cfg.terrain_mode not in {"obstacles", "flat"}:
+        raise ValueError(f"Unknown terrain_mode: {cfg.terrain_mode}")
+
+    csv_path, plot_path = get_result_paths(cfg, results_dir)
+
+    system = build_system()
+    rover = CustomViperRover(system, cfg.control_mode, cfg.experiment_name, cfg.terrain_mode)
+    driver = build_driver(cfg.control_mode, cfg.experiment_name)
+    vis = build_visual_system(system) if cfg.enable_visualization else None
+
+    rover.print_design_summary()
+
+    rows = []
+    time = 0.0
+    next_render_time = 0.0
+    next_log_time = 0.0
+
+    while time < cfg.sim_time_end and (vis is None or vis.Run()):
+        if cfg.control_mode in {"waypoints", "rl"}:
+            inputs = driver.update(rover)
+            rover.target_x = driver.target_x
+            rover.target_y = driver.target_y
+        else:
+            inputs = driver.update(time)
+            rover.target_x = 0.0
+            rover.target_y = 0.0
+
+        rover.synchronize(inputs, cfg.time_step)
+
+        if vis is not None and time >= next_render_time:
+            vis.BeginScene()
+            vis.Render()
+            vis.EndScene()
+            next_render_time += cfg.render_step
+
+        system.DoStepDynamics(cfg.time_step)
+        time += cfg.time_step
+
+        if time >= next_log_time:
+            state = rover.get_state(time)
+            rows.append(
+                {
+                    "time": state.time,
+                    "x": state.x,
+                    "y": state.y,
+                    "z": state.z,
+                    "roll_deg": state.roll_deg,
+                    "pitch_deg": state.pitch_deg,
+                    "yaw_deg": state.yaw_deg,
+                    "target_x": state.target_x,
+                    "target_y": state.target_y,
+                    "speed_cmd": state.speed_cmd,
+                    "steering_cmd": state.steering_cmd,
+                    "turn_mode": state.turn_mode,
+                    "wheel_omega": state.wheel_omega,
+                    "steer_left_deg": state.steer_left_deg,
+                    "steer_right_deg": state.steer_right_deg,
+                }
+            )
+            next_log_time += cfg.log_dt
+
+    save_rows(rows, csv_path)
+    print(f"[Done] Saved log to {csv_path}")
+
+    save_path_plot(rows, plot_path, cfg.show_plots, cfg.control_mode in {"waypoints", "rl"})
+    if rows:
+        print(f"[Done] Saved plot to {plot_path}")
+    attitude_path = save_attitude_plot(rows, plot_path, cfg.show_plots)
+    if attitude_path:
+        print(f"[Done] Saved attitude plot to {attitude_path}")
+
+    return rows, csv_path, plot_path

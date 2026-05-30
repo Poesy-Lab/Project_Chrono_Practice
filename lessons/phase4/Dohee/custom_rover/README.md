@@ -1,4 +1,4 @@
-# Custom Rover Guide
+﻿# Custom Rover Guide
 
 이 폴더는 Phase 4의 커스텀 로버 설계 예제를 체계적으로 정리한 구조다.
 핵심 목표는 다음 두 가지다.
@@ -547,3 +547,522 @@ experiment_name = "slalom"
 - Pure pursuit / Stanley path follower 추가
 - terrain preset 분리
 - rover 파라미터 YAML/JSON 로딩
+---
+
+## 2026-05-30 추가: 평지 Profile 주행 평가 실험 1~4
+
+캡스톤디자인 보고서에서 로버의 기본 주행 성능을 정량적으로 설명하기 위해,
+장애물 지형과 분리된 **평지 전용 profile driver 실험**을 추가하였다.
+
+기존 waypoint 실험은 목표점을 따라가는 closed-loop 경로 추종 평가이고,
+이번 실험 1~4는 미리 정한 입력을 시간에 따라 넣는 open-loop profile 평가이다.
+따라서 slope, step, rock 같은 장애물은 생성하지 않고 평탄 지형에서 수행한다.
+이렇게 하면 장애물 접촉 영향 없이 로버 자체의 구동, 조향, 회전 응답을 비교할 수 있다.
+
+### 추가된 실행 파일
+
+```text
+flat_profile_experiments.py
+```
+
+이 파일은 아래 4개 실험을 순서대로 자동 실행하고, 각 실험의 CSV와 그래프를 저장한다.
+
+```text
+1. straight
+2. step_turn
+3. slalom
+4. pivot_turn
+```
+
+### 실행 방법
+
+그래프와 CSV만 빠르게 생성:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\flat_profile_experiments.py
+```
+
+Chrono 시뮬레이션 창을 보면서 실행:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\flat_profile_experiments.py --visualize
+```
+
+Matplotlib 그래프 창까지 같이 표시:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\flat_profile_experiments.py --visualize --show-plots
+```
+
+### 결과 저장 위치
+
+```text
+results/flat_profile_experiments/
+```
+
+각 실험마다 다음 파일이 생성된다.
+
+```text
+custom_viper_flat_<experiment>.csv
+custom_viper_flat_<experiment>_path.png
+custom_viper_flat_<experiment>_response.png
+```
+
+전체 요약 결과는 다음 파일에 저장된다.
+
+```text
+flat_profile_summary.csv
+flat_profile_summary.png
+```
+
+`_path.png`는 로버의 실제 x-y 이동 경로를 보여준다.
+Profile driver 실험은 waypoint를 쓰지 않으므로, 이 그래프에는 waypoint marker를 표시하지 않는다.
+
+`_response.png`는 시간에 따른 입력과 응답을 함께 보여준다.
+
+```text
+speed command / estimated speed
+steering command / turn mode
+yaw / yaw rate
+x, y position
+```
+
+`flat_profile_summary.csv`에는 보고서 표로 쓰기 좋은 정량 지표가 저장된다.
+
+```text
+duration_s
+path_length_m
+final_x_m
+final_y_m
+max_abs_y_m
+yaw_change_deg
+max_abs_yaw_rate_deg_s
+mean_speed_m_s
+max_speed_m_s
+```
+
+### 실험 1: Straight 주행 안정성
+
+`straight` 실험은 일정한 속도 명령과 0 조향 명령을 주어 로버가 평지에서 직진하는지 확인한다.
+
+목적:
+
+```text
+좌우 구동계 균형 확인
+기본 차체 안정성 확인
+조향 명령이 없을 때 lateral drift가 작은지 확인
+```
+
+보고서에서 사용할 주요 지표:
+
+```text
+final_y_m
+max_abs_y_m
+yaw_change_deg
+mean_speed_m_s
+```
+
+해석 기준:
+
+```text
+final_y_m과 max_abs_y_m이 작을수록 직진성이 좋다.
+yaw_change_deg가 작을수록 의도하지 않은 회전이 적다.
+```
+
+### 실험 2: Step Turn 조향 응답
+
+`step_turn` 실험은 일정 시간 직진 후 조향 명령을 단계적으로 넣어 회전 응답을 확인한다.
+
+목적:
+
+```text
+전륜 Ackermann-style 조향 구조의 응답 확인
+조향 입력에 따른 yaw 변화 확인
+회전 경로와 안정성 확인
+```
+
+보고서에서 사용할 주요 지표:
+
+```text
+yaw_change_deg
+max_abs_yaw_rate_deg_s
+path_length_m
+final_x_m, final_y_m
+```
+
+해석 기준:
+
+```text
+yaw_change_deg는 전체 회전량을 나타낸다.
+max_abs_yaw_rate_deg_s는 조향 입력에 대한 회전 응답 강도를 나타낸다.
+경로 그래프를 통해 회전 반경과 궤적이 자연스러운지 확인한다.
+```
+
+### 실험 3: Slalom 반복 조향 응답
+
+`slalom` 실험은 sine 형태의 조향 입력을 넣어 좌우 반복 회전 응답을 확인한다.
+
+목적:
+
+```text
+연속 조향 입력에 대한 로버의 추종성 확인
+좌우 반복 회전 중 자세 안정성 확인
+profile driver 기반 반복 실험 결과 확보
+```
+
+보고서에서 사용할 주요 지표:
+
+```text
+max_abs_y_m
+yaw_change_deg
+max_abs_yaw_rate_deg_s
+path_length_m
+mean_speed_m_s
+```
+
+해석 기준:
+
+```text
+max_abs_y_m은 slalom 중 좌우 이동 폭을 나타낸다.
+yaw와 yaw rate 그래프를 통해 반복 조향에 대한 회전 응답을 확인한다.
+path 그래프에는 waypoint가 없으며, open-loop 입력에 의해 형성된 실제 주행 궤적만 표시한다.
+```
+
+### 실험 4: Pivot Turn 회전 성능
+
+`pivot_turn` 실험은 turn_mode를 사용하여 좌우 바퀴 속도 차이를 크게 만들고 강한 회전 동작을 확인한다.
+
+목적:
+
+```text
+4륜 구동 및 좌우 분리 속도 제어 구조 확인
+turn_mode 기반 회전 성능 확인
+좁은 공간 회전 가능성 평가
+```
+
+보고서에서 사용할 주요 지표:
+
+```text
+yaw_change_deg
+max_abs_yaw_rate_deg_s
+final_x_m, final_y_m
+path_length_m
+```
+
+해석 기준:
+
+```text
+yaw_change_deg가 클수록 회전 성능이 강하다.
+final_x_m, final_y_m과 path 그래프를 함께 보면 제자리 회전에 가까운지, 전진 이동이 많이 섞였는지 판단할 수 있다.
+```
+
+### 코드 변경 요약
+
+`config.py`에는 평지/장애물 지형을 선택하기 위한 `terrain_mode`가 추가되었다.
+
+```python
+terrain_mode = "obstacles"  # obstacles, flat
+```
+
+`rover.py`는 `terrain_mode == "flat"`일 때 slope, step, rock obstacle을 만들지 않는다.
+
+```text
+flat      : ground만 생성
+obstacles : ground + slope + step + rock 생성
+```
+
+`simulation.py`에는 batch 실행용 `run_simulation_case()`가 추가되었다.
+이 함수는 실험 이름, 지형 모드, 시각화 여부, 결과 저장 폴더를 인자로 받아 한 번의 실험을 수행한다.
+
+`flat_profile_experiments.py`는 실험 1~4를 자동 실행하고 결과 그래프와 summary 파일을 생성한다.
+---
+
+## 2026-05-30 추가: RL Driver Interface
+
+커스텀 로버에 강화학습 정책을 연결할 수 있도록 최소 형태의 `RLDriver` 인터페이스를 추가하였다.
+현재 단계에서는 실제 학습된 모델을 사용하지 않고, waypoint를 향해 이동하는 dummy policy를 사용한다.
+이 구조는 이후 PyTorch, Stable-Baselines3, ONNX policy 등으로 교체할 수 있는 연결 지점이다.
+
+### 추가된 파일
+
+```text
+rl_driver_demo.py
+```
+
+### 실행 방법
+
+평지에서 dummy RL driver 실행:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_driver_demo.py
+```
+
+시뮬레이션 창을 보면서 실행:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_driver_demo.py --visualize
+```
+
+장애물 지형에서 실행:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_driver_demo.py --terrain obstacles --visualize
+```
+
+실행 시간을 바꾸고 싶으면:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_driver_demo.py --sim-time 15
+```
+
+### 결과 저장 위치
+
+```text
+results/rl_driver_demo/
+```
+
+생성 파일:
+
+```text
+custom_viper_<terrain>_rl_dummy.csv
+custom_viper_<terrain>_rl_dummy_path.png
+```
+
+### Driver 구조
+
+`drivers.py`에 `RLDriver` 클래스가 추가되었다.
+RL driver는 매 timestep마다 rover 상태를 observation으로 만들고, policy가 action을 반환한다고 가정한다.
+
+Observation 예:
+
+```text
+x
+y
+yaw_rad
+target_x
+target_y
+dx
+dy
+local_x
+local_y
+distance_to_target
+heading_error
+previous_speed_cmd
+previous_steering_cmd
+previous_turn_mode
+```
+
+Action 형식:
+
+```text
+action[0] -> speed_cmd
+action[1] -> steering_cmd
+action[2] -> turn_mode
+```
+
+최종적으로 action은 기존 rover 제어 입력과 같은 `DriverInputs`로 변환된다.
+
+```python
+DriverInputs(
+    speed_cmd=...,
+    steering_cmd=...,
+    turn_mode=...,
+)
+```
+
+### 현재 dummy policy의 의미
+
+현재 `RLDriver`의 dummy policy는 학습된 RL 모델이 아니다.
+다만 실제 RL policy가 들어갈 위치와 입출력 구조를 검증하기 위한 rule-based policy이다.
+
+보고서에서는 다음과 같이 설명할 수 있다.
+
+```text
+본 프로젝트에서는 향후 강화학습 기반 자율주행 제어기로 확장할 수 있도록
+observation-action 구조를 갖는 RL driver interface를 설계하였다.
+현재 구현에서는 학습된 policy 대신 dummy policy를 사용하여
+DriverInputs 연결 구조와 시뮬레이션 실행 가능성을 검증하였다.
+```
+
+### 이후 확장 방향
+
+```text
+1. reward 설계
+2. Gymnasium 환경 wrapper 작성
+3. reset/step 함수 분리
+4. 학습된 policy를 RLDriver(policy=...)에 연결
+5. waypoint driver와 RL driver의 경로 추종 성능 비교
+```
+---
+
+## 2026-05-30 추가: Gymnasium RL 학습 Wrapper
+
+`RLDriver`는 policy를 연결하는 driver interface이고,
+`CustomRoverRLEnv`는 실제 강화학습 알고리즘이 사용할 수 있는 Gymnasium 환경 wrapper이다.
+
+추가된 파일:
+
+```text
+rl_gym_env.py
+rl_train_ppo.py
+rl_policy_demo.py
+```
+
+### Gymnasium 환경 구조
+
+`rl_gym_env.py`의 `CustomRoverRLEnv`는 다음 Gymnasium API를 제공한다.
+
+```python
+obs, info = env.reset()
+obs, reward, terminated, truncated, info = env.step(action)
+```
+
+Action은 학습이 쉽도록 정규화된 3차원 벡터를 사용한다.
+
+```text
+action[0] in [-1, 1] -> speed_cmd in [-max_speed, max_speed]
+action[1] in [-1, 1] -> steering_cmd in [-1, 1]
+action[2] in [-1, 1] -> turn_mode in [0, 1]
+```
+
+Observation은 10차원 벡터이다.
+
+```text
+x
+y
+local_x
+local_y
+distance_to_target
+sin(heading_error)
+cos(heading_error)
+previous_speed_cmd
+previous_steering_cmd
+waypoint_fraction
+```
+
+Reward는 다음 요소를 사용한다.
+
+```text
+목표 waypoint에 가까워진 거리 progress
+heading error penalty
+action 크기 penalty
+waypoint 도달 bonus
+최종 goal 도달 bonus
+```
+`r`n### PPO 학습
+
+`stable-baselines3`의 PPO를 사용하여 학습을 시작할 수 있다.
+
+짧은 테스트 학습:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_train_ppo.py --timesteps 512 --episode-time 12
+```
+
+더 길게 학습하려면 `--timesteps`를 늘린다.
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_train_ppo.py --timesteps 10000 --episode-time 20
+```
+
+학습 결과 저장 위치:
+
+```text
+results/rl_training/
+```
+
+생성 파일 예:
+
+```text
+ppo_custom_rover_flat.zip
+monitor_flat.csv.monitor.csv
+```
+
+### 학습된 Policy 평가
+
+저장된 PPO policy를 불러와 deterministic action으로 평가한다.
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_policy_demo.py --steps 300 --episode-time 15
+```
+
+시뮬레이션 창을 보면서 평가하려면:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_policy_demo.py --steps 300 --episode-time 15 --visualize
+```
+
+평가가 끝나면 다음 결과가 저장된다.
+
+```text
+results/rl_policy_demo/custom_viper_<terrain>_ppo_policy.csv
+results/rl_policy_demo/custom_viper_<terrain>_ppo_policy_path.png
+results/rl_policy_demo/custom_viper_<terrain>_ppo_policy_attitude.png
+```
+
+장애물 지형용 모델을 평가하려면:
+
+```powershell
+conda run -n chrono python Project_Chrono_Practice\lessons\phase4\Dohee\custom_rover\rl_policy_demo.py --terrain obstacles
+```
+
+### 현재 구현의 의미
+
+현재 단계에서 완성된 것은 다음이다.
+
+```text
+1. RL action interface
+2. Gymnasium reset/step wrapper
+3. reward 구조
+4. stable-baselines3 PPO 학습 스크립트
+5. 저장된 policy 평가 스크립트
+```
+
+아직 최적 성능을 내는 policy를 학습한 것은 아니다.
+보고서에서는 "강화학습 적용을 위한 시뮬레이션 환경과 학습 인터페이스를 구축하고,
+짧은 PPO 학습 실행을 통해 학습 파이프라인이 동작함을 확인하였다"라고 정리하는 것이 정확하다.
+---
+
+## 2026-05-30 추가: 자세 로그와 Attitude 그래프
+
+장애물 통과 실험에서 자세 변화를 분석할 수 있도록 CSV 로그에 roll/pitch 컬럼을 추가하였다.
+
+추가된 CSV 컬럼:
+
+```text
+roll_deg
+pitch_deg
+```
+
+기존 `yaw_deg`와 함께 사용하면 장애물 통과 중 차체 자세 변화를 분석할 수 있다.
+
+```text
+roll_deg  : 좌우 기울어짐
+pitch_deg : 전후 기울어짐
+yaw_deg   : 수평면 회전 방향
+z         : 차체 높이 변화
+```
+
+시뮬레이션 종료 후 path 그래프와 별도로 attitude 그래프가 자동 저장된다.
+
+```text
+custom_viper_<terrain>_<experiment>_attitude.png
+```
+
+그래프 구성:
+
+```text
+roll / pitch vs time
+yaw vs time
+z position vs time
+```
+
+보고서의 장애물 통과 실험에서는 다음 항목에 사용할 수 있다.
+
+```text
+Slope 등판      : pitch 변화와 z 변화
+Step 극복       : pitch/roll peak와 z 변화
+Rock 통과       : roll 변화와 yaw 흔들림
+자세 안정성     : roll_deg, pitch_deg의 최대값과 진동 정도
+```
+
