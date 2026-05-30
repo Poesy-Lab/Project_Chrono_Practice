@@ -54,6 +54,12 @@ def style_3d_axes(ax, title: str) -> None:
     ax.grid(True, alpha=0.25)
 
 
+def legend_if_any(ax, *args, **kwargs) -> None:
+    handles, _ = ax.get_legend_handles_labels()
+    if handles:
+        ax.legend(*args, **kwargs)
+
+
 def box_vertices(center, size):
     cx, cy, cz = center
     sx, sy, sz = (value / 2.0 for value in size)

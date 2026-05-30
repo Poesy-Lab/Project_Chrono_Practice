@@ -1,0 +1,21 @@
+classDiagram
+    class Component {
+      +name
+      +parameters
+      +build(system)
+      +visual_artifact
+      +log_schema
+      +validation_graph
+    }
+    class ChronoCommand {
+      +API call
+      +object creation
+      +state update
+    }
+    class SystemScenario {
+      +components
+      +simulation loop
+      +outputs
+    }
+    ChronoCommand --> Component : "조합"
+    Component --> SystemScenario : "배치"

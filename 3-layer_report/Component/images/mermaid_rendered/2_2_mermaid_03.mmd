@@ -1,0 +1,12 @@
+flowchart LR
+    Chassis["Chassis<br/>기준 강체"] --> Visual["Visual Shape<br/>보이는 외형"]
+    Chassis --> Collision["Collision Shape<br/>물리 접촉 형상"]
+    Chassis --> Payload["Payload / Sensor Mount"]
+    Chassis --> Suspension["Suspension"]
+    Suspension --> Axle["Axle / Joint"]
+    Axle --> Wheel["Wheel / Tire"]
+    Motor["Motor / Drive"] --> Wheel
+    Steering["Steering"] --> Axle
+    Powertrain["Powertrain / Driveline / Brake"] --> Motor
+    Wheel --> Terrain["Terrain Component"]
+    Chassis --> Logger["State Logger"]

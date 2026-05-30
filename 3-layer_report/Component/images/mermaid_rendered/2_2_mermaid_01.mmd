@@ -1,0 +1,12 @@
+flowchart TB
+    A["Command 단계<br/>Chrono API 호출"] --> B["Component 단계<br/>재사용 가능한 부품 설계"]
+    B --> C["System 단계<br/>시나리오와 실행 파이프라인"]
+    A1["ChBody / ChLink / ChMotor"] --> A
+    A2["Collision shape / Contact material"] --> A
+    A3["CSV writer / Graph generator"] --> A
+    B1["Chassis / Wheel / Motor / Steering"] --> B
+    B2["Ground / Obstacle / Terrain"] --> B
+    B3["Contact Reporter / State Logger"] --> B
+    C1["단일 로버 주행 실험"] --> C
+    C2["로버-장애물 충돌 실험"] --> C
+    C3["지형별 주행 성능 비교"] --> C

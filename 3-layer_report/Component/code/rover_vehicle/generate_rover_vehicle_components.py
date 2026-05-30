@@ -16,6 +16,7 @@ from component_utils import (  # noqa: E402
     add_box,
     add_cylinder_y,
     ensure_output_dirs,
+    legend_if_any,
     save_figure,
     set_axes_equal,
     style_3d_axes,
@@ -42,7 +43,7 @@ def render_rover_components() -> list[Path]:
     ax.set_ylim(-1.15, 1.15)
     ax.set_zlim(0, 1.4)
     style_3d_axes(ax, "Rover/Vehicle Component Layout")
-    ax.legend(loc="upper left", fontsize=8)
+    legend_if_any(ax, loc="upper left", fontsize=8)
     set_axes_equal(ax)
     paths.append(save_figure(fig, IMAGES_RENDER / "rover_vehicle_component_overview.png"))
 
@@ -57,7 +58,7 @@ def render_rover_components() -> list[Path]:
     ax.set_ylim(-1.0, 1.0)
     ax.set_zlim(0, 1.2)
     style_3d_axes(ax, "Visual Shape vs Collision Shape")
-    ax.legend(loc="upper left", fontsize=8)
+    legend_if_any(ax, loc="upper left", fontsize=8)
     set_axes_equal(ax)
     paths.append(save_figure(fig, IMAGES_RENDER / "rover_visual_collision_shapes.png"))
 
@@ -91,7 +92,7 @@ def render_rover_components() -> list[Path]:
     ax.set_ylim(-0.9, 0.9)
     ax.set_zlim(0, 1.1)
     style_3d_axes(ax, "Tracked Vehicle Extension Components")
-    ax.legend(loc="upper left", fontsize=8)
+    legend_if_any(ax, loc="upper left", fontsize=8)
     set_axes_equal(ax)
     paths.append(save_figure(fig, IMAGES_RENDER / "tracked_vehicle_components.png"))
 
@@ -155,7 +156,7 @@ def run_chrono_rover_probe() -> tuple[Path, Path]:
     ax.set_xlabel("time [s]")
     ax.set_ylabel("value")
     ax.grid(True, alpha=0.3)
-    ax.legend()
+    legend_if_any(ax)
     graph_path = save_figure(fig, IMAGES_GRAPH / "rover_vehicle_chassis_probe_graph.png")
     return csv_path, graph_path
 

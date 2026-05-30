@@ -17,6 +17,7 @@ from component_utils import (  # noqa: E402
     add_cylinder_x,
     add_terrain_surface,
     ensure_output_dirs,
+    legend_if_any,
     save_figure,
     set_axes_equal,
     style_3d_axes,
@@ -46,7 +47,7 @@ def render_terrain_components() -> list[Path]:
     ax.set_ylim(-2.4, 2.4)
     ax.set_zlim(0, 1.2)
     style_3d_axes(ax, "Ground, Obstacle, and RigidTerrain Components")
-    ax.legend(loc="upper left", fontsize=8)
+    legend_if_any(ax, loc="upper left", fontsize=8)
     set_axes_equal(ax)
     paths.append(save_figure(fig, IMAGES_RENDER / "terrain_ground_obstacle_components.png"))
 
@@ -69,7 +70,7 @@ def render_terrain_components() -> list[Path]:
     ax.set_ylim(-2.2, 2.2)
     ax.set_zlim(-0.35, 0.55)
     style_3d_axes(ax, "SCMTerrain Deformation Concept")
-    ax.legend(fontsize=8)
+    legend_if_any(ax, fontsize=8)
     paths.append(save_figure(fig, IMAGES_RENDER / "terrain_scm_deformation_component.png"))
     return paths
 
@@ -109,7 +110,7 @@ def generate_terrain_csv_and_graphs() -> tuple[Path, list[Path]]:
     ax.set_xlabel("x [m]")
     ax.set_ylabel("z [m]")
     ax.grid(True, alpha=0.3)
-    ax.legend()
+    legend_if_any(ax)
     graphs.append(save_figure(fig, IMAGES_GRAPH / "terrain_height_sinkage_profile.png"))
 
     fig, ax = plt.subplots(figsize=(7.8, 4.8))

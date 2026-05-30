@@ -1,0 +1,13 @@
+flowchart LR
+    Sim["Chrono Simulation Loop"] --> State["State Logger"]
+    Sim --> Control["Control Logger"]
+    Sim --> Contact["Contact Logger"]
+    Sim --> Render["Render / Screenshot"]
+    Sim --> Meta["Metadata Logger"]
+    State --> CSV["CSV Schema"]
+    Control --> CSV
+    Contact --> CSV
+    CSV --> Graph["Graph Generator"]
+    Render --> Report["Markdown Report"]
+    Graph --> Report
+    Meta --> Report

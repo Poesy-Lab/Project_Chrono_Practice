@@ -16,6 +16,7 @@ from component_utils import (  # noqa: E402
     add_box,
     add_cylinder_y,
     ensure_output_dirs,
+    legend_if_any,
     save_figure,
     set_axes_equal,
     style_3d_axes,
@@ -24,6 +25,63 @@ from component_utils import (  # noqa: E402
     vec_xyz,
     write_csv,
 )
+
+
+class PairContactReporter:
+    """Create a PyChrono ReportContactCallback for one body pair.
+
+    The concrete callback class must be defined after importing pychrono because
+    it inherits from chrono.ReportContactCallback.
+    """
+
+    @staticmethod
+    def make(chrono, body_a, body_b, vec_length_fn):
+        class _PairContactReporter(chrono.ReportContactCallback):
+            def __init__(self):
+                super().__init__()
+                self.count = 0
+                self.force_sum = 0.0
+                self.fx_sum = 0.0
+                self.fy_sum = 0.0
+                self.fz_sum = 0.0
+
+            def reset(self):
+                self.count = 0
+                self.force_sum = 0.0
+                self.fx_sum = 0.0
+                self.fy_sum = 0.0
+                self.fz_sum = 0.0
+
+            def OnReportContact(
+                self,
+                pA,
+                pB,
+                plane_coord,
+                distance,
+                eff_radius,
+                cforce,
+                ctorque,
+                modA,
+                modB,
+                cnstr_offset,
+            ):
+                reported_a = chrono.CastToChBody(modA)
+                reported_b = chrono.CastToChBody(modB)
+                is_pair = (reported_a == body_a and reported_b == body_b) or (
+                    reported_a == body_b and reported_b == body_a
+                )
+                if not is_pair:
+                    return True
+
+                self.count += 1
+                self.force_sum += vec_length_fn(cforce)
+                fx, fy, fz = vec_xyz(cforce)
+                self.fx_sum += fx
+                self.fy_sum += fy
+                self.fz_sum += fz
+                return True
+
+        return _PairContactReporter()
 
 
 def render_collision_scene() -> list[Path]:
@@ -39,7 +97,7 @@ def render_collision_scene() -> list[Path]:
     ax.set_ylim(-1.3, 1.3)
     ax.set_zlim(0, 1.4)
     style_3d_axes(ax, "Collision and Contact Measurement Components")
-    ax.legend(loc="upper left", fontsize=8)
+    legend_if_any(ax, loc="upper left", fontsize=8)
     set_axes_equal(ax)
     paths.append(save_figure(fig, IMAGES_RENDER / "collision_contact_components.png"))
 
@@ -54,7 +112,7 @@ def render_collision_scene() -> list[Path]:
     ax.set_ylim(-1.0, 1.0)
     ax.set_zlim(0, 1.1)
     style_3d_axes(ax, "Visual Shape vs Collision Shape")
-    ax.legend(loc="upper left", fontsize=8)
+    legend_if_any(ax, loc="upper left", fontsize=8)
     set_axes_equal(ax)
     paths.append(save_figure(fig, IMAGES_RENDER / "collision_visual_vs_collision_shape.png"))
     return paths
@@ -84,13 +142,15 @@ def run_contact_probe() -> tuple[Path, list[Path]]:
         rover.SetPos(chrono.ChVector3d(-1.6, 0, 0.28))
         rover.SetPosDt(chrono.ChVector3d(1.8, 0, 0))
         system.AddBody(rover)
+        reporter = PairContactReporter.make(chrono, rover, obstacle, vec_length)
 
         hit_started = False
         while system.GetChTime() <= 1.8:
-            contact_force = rover.GetContactForce()
-            fx, fy, fz = vec_xyz(contact_force)
-            force = vec_length(contact_force)
-            contact_count = system.GetContactContainer().GetNumContacts()
+            reporter.reset()
+            system.GetContactContainer().ReportAllContacts(reporter)
+            contact_count = reporter.count
+            force = reporter.force_sum
+            fx, fy, fz = reporter.fx_sum, reporter.fy_sum, reporter.fz_sum
             if contact_count > 0 and not hit_started:
                 events.append({"event": "first_contact", "time_s": f"{system.GetChTime():.4f}", "contacts": contact_count})
                 hit_started = True

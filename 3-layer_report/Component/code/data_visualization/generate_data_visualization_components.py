@@ -16,6 +16,7 @@ from component_utils import (  # noqa: E402
     add_box,
     add_cylinder_y,
     ensure_output_dirs,
+    legend_if_any,
     save_figure,
     set_axes_equal,
     style_3d_axes,
@@ -43,7 +44,7 @@ def render_visualization_components() -> list[Path]:
     ax.set_ylim(-1.8, 1.8)
     ax.set_zlim(0, 1.7)
     style_3d_axes(ax, "Render, Screenshot, and Sensor Components")
-    ax.legend(loc="upper left", fontsize=8)
+    legend_if_any(ax, loc="upper left", fontsize=8)
     set_axes_equal(ax)
     paths.append(save_figure(fig, IMAGES_RENDER / "data_visualization_sensor_components.png"))
     return paths
@@ -179,7 +180,7 @@ def generate_state_and_control_logs() -> tuple[list[Path], list[Path]]:
     ax.set_xlabel("time [s]")
     ax.set_ylabel("normalized input")
     ax.grid(True, alpha=0.3)
-    ax.legend()
+    legend_if_any(ax)
     graphs.append(save_figure(fig, IMAGES_GRAPH / "data_visualization_control_inputs.png"))
     return [state_csv, control_csv], graphs
 
