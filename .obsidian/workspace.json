@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "3-layer_report/1.2 프로젝트 목적/README.md",
+                "file": "3-layer_report/1.1 프로젝트 개요/1.1 프로젝트 개요.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "1.1 프로젝트 개요"
             }
           }
         ]
@@ -180,15 +180,29 @@
       "bases:새 베이스 생성하기": false
     }
   },
-  "active": "3b7bf9a294f643ec",
+  "active": "ebc0a45d64fe4414",
   "lastOpenFiles": [
-    "3-layer_report/1.1 프로젝트 개요/README.md",
+    "3-layer_report/1.2 프로젝트 목적/1.2 프로젝트 목적.md",
     "3-layer_report/1.2 프로젝트 목적/README.md",
     "3-layer_report/2.3 System/2.3.2_curiosity_rover_mars_terrain_system.md",
-    "3-layer_report/2.3 System/2.3.3_custom_rover_design_purpose.md",
     "lessons/phase4/Jongmin/scm_pockmarked_mars_heightmap.png",
-    "lessons/phase4/Jongmin/heightmap",
+    "3-layer_report/1.1 프로젝트 개요/1.1 프로젝트 개요.md",
+    "3-layer_report/1.1 프로젝트 개요/무제 2.md",
+    "3-layer_report/2.2 Component/2.2.3_environment_terrain_components.md",
+    "3-layer_report/2.2 Component/2.2.5_data_visualization_components.md",
+    "3-layer_report/2.2 Component/2.2.4_collision_contact_components.md",
+    "3-layer_report/2.2 Component/2.2.2_rover_vehicle_components.md",
+    "3-layer_report/2.1 Command/2.1.4_joint_and_links.md",
+    "3-layer_report/2.1 Command/2.1.2_collision.md",
+    "3-layer_report/2.1 Command/2.1.1_system.md",
     "3-layer_report/2.3 System/2.3.1_collision_system.md",
+    "3-layer_report/2.3 System/attachments/화면 캡처 2026-05-29 070824.jpg",
+    "3-layer_report/1.1 프로젝트 개요/README.md",
+    "3-layer_report/1.1 프로젝트 개요/무제 1.md",
+    "3-layer_report/2.2 Component/README.md",
+    "3-layer_report/2.1 Command/README.md",
+    "3-layer_report/2.3 System/2.3.3_custom_rover_design_purpose.md",
+    "lessons/phase4/Jongmin/heightmap",
     "scm_mars_offroad_heightmap.png",
     "3-layer_report/2.3 System/attachments/pitch and roll 1.png",
     "3-layer_report/2.3 System/2.3.4_custom_rover_design.md",
@@ -203,30 +217,15 @@
     "3-layer_report/2026학년도 1학기 캡스톤디자인 보고서.md",
     "3-layer_report/3.3 여름방학 및 2학기 향후 계획/README.md",
     "3-layer_report/3.3 여름방학 및 2학기 향후 계획",
-    "3-layer_report/3.2 최종 프로젝트 주제 브레인스토밍 결과/README.md",
     "3-layer_report/3.2 최종 프로젝트 주제 브레인스토밍 결과",
     "3-layer_report/3.1 프로젝트 종합 결론 및 보완할 점",
     "3-layer_report/2.3 System/images/system_figure_25.png",
     "3-layer_report/2.3 System/images/system_figure_24.png",
     "3-layer_report/2.3 System/images/system_figure_23.png",
-    "3-layer_report/2.3 System/images/system_figure_22.png",
     "3-layer_report/2.3 System/images",
-    "3-layer_report/2.3 System/README.md",
     "3-layer_report/2.3 System",
-    "3-layer_report/2.2 Component/images/renders/manual_chrono/README.md",
     "3-layer_report/2.2 Component/outputs/csv/rover_vehicle_chassis_probe.csv",
     "3-layer_report/2.2 Component/outputs/csv/environment_terrain_height_friction_sinkage.csv",
-    "3-layer_report/2.2 Component/outputs/csv/environment_terrain_contact_probe.csv",
-    "3-layer_report/2.2 Component/README.md",
-    "3-layer_report/2.2 Component/2.2.5_data_visualization_components.md",
-    "3-layer_report/2.2 Component/2.2.4_collision_contact_components.md",
-    "3-layer_report/2.2 Component/2.2.3_environment_terrain_components.md",
-    "3-layer_report/2.2 Component/2.2.2_rover_vehicle_components.md",
-    "3-layer_report/2.2 Component/2.2.1_component_definition.md",
-    "3-layer_report/2.1 Command/README.md",
-    "3-layer_report/2.1 Command/2.1.9_vehicle.md",
-    "3-layer_report/2.1 Command/2.1.8_solver.md",
-    "3-layer_report/2.1 Command/2.1.7_rigid_bodies.md",
-    "3-layer_report/2.1 Command/2.1.6_motors.md"
+    "3-layer_report/2.2 Component/outputs/csv/environment_terrain_contact_probe.csv"
   ]
 }
