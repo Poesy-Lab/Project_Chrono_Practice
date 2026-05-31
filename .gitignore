@@ -2,7 +2,7 @@
 # Project Chrono 빌드/소스 (각자 환경에서 빌드)
 # ===========================
 chrono/
-chrono_build/
+chrono_build*/
 chrono_install/
 eigen3/
 

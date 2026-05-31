@@ -11,7 +11,9 @@ matplotlib.use("Agg")
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.patches import FancyArrowPatch
 from mpl_toolkits.mplot3d.art3d import Poly3DCollection
+from mpl_toolkits.mplot3d import proj3d
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -127,10 +129,128 @@ def add_terrain_surface(ax, x, y, z, cmap="terrain", alpha=0.9):
     ax.plot_surface(x, y, z, cmap=cmap, alpha=alpha, linewidth=0, antialiased=True)
 
 
+def add_label_3d(ax, text: str, point, *, color: str = "#111827", size: int = 8, ha: str = "center") -> None:
+    ax.text(
+        point[0],
+        point[1],
+        point[2],
+        text,
+        ha=ha,
+        va="center",
+        fontsize=size,
+        color=color,
+        bbox={"boxstyle": "round,pad=0.18", "facecolor": "white", "edgecolor": color, "alpha": 0.82, "linewidth": 0.7},
+    )
+
+
+def add_label_2d(ax, text: str, xy, *, color: str = "#111827", size: int = 8, ha: str = "left") -> None:
+    bbox = ax.get_position()
+    fig_x = bbox.x0 + xy[0] * bbox.width
+    fig_y = bbox.y0 + xy[1] * bbox.height
+    ax.figure.text(
+        fig_x,
+        fig_y,
+        text,
+        ha=ha,
+        va="center",
+        fontsize=size,
+        color=color,
+        zorder=20,
+        bbox={"boxstyle": "round,pad=0.18", "facecolor": "white", "edgecolor": color, "alpha": 0.86, "linewidth": 0.7},
+    )
+
+
+def _figure_xy_from_axes_fraction(ax, xy) -> tuple[float, float]:
+    bbox = ax.get_position()
+    return bbox.x0 + xy[0] * bbox.width, bbox.y0 + xy[1] * bbox.height
+
+
+def _figure_xy_from_3d_point(ax, xyz) -> tuple[float, float]:
+    x2, y2, _ = proj3d.proj_transform(xyz[0], xyz[1], xyz[2], ax.get_proj())
+    display_xy = ax.transData.transform((x2, y2))
+    fig_xy = ax.figure.transFigure.inverted().transform(display_xy)
+    return float(fig_xy[0]), float(fig_xy[1])
+
+
+def _figure_xy_from_2d_data(ax, xy) -> tuple[float, float]:
+    display_xy = ax.transData.transform((xy[0], xy[1]))
+    fig_xy = ax.figure.transFigure.inverted().transform(display_xy)
+    return float(fig_xy[0]), float(fig_xy[1])
+
+
+def _queue_callout(ax, text: str, xy, target, *, target_mode: str, color: str, size: int, ha: str) -> None:
+    callouts = getattr(ax.figure, "_component_callouts", None)
+    if callouts is None:
+        callouts = []
+        setattr(ax.figure, "_component_callouts", callouts)
+    callouts.append(
+        {
+            "ax": ax,
+            "text": text,
+            "xy": xy,
+            "target": target,
+            "target_mode": target_mode,
+            "color": color,
+            "size": size,
+            "ha": ha,
+        }
+    )
+
+
+def add_callout_2d(ax, text: str, xy, target_xy, *, color: str = "#111827", size: int = 8, ha: str = "left") -> None:
+    _queue_callout(ax, text, xy, target_xy, target_mode="axes_fraction", color=color, size=size, ha=ha)
+
+
+def add_callout_3d(ax, text: str, xy, target_xyz, *, color: str = "#111827", size: int = 8, ha: str = "left") -> None:
+    _queue_callout(ax, text, xy, target_xyz, target_mode="data_3d", color=color, size=size, ha=ha)
+
+
+def add_callout_data_2d(ax, text: str, xy, target_xy, *, color: str = "#111827", size: int = 8, ha: str = "left") -> None:
+    _queue_callout(ax, text, xy, target_xy, target_mode="data_2d", color=color, size=size, ha=ha)
+
+
+def _draw_component_callouts(fig) -> None:
+    for item in getattr(fig, "_component_callouts", []):
+        ax = item["ax"]
+        start_x, start_y = _figure_xy_from_axes_fraction(ax, item["xy"])
+        if item["target_mode"] == "data_3d":
+            end_x, end_y = _figure_xy_from_3d_point(ax, item["target"])
+        elif item["target_mode"] == "data_2d":
+            end_x, end_y = _figure_xy_from_2d_data(ax, item["target"])
+        else:
+            end_x, end_y = _figure_xy_from_axes_fraction(ax, item["target"])
+        color = item["color"]
+        line = FancyArrowPatch(
+            (start_x, start_y),
+            (end_x, end_y),
+            transform=fig.transFigure,
+            arrowstyle="-",
+            mutation_scale=1,
+            linewidth=0.8,
+            color=color,
+            alpha=0.88,
+            zorder=24,
+        )
+        fig.add_artist(line)
+        fig.text(
+            start_x,
+            start_y,
+            item["text"],
+            ha=item["ha"],
+            va="center",
+            fontsize=item["size"],
+            color=color,
+            zorder=30,
+            bbox={"boxstyle": "round,pad=0.18", "facecolor": "white", "edgecolor": color, "alpha": 0.90, "linewidth": 0.7},
+        )
+
+
 def save_figure(fig, path: Path) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     fig.tight_layout()
-    fig.savefig(path, dpi=180)
+    fig.canvas.draw()
+    _draw_component_callouts(fig)
+    fig.savefig(path, dpi=180, bbox_inches="tight", pad_inches=0.12)
     plt.close(fig)
     return path
 
@@ -141,7 +261,7 @@ def try_import_chrono():
 
         return chrono, None
     except Exception as exc:  # pragma: no cover - environment dependent
-        return None, f"{type(exc).__name__}: {exc}"
+        return None, "pychrono_unavailable"
 
 
 def vec_xyz(vec) -> tuple[float, float, float]:
