@@ -13,7 +13,7 @@ time_step = 1.5e-3
 
 terrain_length = 42.0
 terrain_width = 24.0
-heightmap_file = "scm_pockmarked_mars_heightmap.png"
+heightmap_file = "lessons/phase4/Jongmin/scm_pockmarked_mars_heightmap.png"
 
 terrain_delta = 0.10
 
