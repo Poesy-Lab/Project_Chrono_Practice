@@ -14,10 +14,18 @@ else
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
-CHRONO_BUILD_DIR="${SCRIPT_DIR}/chrono_build"
+if [ -z "${CHRONO_BUILD_DIR:-}" ]; then
+    if [ -d "${SCRIPT_DIR}/chrono_build_cuda129_sm120" ]; then
+        CHRONO_BUILD_DIR="${SCRIPT_DIR}/chrono_build_cuda129_sm120"
+    elif [ -d "${SCRIPT_DIR}/chrono_build_vsg" ]; then
+        CHRONO_BUILD_DIR="${SCRIPT_DIR}/chrono_build_vsg"
+    else
+        CHRONO_BUILD_DIR="${SCRIPT_DIR}/chrono_build"
+    fi
+fi
 
 if [ ! -d "$CHRONO_BUILD_DIR" ]; then
-    echo "ERROR: chrono_build/ directory not found."
+    echo "ERROR: Chrono build directory not found."
     echo "  Expected: ${CHRONO_BUILD_DIR}"
     echo "  Please build Chrono first. See README.md for instructions."
     return 1 2>/dev/null || exit 1
@@ -31,13 +39,32 @@ case "$OS_TYPE" in
         export LD_LIBRARY_PATH="${CHRONO_BUILD_DIR}/lib:${LD_LIBRARY_PATH}"
         export PYTHONPATH="${CHRONO_BUILD_DIR}/bin:${PYTHONPATH}"
 
+        # Preferred local CUDA toolkit for the RTX 5060 Ti Chrono build.
+        CHRONO_CONDA_ENV="${CHRONO_CONDA_ENV:-$HOME/anaconda3/envs/chrono}"
+        if [ -x "${CHRONO_CONDA_ENV}/bin/nvcc" ]; then
+            export PATH="${CHRONO_CONDA_ENV}/bin:${PATH}"
+            if [ -d "${CHRONO_CONDA_ENV}/targets/x86_64-linux/lib" ]; then
+                export LD_LIBRARY_PATH="${CHRONO_CONDA_ENV}/targets/x86_64-linux/lib:${LD_LIBRARY_PATH}"
+            fi
+            if [ -d "${CHRONO_CONDA_ENV}/lib" ]; then
+                export LD_LIBRARY_PATH="${CHRONO_CONDA_ENV}/lib:${LD_LIBRARY_PATH}"
+            fi
+        fi
+
+        # VSG (Vulkan Scene Graph) libraries, if available.
+        VSG_LIB_DIR="$HOME/Packages/vsg/lib"
+        if [ -d "${VSG_LIB_DIR}" ]; then
+            export LD_LIBRARY_PATH="${VSG_LIB_DIR}:${LD_LIBRARY_PATH}"
+            export VSG_FILE_PATH="${CHRONO_BUILD_DIR}/data"
+        fi
+
         # Anaconda libstdc++ 충돌 방지
         if [ -d "$HOME/anaconda3" ] || [ -d "$HOME/miniconda3" ]; then
             export LD_PRELOAD="/usr/lib/x86_64-linux-gnu/libstdc++.so.6"
         fi
 
-        # CUDA (설치되어 있는 경우)
-        if [ -d "/usr/local/cuda/bin" ]; then
+        # System CUDA fallback.
+        if ! command -v nvcc &>/dev/null && [ -d "/usr/local/cuda/bin" ]; then
             export PATH="/usr/local/cuda/bin:${PATH}"
             export LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
         fi

@@ -7,6 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = [
+    ROOT / "code" / "common" / "generate_chrono_default_shapes.py",
+    ROOT / "code" / "common" / "generate_chrono_builtin_component_assets.py",
     ROOT / "code" / "rover_vehicle" / "generate_rover_vehicle_components.py",
     ROOT / "code" / "environment_terrain" / "generate_environment_terrain_components.py",
     ROOT / "code" / "collision_contact" / "generate_collision_contact_components.py",
