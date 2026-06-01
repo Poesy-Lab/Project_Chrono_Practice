@@ -1,0 +1,39 @@
+{
+  "boundary_conditions": [
+    {
+      "attached_body_id": "vehicle.chassis",
+      "boundary_condition_id": "bc.panel_root_fixed",
+      "catalog_component_id": "flex.boundary_attachment",
+      "constraint_class": "fixed_nodes_or_ChLinkPointFrame",
+      "dof_policy": "all translational/rotational DOF fixed",
+      "frame": "body_REF",
+      "instance_id": "bc.panel_root_fixed",
+      "load_id": "",
+      "local_xyz_m": "0.0,0.0,0.0",
+      "mesh_id": "fea_mesh.rover_panel_demo",
+      "node_set": "root_edge_nodes",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "flex.boundary_condition_map.v1",
+      "source": "fallback_flex_fea_schema_only"
+    },
+    {
+      "attached_body_id": "sensor.mount_payload",
+      "boundary_condition_id": "bc.sensor_payload_load",
+      "catalog_component_id": "flex.boundary_attachment",
+      "constraint_class": "distributed_load_catalog",
+      "dof_policy": "force only; live FEA run must export reaction/deformation",
+      "frame": "body_REF",
+      "instance_id": "bc.sensor_payload_load",
+      "load_id": "load.sensor_payload_weight",
+      "local_xyz_m": "0.35,0.0,0.12",
+      "mesh_id": "fea_mesh.rover_panel_demo",
+      "node_set": "payload_mount_nodes",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "flex.boundary_condition_map.v1",
+      "source": "fallback_flex_fea_schema_only"
+    }
+  ],
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "flex.boundary_condition_map.v1",
+  "source": "fallback_flex_fea_schema_only"
+}

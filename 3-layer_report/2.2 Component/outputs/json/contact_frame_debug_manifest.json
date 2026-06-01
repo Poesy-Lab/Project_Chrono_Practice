@@ -1,0 +1,30 @@
+{
+  "debug_frames": [
+    {
+      "backend_visualization_support": "schema-only render; live VSG/Irrlicht debug draw must record backend",
+      "body_a": "rover_body",
+      "body_b": "rigid_obstacle",
+      "catalog_component_id": "contact.frame_debug",
+      "debug_frame_id": "contact_frame.rover_obstacle.demo",
+      "debug_vector_render": "images/renders/collision_contact_debug_vectors.png",
+      "fallback_reason": "deterministic_contact_probe_pychrono_unavailable",
+      "force_vector_columns": "contact_fx_N,contact_fy_N,contact_fz_N",
+      "instance_id": "contact_frame.rover_obstacle.demo",
+      "normal_xyz": "-1,0,0",
+      "owner_component_id": "contact.container_reporter",
+      "point_x_m": "0.36000",
+      "point_y_m": "0.00000",
+      "point_z_m": "0.30000",
+      "run_id": "collision_contact_component_demo",
+      "schema_id": "collision.contact_frame_debug_manifest.v1",
+      "source": "deterministic_contact_probe_pychrono_unavailable",
+      "tangent_u_xyz": "0,1,0",
+      "tangent_v_xyz": "0,0,1",
+      "torque_vector_columns": "contact_tx_Nm,contact_ty_Nm,contact_tz_Nm",
+      "visual_vs_collision_render": "images/renders/collision_visual_vs_collision_shape.png"
+    }
+  ],
+  "run_id": "collision_contact_component_demo",
+  "schema_id": "collision.contact_frame_debug_manifest.v1",
+  "source": "deterministic_contact_probe_pychrono_unavailable"
+}

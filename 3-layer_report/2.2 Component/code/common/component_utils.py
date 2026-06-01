@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import json
 import math
 from pathlib import Path
 from typing import Iterable, Sequence
@@ -20,21 +21,30 @@ ROOT = Path(__file__).resolve().parents[2]
 IMAGES_RENDER = ROOT / "images" / "renders"
 IMAGES_GRAPH = ROOT / "images" / "graphs"
 OUTPUT_CSV = ROOT / "outputs" / "csv"
+OUTPUT_JSON = ROOT / "outputs" / "json"
 OUTPUT_RAW = ROOT / "outputs" / "raw"
 
 
 def ensure_output_dirs() -> None:
-    for path in (IMAGES_RENDER, IMAGES_GRAPH, OUTPUT_CSV, OUTPUT_RAW):
+    for path in (IMAGES_RENDER, IMAGES_GRAPH, OUTPUT_CSV, OUTPUT_JSON, OUTPUT_RAW):
         path.mkdir(parents=True, exist_ok=True)
 
 
 def write_csv(path: Path, fieldnames: Sequence[str], rows: Iterable[dict]) -> Path:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer = csv.DictWriter(handle, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
+    return path
+
+
+def write_json(path: Path, payload) -> Path:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", encoding="utf-8") as handle:
+        json.dump(payload, handle, indent=2, ensure_ascii=False, sort_keys=True)
+        handle.write("\n")
     return path
 
 

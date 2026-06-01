@@ -1,0 +1,37 @@
+{
+  "fmu_variables": [
+    {
+      "catalog_component_id": "integration.fmi",
+      "causality": "input",
+      "chrono_component_id": "core.function_input",
+      "chrono_field": "throttle",
+      "direction": "external_to_chrono",
+      "fmi_version": "2.0_or_3.0",
+      "fmu_variable": "throttle_cmd",
+      "instance_id": "fmu.variable.throttle_cmd",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "integration.fmu_variable_map.v1",
+      "source": "fallback_model_integration_schema_only",
+      "step_size_s": "0.020",
+      "unit": "1"
+    },
+    {
+      "catalog_component_id": "integration.fmi",
+      "causality": "output",
+      "chrono_component_id": "vehicle.chassis",
+      "chrono_field": "speed",
+      "direction": "chrono_to_external",
+      "fmi_version": "2.0_or_3.0",
+      "fmu_variable": "vehicle_speed",
+      "instance_id": "fmu.variable.vehicle_speed",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "integration.fmu_variable_map.v1",
+      "source": "fallback_model_integration_schema_only",
+      "step_size_s": "0.020",
+      "unit": "m/s"
+    }
+  ],
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "integration.fmu_variable_map.v1",
+  "source": "fallback_model_integration_schema_only"
+}

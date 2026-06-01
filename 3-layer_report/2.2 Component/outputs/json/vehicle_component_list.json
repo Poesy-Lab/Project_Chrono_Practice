@@ -1,0 +1,185 @@
+{
+  "components": [
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.system_export",
+      "chrono_class": "ChWheeledVehicle",
+      "chrono_item_id": "vehicle.system",
+      "component_id": "vehicle.system_export",
+      "instance_id": "vehicle.system",
+      "link_ids": "",
+      "owner_component_id": "vehicle.system_export",
+      "role": "schema-only upgrade root"
+    },
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.chassis",
+      "chrono_class": "ChRigidChassis",
+      "chrono_item_id": "vehicle.chassis.main",
+      "component_id": "vehicle.chassis",
+      "instance_id": "vehicle.chassis.main",
+      "link_ids": "",
+      "owner_component_id": "vehicle.chassis",
+      "role": "reference body and inertia owner"
+    },
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.chassis",
+      "chrono_class": "ChSubchassis",
+      "chrono_item_id": "vehicle.subchassis.payload",
+      "component_id": "vehicle.chassis",
+      "instance_id": "vehicle.subchassis.payload",
+      "link_ids": "",
+      "owner_component_id": "vehicle.chassis",
+      "role": "payload and sensor support body group"
+    },
+    {
+      "body_ids": "see vehicle_axle_wheel_map.json",
+      "catalog_component_id": "vehicle.axle",
+      "chrono_class": "ChAxle",
+      "chrono_item_id": "vehicle.axle.front",
+      "component_id": "vehicle.axle",
+      "instance_id": "vehicle.axle.front",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.axle",
+      "role": "front axle ownership path"
+    },
+    {
+      "body_ids": "see vehicle_axle_wheel_map.json",
+      "catalog_component_id": "vehicle.axle",
+      "chrono_class": "ChAxle",
+      "chrono_item_id": "vehicle.axle.rear",
+      "component_id": "vehicle.axle",
+      "instance_id": "vehicle.axle.rear",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.axle",
+      "role": "rear axle ownership path"
+    },
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.suspension",
+      "chrono_class": "ChSuspension",
+      "chrono_item_id": "vehicle.suspension.front",
+      "component_id": "vehicle.suspension",
+      "instance_id": "vehicle.suspension.front",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.suspension",
+      "role": "front spindle and load path"
+    },
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.suspension",
+      "chrono_class": "ChSuspension",
+      "chrono_item_id": "vehicle.suspension.rear",
+      "component_id": "vehicle.suspension",
+      "instance_id": "vehicle.suspension.rear",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.suspension",
+      "role": "rear spindle and load path"
+    },
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.steering",
+      "chrono_class": "ChSteering",
+      "chrono_item_id": "vehicle.steering.front",
+      "component_id": "vehicle.steering",
+      "instance_id": "vehicle.steering.front",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.steering",
+      "role": "normalized steering to spindle motion"
+    },
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.antirollbar",
+      "chrono_class": "ChAntirollBar",
+      "chrono_item_id": "vehicle.antiroll.front",
+      "component_id": "vehicle.antirollbar",
+      "instance_id": "vehicle.antiroll.front",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.antirollbar",
+      "role": "front axle roll-coupling output slot"
+    },
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.powertrain",
+      "chrono_class": "ChPowertrainAssembly",
+      "chrono_item_id": "vehicle.powertrain.main",
+      "component_id": "vehicle.powertrain",
+      "instance_id": "vehicle.powertrain.main",
+      "link_ids": "",
+      "owner_component_id": "vehicle.powertrain",
+      "role": "throttle to engine/driveshaft torque"
+    },
+    {
+      "body_ids": "",
+      "catalog_component_id": "vehicle.driveline",
+      "chrono_class": "ChDrivelineWV",
+      "chrono_item_id": "vehicle.driveline.4wd",
+      "component_id": "vehicle.driveline",
+      "instance_id": "vehicle.driveline.4wd",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.driveline",
+      "role": "torque split to driven wheels"
+    },
+    {
+      "body_ids": "see vehicle_axle_wheel_map.json",
+      "catalog_component_id": "vehicle.brake",
+      "chrono_class": "ChBrake",
+      "chrono_item_id": "vehicle.brake.service",
+      "component_id": "vehicle.brake",
+      "instance_id": "vehicle.brake.service",
+      "link_ids": "",
+      "owner_component_id": "vehicle.brake",
+      "role": "braking command to wheel brake torque"
+    },
+    {
+      "body_ids": "see vehicle_axle_wheel_map.json",
+      "catalog_component_id": "vehicle.wheel",
+      "chrono_class": "ChWheel",
+      "chrono_item_id": "vehicle.wheel.single",
+      "component_id": "vehicle.wheel",
+      "instance_id": "vehicle.wheel.single",
+      "link_ids": "",
+      "owner_component_id": "vehicle.wheel",
+      "role": "wheel/spindle body output slot"
+    },
+    {
+      "body_ids": "see vehicle_axle_wheel_map.json",
+      "catalog_component_id": "vehicle.tire_model",
+      "chrono_class": "ChTire",
+      "chrono_item_id": "vehicle.tire.rigid",
+      "component_id": "vehicle.tire_model",
+      "instance_id": "vehicle.tire.rigid",
+      "link_ids": "",
+      "owner_component_id": "vehicle.tire_model",
+      "role": "tire force/contact patch owner"
+    },
+    {
+      "body_ids": "see vehicle_axle_wheel_map.json",
+      "catalog_component_id": "vehicle.track_assembly",
+      "chrono_class": "ChTrackAssembly",
+      "chrono_item_id": "vehicle.track_assembly.left",
+      "component_id": "vehicle.track_assembly",
+      "instance_id": "vehicle.track_assembly.left",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.track_assembly",
+      "role": "tracked vehicle left-side upgrade slot"
+    },
+    {
+      "body_ids": "see vehicle_axle_wheel_map.json",
+      "catalog_component_id": "vehicle.track_shoe",
+      "chrono_class": "ChTrackShoe",
+      "chrono_item_id": "vehicle.track_shoe.schema",
+      "component_id": "vehicle.track_shoe",
+      "instance_id": "vehicle.track_shoe.schema",
+      "link_ids": "see vehicle_axle_wheel_map.json",
+      "owner_component_id": "vehicle.track_shoe",
+      "role": "tracked contact segment upgrade slot"
+    }
+  ],
+  "evidence_level": "schema_only_vehicle_upgrade_contract",
+  "run_id": "rover_vehicle_component_demo",
+  "schema_id": "vehicle.component_list.v1",
+  "source": "fallback_vehicle_schema_only_pychrono_unavailable",
+  "vehicle_model": "core_to_vehicle_upgrade_contract"
+}

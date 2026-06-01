@@ -1,0 +1,45 @@
+{
+  "models": [
+    {
+      "catalog_component_id": "collision.model_registry",
+      "chrono_item_id": "ChCollisionModel:rover_body",
+      "collision_model_id": "collision_model.rover_body",
+      "component_id": "core.body",
+      "contactable_id": "rover_body",
+      "enabled": true,
+      "instance_id": "collision_model.rover_body",
+      "material_ids": [
+        "contact_material_nsc_demo"
+      ],
+      "owner_component_id": "vehicle.chassis",
+      "reporter_scope": "body_pair:rover_body-rigid_obstacle",
+      "shape_count": 1,
+      "shape_ids": [
+        "shape.rover_body.box"
+      ],
+      "visual_shape_link": "images/renders/collision_visual_vs_collision_shape.png"
+    },
+    {
+      "catalog_component_id": "collision.model_registry",
+      "chrono_item_id": "ChCollisionModel:rigid_obstacle",
+      "collision_model_id": "collision_model.rigid_obstacle",
+      "component_id": "terrain.obstacle_field",
+      "contactable_id": "rigid_obstacle",
+      "enabled": true,
+      "instance_id": "collision_model.rigid_obstacle",
+      "material_ids": [
+        "contact_material_nsc_demo"
+      ],
+      "owner_component_id": "terrain.obstacle_field",
+      "reporter_scope": "body_pair:rover_body-rigid_obstacle",
+      "shape_count": 1,
+      "shape_ids": [
+        "shape.rigid_obstacle.box"
+      ],
+      "visual_shape_link": "images/renders/collision_visual_vs_collision_shape.png"
+    }
+  ],
+  "run_id": "collision_contact_component_demo",
+  "schema_id": "collision.model_registry.v1",
+  "source": "deterministic_contact_probe_pychrono_unavailable"
+}

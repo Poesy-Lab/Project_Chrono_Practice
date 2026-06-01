@@ -1,0 +1,61 @@
+{
+  "material_regions": [
+    {
+      "bounds_max_xy_m": "0.000,2.000",
+      "bounds_min_xy_m": "-3.000,-2.000",
+      "calibration_source": "schema fixture for tire/contact query wiring",
+      "catalog_component_id": "terrain.material_region",
+      "contact_material_mu": "0.6200",
+      "friction_functor_id": "analytic_region_friction.v1",
+      "instance_id": "terrain.region.high_friction",
+      "material_class": "ChContactMaterialNSC",
+      "material_id": "terrain.material.rigid_mu_0p62",
+      "region_id": "high_friction_left",
+      "region_shape": "AABB",
+      "run_id": "environment_terrain_component_demo",
+      "schema_id": "terrain.material_region_map.v1",
+      "source": "fallback_terrain_schema_only_pychrono_unavailable",
+      "terrain_component_id": "terrain.heightmap_mesh",
+      "terrain_mu_query": "0.6200"
+    },
+    {
+      "bounds_max_xy_m": "3.000,2.000",
+      "bounds_min_xy_m": "0.000,-2.000",
+      "calibration_source": "schema fixture for material map handoff",
+      "catalog_component_id": "terrain.material_region",
+      "contact_material_mu": "0.4800",
+      "friction_functor_id": "analytic_region_friction.v1",
+      "instance_id": "terrain.region.low_friction",
+      "material_class": "ChContactMaterialNSC",
+      "material_id": "terrain.material.rigid_mu_0p48",
+      "region_id": "low_friction_right",
+      "region_shape": "AABB",
+      "run_id": "environment_terrain_component_demo",
+      "schema_id": "terrain.material_region_map.v1",
+      "source": "fallback_terrain_schema_only_pychrono_unavailable",
+      "terrain_component_id": "terrain.heightmap_mesh",
+      "terrain_mu_query": "0.4800"
+    },
+    {
+      "bounds_max_xy_m": "2.200,1.400",
+      "bounds_min_xy_m": "-2.200,-1.400",
+      "calibration_source": "catalog values only; live calibration required",
+      "catalog_component_id": "terrain.material_region",
+      "contact_material_mu": "soil_model",
+      "friction_functor_id": "Bekker_Mohr_Janosi_profile.v1",
+      "instance_id": "terrain.region.scm_soil_profile",
+      "material_class": "SCMTerrain soil profile",
+      "material_id": "scm.soil_profile.default_loam",
+      "region_id": "scm_profile_default",
+      "region_shape": "active_domain",
+      "run_id": "environment_terrain_component_demo",
+      "schema_id": "terrain.material_region_map.v1",
+      "source": "fallback_terrain_schema_only_pychrono_unavailable",
+      "terrain_component_id": "terrain.scm",
+      "terrain_mu_query": "soil_model"
+    }
+  ],
+  "run_id": "environment_terrain_component_demo",
+  "schema_id": "terrain.material_region_map.v1",
+  "source": "fallback_terrain_schema_only_pychrono_unavailable"
+}

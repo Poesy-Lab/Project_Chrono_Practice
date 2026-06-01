@@ -1,0 +1,2 @@
+schema_id,run_id,mesh_id,node_count,element_count,boundary_node_count,contact_surface_element_count,visual_surface_element_count,source
+flex.node_element_count.v1,component_catalog_fallback_bundle,fea_mesh.rover_panel_demo,24,18,6,4,18,fallback_flex_fea_schema_only

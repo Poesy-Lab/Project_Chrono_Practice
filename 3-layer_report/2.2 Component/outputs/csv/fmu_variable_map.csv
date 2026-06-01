@@ -1,0 +1,3 @@
+schema_id,run_id,catalog_component_id,instance_id,fmu_variable,causality,unit,fmi_version,step_size_s,chrono_component_id,chrono_field,direction,source
+integration.fmu_variable_map.v1,component_catalog_fallback_bundle,integration.fmi,fmu.variable.throttle_cmd,throttle_cmd,input,1,2.0_or_3.0,0.020,core.function_input,throttle,external_to_chrono,fallback_model_integration_schema_only
+integration.fmu_variable_map.v1,component_catalog_fallback_bundle,integration.fmi,fmu.variable.vehicle_speed,vehicle_speed,output,m/s,2.0_or_3.0,0.020,vehicle.chassis,speed,chrono_to_external,fallback_model_integration_schema_only

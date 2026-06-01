@@ -1,0 +1,3 @@
+schema_id,run_id,catalog_component_id,instance_id,topic,handler_class,message_type,direction,frame_id,update_rate_hz,chrono_component_ids,source
+integration.ros_topic_handler_manifest.v1,component_catalog_fallback_bundle,integration.ros,ros.topic.clock,/clock,ChROSClockHandler,rosgraph_msgs/Clock,publish,,50,runtime.system,fallback_model_integration_schema_only
+integration.ros_topic_handler_manifest.v1,component_catalog_fallback_bundle,integration.ros,ros.topic.driver_inputs,/cmd/driver_inputs,custom_driver_input_handler,chrono_msgs/DriverInputs,subscribe,base_link,50,core.function_input,fallback_model_integration_schema_only

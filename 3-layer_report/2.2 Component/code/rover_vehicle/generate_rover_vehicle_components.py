@@ -26,6 +26,7 @@ from component_utils import (  # noqa: E402
     IMAGES_GRAPH,
     IMAGES_RENDER,
     OUTPUT_CSV,
+    OUTPUT_JSON,
     OUTPUT_RAW,
     add_callout_3d,
     add_box as add_mpl_box,
@@ -36,6 +37,7 @@ from component_utils import (  # noqa: E402
     vec_length,
     vec_xyz,
     write_csv,
+    write_json,
 )
 
 
@@ -338,7 +340,8 @@ def _render_tracked_vehicle() -> tuple[Path, bool, str]:
         _line3d(ax, (-0.94, side, 0.53), (0.94, side, 0.53), color="#111827", linewidth=3.0)
     ax.quiver(0.92, -0.70, 0.55, -0.25, 0.15, 0, color=COLORS["drive"], linewidth=2.5)
     add_callout_3d(ax, "Chassis", (0.16, 0.86), (0.0, 0.0, 0.78), color="#1d4ed8", size=9)
-    add_callout_3d(ax, "Sprocket/rollers", (0.78, 0.62), (0.92, -0.56, 0.32), color="#475569", size=9)
+    add_callout_3d(ax, "Drive sprocket", (0.78, 0.66), (0.92, -0.56, 0.54), color="#475569", size=9)
+    add_callout_3d(ax, "Roller", (0.78, 0.56), (0.30, -0.56, 0.44), color="#64748b", size=9)
     add_callout_3d(ax, "Track shoes", (0.36, 0.20), (0.0, -0.56, 0.15), color="#111827", size=9)
     _format_component_ax(ax, xlim=(-1.22, 1.22), ylim=(-0.88, 0.88), zlim=(0.08, 1.05), elev=22, azim=-50)
     save_figure(fig, output)
@@ -362,14 +365,25 @@ def render_rover_components() -> list[tuple[Path, bool, str]]:
 
 def deterministic_chassis_probe_rows(source: str) -> list[dict]:
     rows = []
-    for t in np.arange(0, 2.01, 0.01):
+    run_id = "rover_vehicle_component_demo"
+    scenario_id = "chassis_smoke_probe_v0"
+    for step_index, t in enumerate(np.arange(0, 2.01, 0.01)):
         throttle_ramp = min(1.0, t / 0.65)
         speed = 0.28 + 1.00 * throttle_ramp - 0.08 * math.sin(2.2 * t)
         x = -2.2 + 0.28 * t + 0.48 * t * t - 0.02 * math.sin(3.0 * t)
         normal_load = 1450.0 + 80.0 * math.sin(3.6 * t)
         rows.append(
             {
+                "schema_id": "rover.chassis_smoke_probe.v0",
+                "run_id": run_id,
+                "scenario_id": scenario_id,
+                "step_index": step_index,
+                "component_id": "vehicle.chassis",
+                "vehicle_model": "core_rover_smoke_probe",
+                "terrain_component_id": "terrain.core_ground",
                 "time_s": f"{t:.3f}",
+                "body_name": "probe_chassis",
+                "body_role": "logged_chassis",
                 "chassis_x_m": f"{x:.5f}",
                 "chassis_y_m": "0.00000",
                 "chassis_z_m": "0.48000",
@@ -395,7 +409,7 @@ def chassis_probe_is_reportable(rows: list[dict]) -> bool:
     return bool(xs[-1] > xs[0] + 0.8 and mostly_forward and np.max(np.abs(ys)) < 0.10 and np.min(zs) > 0.15 and np.max(vxs) > 0.5)
 
 
-def run_chassis_motor_probe() -> tuple[Path, Path]:
+def write_chassis_motor_probe_csv() -> Path:
     rows = []
     chrono, error = try_import_chrono()
 
@@ -429,6 +443,7 @@ def run_chassis_motor_probe() -> tuple[Path, Path]:
         motor.SetSpeedFunction(chrono.ChFunctionConst(8.0))
         system.AddLink(motor)
 
+        step_index = 0
         while system.GetChTime() <= 2.0:
             t = system.GetChTime()
             pos = chassis.GetPos()
@@ -438,7 +453,16 @@ def run_chassis_motor_probe() -> tuple[Path, Path]:
             vx, vy, vz = vec_xyz(vel)
             rows.append(
                 {
+                    "schema_id": "rover.chassis_smoke_probe.v0",
+                    "run_id": "rover_vehicle_component_demo",
+                    "scenario_id": "chassis_smoke_probe_v0",
+                    "step_index": step_index,
+                    "component_id": "vehicle.chassis",
+                    "vehicle_model": "core_rover_smoke_probe",
+                    "terrain_component_id": "terrain.core_ground",
                     "time_s": f"{t:.3f}",
+                    "body_name": "probe_chassis",
+                    "body_role": "logged_chassis",
                     "chassis_x_m": f"{px:.5f}",
                     "chassis_y_m": f"{py:.5f}",
                     "chassis_z_m": f"{pz:.5f}",
@@ -451,6 +475,7 @@ def run_chassis_motor_probe() -> tuple[Path, Path]:
                 }
             )
             system.DoStepDynamics(0.01)
+            step_index += 1
         if not chassis_probe_is_reportable(rows):
             rows = deterministic_chassis_probe_rows("deterministic_chassis_probe: pychrono result not reportable")
     else:
@@ -459,7 +484,16 @@ def run_chassis_motor_probe() -> tuple[Path, Path]:
     csv_path = write_csv(
         OUTPUT_CSV / "rover_vehicle_chassis_probe.csv",
         [
+            "schema_id",
+            "run_id",
+            "scenario_id",
+            "step_index",
+            "component_id",
+            "vehicle_model",
+            "terrain_component_id",
             "time_s",
+            "body_name",
+            "body_role",
             "chassis_x_m",
             "chassis_y_m",
             "chassis_z_m",
@@ -473,24 +507,429 @@ def run_chassis_motor_probe() -> tuple[Path, Path]:
         rows,
     )
 
+    return csv_path
+
+
+def render_rover_vehicle_chassis_probe_graph() -> Path:
+    csv_path = write_chassis_motor_probe_csv()
     data = np.genfromtxt(csv_path, delimiter=",", names=True, dtype=None, encoding="utf-8")
     fig, ax1 = plt.subplots(figsize=(8.0, 4.8))
-    ax1.plot(data["time_s"], data["chassis_x_m"], color="#1d4ed8", linewidth=2, label="chassis x")
+    line_pos = ax1.plot(data["time_s"], data["chassis_x_m"], color="#1d4ed8", linewidth=2, label="chassis x")[0]
     ax1.set_xlabel("time [s]")
-    ax1.set_ylabel("x position [m]")
+    ax1.set_ylabel("x position [m]", color="#1d4ed8")
+    ax1.tick_params(axis="y", labelcolor="#1d4ed8")
     ax1.grid(True, alpha=0.3)
     ax2 = ax1.twinx()
-    ax2.plot(data["time_s"], data["vx_mps"], color="#dc2626", linewidth=1.8, label="vx")
-    ax2.set_ylabel("x velocity [m/s]")
+    line_vel = ax2.plot(data["time_s"], data["vx_mps"], color="#dc2626", linewidth=1.8, label="vx")[0]
+    ax2.set_ylabel("x velocity [m/s]", color="#dc2626")
+    ax2.tick_params(axis="y", labelcolor="#dc2626")
+    ax1.legend([line_pos, line_vel], [line_pos.get_label(), line_vel.get_label()], loc="upper left", fontsize=8)
     fig.suptitle("Chassis Position and Velocity Probe")
-    graph_path = save_figure(fig, IMAGES_GRAPH / "rover_vehicle_chassis_probe_graph.png")
+    return save_figure(fig, IMAGES_GRAPH / "rover_vehicle_chassis_probe_graph.png")
+
+
+def run_chassis_motor_probe() -> tuple[Path, Path]:
+    csv_path = write_chassis_motor_probe_csv()
+    graph_path = render_rover_vehicle_chassis_probe_graph()
     return csv_path, graph_path
+
+
+def _vehicle_schema_source() -> str:
+    _, error = try_import_chrono()
+    return "fallback_vehicle_schema_only" if error is None else f"fallback_vehicle_schema_only_{error}"
+
+
+def _wheel_key(axle_index: int, side: str) -> str:
+    return f"axle{axle_index}_{side}_single"
+
+
+def _vehicle_axle_wheel_rows(source: str) -> list[dict[str, str]]:
+    rows = []
+    for axle_index, axle_label, x_m, steerable in [(0, "front", 0.68, True), (1, "rear", -0.68, False)]:
+        for side, y_m in [("left", 0.55), ("right", -0.55)]:
+            key = _wheel_key(axle_index, side)
+            display = ("F" if axle_index == 0 else "R") + ("L" if side == "left" else "R")
+            rows.append(
+                {
+                    "schema_id": "vehicle.axle_wheel_map.v1",
+                    "run_id": "rover_vehicle_component_demo",
+                    "vehicle_model": "core_to_vehicle_upgrade_contract",
+                    "axle_index": axle_index,
+                    "axle_label": axle_label,
+                    "side": side,
+                    "wheel_location": "single",
+                    "display_alias": display,
+                    "x_m": f"{x_m:.3f}",
+                    "y_m": f"{y_m:.3f}",
+                    "z_m": "0.300",
+                    "steering_index": "0" if steerable else "none",
+                    "suspension_id": f"suspension.{axle_label}",
+                    "wheel_id": f"wheel.{key}",
+                    "tire_id": f"tire.{key}.rigid",
+                    "brake_id": f"brake.{key}",
+                    "driven": "true",
+                    "steerable": str(steerable).lower(),
+                    "dual_wheel": "false",
+                    "source_json": "schema_fallback_vehicle_model.json",
+                    "body_ids": f"wheel_body.{key}",
+                    "link_ids": f"spindle_link.{key};motor_link.{key}",
+                    "source": source,
+                }
+            )
+    return rows
+
+
+def write_vehicle_axle_wheel_map(source: str) -> tuple[Path, Path]:
+    rows = _vehicle_axle_wheel_rows(source)
+    fieldnames = [
+        "schema_id",
+        "run_id",
+        "vehicle_model",
+        "axle_index",
+        "axle_label",
+        "side",
+        "wheel_location",
+        "display_alias",
+        "x_m",
+        "y_m",
+        "z_m",
+        "steering_index",
+        "suspension_id",
+        "wheel_id",
+        "tire_id",
+        "brake_id",
+        "driven",
+        "steerable",
+        "dual_wheel",
+        "source_json",
+        "body_ids",
+        "link_ids",
+        "source",
+    ]
+    csv_path = write_csv(OUTPUT_CSV / "vehicle_axle_wheel_map.csv", fieldnames, rows)
+    json_path = write_json(
+        OUTPUT_JSON / "vehicle_axle_wheel_map.json",
+        {"schema_id": "vehicle.axle_wheel_map.v1", "run_id": "rover_vehicle_component_demo", "source": source, "wheels": rows},
+    )
+    return csv_path, json_path
+
+
+def _vehicle_frame_hardpoint_rows(source: str) -> list[dict[str, str]]:
+    base = {
+        "schema_id": "vehicle.frame_hardpoint_map.v1",
+        "run_id": "rover_vehicle_component_demo",
+        "vehicle_model": "core_to_vehicle_upgrade_contract",
+        "world_frame": "Chrono world: X forward, Y left, Z up in this report",
+        "vehicle_frame": "ISO vehicle frame: X forward, Y left, Z up",
+        "render_camera_up": "matplotlib/VSG camera up is view-dependent, not vehicle frame",
+        "source": source,
+    }
+    hardpoints = [
+        ("chassis.com", "world", 0.0, 0.0, 0.56, "1", "0", "0", "chassis center of mass/reference body"),
+        ("payload.mount", "chassis.com", -0.34, 0.0, 0.86, "0", "0", "1", "payload/sensor mounting deck"),
+        ("axle.front.left", "chassis.com", 0.68, 0.55, 0.30, "0", "1", "0", "front-left wheel spindle axis"),
+        ("axle.front.right", "chassis.com", 0.68, -0.55, 0.30, "0", "1", "0", "front-right wheel spindle axis"),
+        ("axle.rear.left", "chassis.com", -0.68, 0.55, 0.30, "0", "1", "0", "rear-left wheel spindle axis"),
+        ("axle.rear.right", "chassis.com", -0.68, -0.55, 0.30, "0", "1", "0", "rear-right wheel spindle axis"),
+        ("steering.rack", "chassis.com", 0.72, 0.0, 0.43, "0", "1", "0", "front steering linkage reference"),
+    ]
+    rows = []
+    for frame_id, parent_frame, x_m, y_m, z_m, axis_x, axis_y, axis_z, role in hardpoints:
+        row = dict(base)
+        row.update(
+            {
+                "frame_id": frame_id,
+                "parent_frame": parent_frame,
+                "x_m": f"{x_m:.3f}",
+                "y_m": f"{y_m:.3f}",
+                "z_m": f"{z_m:.3f}",
+                "axis_x": axis_x,
+                "axis_y": axis_y,
+                "axis_z": axis_z,
+                "role": role,
+            }
+        )
+        rows.append(row)
+    return rows
+
+
+def write_vehicle_frame_hardpoint_map(source: str) -> tuple[Path, Path]:
+    rows = _vehicle_frame_hardpoint_rows(source)
+    fieldnames = [
+        "schema_id",
+        "run_id",
+        "vehicle_model",
+        "frame_id",
+        "parent_frame",
+        "x_m",
+        "y_m",
+        "z_m",
+        "axis_x",
+        "axis_y",
+        "axis_z",
+        "role",
+        "world_frame",
+        "vehicle_frame",
+        "render_camera_up",
+        "source",
+    ]
+    csv_path = write_csv(OUTPUT_CSV / "vehicle_frame_hardpoint_map.csv", fieldnames, rows)
+    json_path = write_json(
+        OUTPUT_JSON / "vehicle_frame_hardpoint_map.json",
+        {"schema_id": "vehicle.frame_hardpoint_map.v1", "run_id": "rover_vehicle_component_demo", "source": source, "hardpoints": rows},
+    )
+    return csv_path, json_path
+
+
+def write_vehicle_component_list(source: str) -> Path:
+    components = [
+        ("vehicle.system", "vehicle.system_export", "ChWheeledVehicle", "schema-only upgrade root"),
+        ("vehicle.chassis.main", "vehicle.chassis", "ChRigidChassis", "reference body and inertia owner"),
+        ("vehicle.subchassis.payload", "vehicle.chassis", "ChSubchassis", "payload and sensor support body group"),
+        ("vehicle.axle.front", "vehicle.axle", "ChAxle", "front axle ownership path"),
+        ("vehicle.axle.rear", "vehicle.axle", "ChAxle", "rear axle ownership path"),
+        ("vehicle.suspension.front", "vehicle.suspension", "ChSuspension", "front spindle and load path"),
+        ("vehicle.suspension.rear", "vehicle.suspension", "ChSuspension", "rear spindle and load path"),
+        ("vehicle.steering.front", "vehicle.steering", "ChSteering", "normalized steering to spindle motion"),
+        ("vehicle.antiroll.front", "vehicle.antirollbar", "ChAntirollBar", "front axle roll-coupling output slot"),
+        ("vehicle.powertrain.main", "vehicle.powertrain", "ChPowertrainAssembly", "throttle to engine/driveshaft torque"),
+        ("vehicle.driveline.4wd", "vehicle.driveline", "ChDrivelineWV", "torque split to driven wheels"),
+        ("vehicle.brake.service", "vehicle.brake", "ChBrake", "braking command to wheel brake torque"),
+        ("vehicle.wheel.single", "vehicle.wheel", "ChWheel", "wheel/spindle body output slot"),
+        ("vehicle.tire.rigid", "vehicle.tire_model", "ChTire", "tire force/contact patch owner"),
+        ("vehicle.track_assembly.left", "vehicle.track_assembly", "ChTrackAssembly", "tracked vehicle left-side upgrade slot"),
+        ("vehicle.track_shoe.schema", "vehicle.track_shoe", "ChTrackShoe", "tracked contact segment upgrade slot"),
+    ]
+    payload = {
+        "schema_id": "vehicle.component_list.v1",
+        "run_id": "rover_vehicle_component_demo",
+        "vehicle_model": "core_to_vehicle_upgrade_contract",
+        "source": source,
+        "evidence_level": "schema_only_vehicle_upgrade_contract",
+        "components": [
+            {
+                "component_id": catalog_component_id,
+                "catalog_component_id": catalog_component_id,
+                "instance_id": instance_id,
+                "chrono_item_id": instance_id,
+                "chrono_class": chrono_class,
+                "owner_component_id": catalog_component_id,
+                "body_ids": "see vehicle_axle_wheel_map.json" if any(token in instance_id for token in ("axle", "tire", "brake", "wheel", "track")) else "",
+                "link_ids": "see vehicle_axle_wheel_map.json" if any(token in instance_id for token in ("axle", "steering", "driveline", "suspension", "antiroll", "track")) else "",
+                "role": role,
+            }
+            for instance_id, catalog_component_id, chrono_class, role in components
+        ],
+    }
+    return write_json(OUTPUT_JSON / "vehicle_component_list.json", payload)
+
+
+def write_vehicle_model_spec_manifest(source: str) -> Path:
+    model_specs = [
+        {
+            "model_spec_id": "core_to_vehicle_upgrade_contract",
+            "vehicle_model": "core_to_vehicle_upgrade_contract",
+            "top_level_json": "schema_fallback_vehicle_model.json",
+            "path_base": "project_report_schema_only",
+            "resolved_config_hash": "",
+            "chrono_vehicle_class": "ChWheeledVehicle",
+            "template_family": "wheeled_vehicle_json_hierarchy",
+            "chassis_file": "schema_fallback/chassis.json",
+            "suspension_files": "schema_fallback/front_suspension.json;schema_fallback/rear_suspension.json",
+            "steering_file": "schema_fallback/steering.json",
+            "wheel_files": "schema_fallback/wheel.json",
+            "tire_files": "schema_fallback/rigid_tire.json",
+            "brake_files": "schema_fallback/brake.json",
+            "powertrain_file": "schema_fallback/powertrain.json",
+            "driveline_file": "schema_fallback/driveline.json",
+            "source_to_chrono_name_map": "vehicle.system->ChWheeledVehicle;vehicle.chassis->ChRigidChassis;vehicle.axle.*->ChAxle;vehicle.tire.rigid->ChTire",
+            "unit_policy": "SI units; ISO vehicle frame X-forward/Y-left/Z-up",
+            "axis_transform": "none for report fallback; source importers must declare transforms",
+            "missing_field_policy": "schema fallback marks missing template files as not live-loadable",
+            "evidence_level": "schema_only_vehicle_model_spec",
+            "source": source,
+        }
+    ]
+    return write_json(
+        OUTPUT_JSON / "vehicle_model_spec_manifest.json",
+        {
+            "schema_id": "vehicle.model_spec_manifest.v1",
+            "run_id": "rover_vehicle_component_demo",
+            "source": source,
+            "model_specs": model_specs,
+        },
+    )
+
+
+def write_vehicle_subsystem_types(source: str) -> Path:
+    payload = {
+        "schema_id": "vehicle.subsystem_types.v1",
+        "run_id": "rover_vehicle_component_demo",
+        "vehicle_model": "core_to_vehicle_upgrade_contract",
+        "source": source,
+        "subsystem_types": {
+            "chassis": "Rigid chassis schema placeholder",
+            "subchassis": "payload/sensor body group upgrade slot",
+            "axle": "front/rear axle ownership and side indexing",
+            "suspension": "DoubleWishbone/solid-axle upgrade slot",
+            "steering": "PitmanArm/RackPinion or skid command mapper",
+            "anti_roll_bar": "anti-roll stiffness/coupling output slot",
+            "wheel": "single wheel per side per axle in this schema",
+            "tire": "RigidTire fallback slot; TMeasy/Fiala/Pacejka/FEA upgrade path",
+            "powertrain": "engine + transmission assembly",
+            "driveline": "4WD torque split contract",
+            "brake": "per-wheel brake torque contract",
+            "tracked_vehicle": "separate tracked subsystem path, indexed but not active in wheeled probe",
+        },
+    }
+    return write_json(OUTPUT_JSON / "vehicle_subsystem_types.json", payload)
+
+
+def write_vehicle_subsystem_output_policy(source: str) -> Path:
+    payload = {
+        "schema_id": "vehicle.subsystem_output_policy.v1",
+        "run_id": "rover_vehicle_component_demo",
+        "vehicle_model": "core_to_vehicle_upgrade_contract",
+        "source": source,
+        "output_policy": [
+            {"subsystem": "chassis", "enabled": True, "artifact": "outputs/csv/rover_vehicle_chassis_probe.csv", "cadence": "every dynamics step"},
+            {"subsystem": "subchassis", "enabled": True, "artifact": "outputs/json/vehicle_component_list.json", "cadence": "schema inventory row"},
+            {"subsystem": "axle", "enabled": True, "artifact": "outputs/csv/vehicle_axle_wheel_map.csv", "cadence": "schema inventory row"},
+            {"subsystem": "suspension", "enabled": True, "artifact": "outputs/csv/vehicle_subsystem_probe.csv", "cadence": "every schema probe row"},
+            {"subsystem": "steering", "enabled": True, "artifact": "outputs/csv/vehicle_subsystem_probe.csv", "cadence": "every schema probe row"},
+            {"subsystem": "anti_roll_bar", "enabled": True, "artifact": "outputs/json/vehicle_component_list.json", "cadence": "schema inventory row; live torque log required"},
+            {"subsystem": "driver", "enabled": True, "artifact": "outputs/csv/vehicle_subsystem_probe.csv", "cadence": "every schema probe row"},
+            {"subsystem": "powertrain", "enabled": True, "artifact": "outputs/csv/vehicle_subsystem_probe.csv", "cadence": "every schema probe row"},
+            {"subsystem": "driveline", "enabled": True, "artifact": "outputs/csv/vehicle_subsystem_probe.csv", "cadence": "every schema probe row"},
+            {"subsystem": "brake", "enabled": True, "artifact": "outputs/csv/vehicle_subsystem_probe.csv", "cadence": "every schema probe row"},
+            {"subsystem": "wheel", "enabled": True, "artifact": "outputs/csv/vehicle_axle_wheel_map.csv", "cadence": "schema inventory row"},
+            {"subsystem": "tire", "enabled": True, "artifact": "outputs/csv/vehicle_subsystem_probe.csv", "cadence": "every schema probe row"},
+            {"subsystem": "tracked_vehicle", "enabled": True, "artifact": "outputs/json/vehicle_component_list.json", "cadence": "schema inventory row; live tracked run required"},
+            {"subsystem": "track_assembly", "enabled": True, "artifact": "outputs/json/vehicle_component_list.json", "cadence": "schema inventory row; live tracked run required"},
+            {"subsystem": "track_shoe", "enabled": True, "artifact": "outputs/json/vehicle_component_list.json", "cadence": "schema inventory row; live tracked run required"},
+            {"subsystem": "sensor", "enabled": False, "artifact": "", "cadence": "requires Sensor module live run"},
+        ],
+    }
+    return write_json(OUTPUT_JSON / "vehicle_subsystem_output_policy.json", payload)
+
+
+def write_vehicle_subsystem_probe_csv(source: str) -> Path:
+    rows = []
+    fieldnames = [
+        "schema_id",
+        "run_id",
+        "scenario_id",
+        "time_s",
+        "step_index",
+        "vehicle_model",
+        "terrain_component_id",
+        "driver_input_source",
+        "steering_cmd",
+        "throttle_cmd",
+        "braking_cmd",
+        "input_source",
+        "engine_speed_radps",
+        "engine_torque_Nm",
+        "gear",
+        "driveshaft_speed_radps",
+        "driveshaft_torque_Nm",
+        "drive_type",
+        "front_torque_fraction",
+        "brake_lock_state",
+        "source",
+    ]
+    wheel_columns = []
+    for axle_index in (0, 1):
+        for side in ("left", "right"):
+            key = _wheel_key(axle_index, side)
+            wheel_columns.extend(
+                [
+                    f"wheel_torque_{key}_Nm",
+                    f"brake_torque_{key}_Nm",
+                    f"tire_Fx_{key}_N",
+                    f"tire_Fz_{key}_N",
+                    f"slip_ratio_{key}",
+                    f"contact_patch_{key}",
+                    f"steering_angle_{key}_rad",
+                    f"suspension_travel_{key}_m",
+                    f"wheel_load_{key}_N",
+                ]
+            )
+    fieldnames.extend(wheel_columns)
+    for step_index, t in enumerate(np.arange(0.0, 2.02, 0.02)):
+        throttle = 0.42 + 0.24 * math.sin(1.8 * t)
+        braking = max(0.0, 0.22 * math.sin(2.4 * t - 2.0))
+        steering = 0.24 * math.sin(1.2 * t)
+        engine_speed = 72.0 + 40.0 * throttle
+        engine_torque = 115.0 * throttle - 35.0 * braking
+        driveshaft_speed = engine_speed / 8.5
+        driveshaft_torque = engine_torque * 3.2
+        row = {
+            "schema_id": "vehicle.subsystem_probe.v1",
+            "run_id": "rover_vehicle_component_demo",
+            "scenario_id": "vehicle_subsystem_schema_contract_v1",
+            "time_s": f"{t:.3f}",
+            "step_index": step_index,
+            "vehicle_model": "core_to_vehicle_upgrade_contract",
+            "terrain_component_id": "terrain.core_ground",
+            "driver_input_source": "analytic_driver_profile",
+            "steering_cmd": f"{steering:.5f}",
+            "throttle_cmd": f"{throttle:.5f}",
+            "braking_cmd": f"{braking:.5f}",
+            "input_source": "schema_fallback_driver",
+            "engine_speed_radps": f"{engine_speed:.5f}",
+            "engine_torque_Nm": f"{engine_torque:.5f}",
+            "gear": "1",
+            "driveshaft_speed_radps": f"{driveshaft_speed:.5f}",
+            "driveshaft_torque_Nm": f"{driveshaft_torque:.5f}",
+            "drive_type": "schema_4wd_split",
+            "front_torque_fraction": "0.50000",
+            "brake_lock_state": "false",
+            "source": source,
+        }
+        for axle_index in (0, 1):
+            for side in ("left", "right"):
+                key = _wheel_key(axle_index, side)
+                steer_factor = 1.0 if axle_index == 0 else 0.0
+                side_factor = 1.0 if side == "left" else -1.0
+                torque = driveshaft_torque * 0.25 * (1.0 + 0.03 * side_factor * steering)
+                brake_torque = 90.0 * braking
+                normal_load = 880.0 + (35.0 if axle_index == 0 else -20.0) + 18.0 * math.sin(2.0 * t + axle_index)
+                row.update(
+                    {
+                        f"wheel_torque_{key}_Nm": f"{torque:.5f}",
+                        f"brake_torque_{key}_Nm": f"{brake_torque:.5f}",
+                        f"tire_Fx_{key}_N": f"{2.7 * torque - 1.4 * brake_torque:.5f}",
+                        f"tire_Fz_{key}_N": f"{normal_load:.5f}",
+                        f"slip_ratio_{key}": f"{0.04 * throttle - 0.02 * braking:.5f}",
+                        f"contact_patch_{key}": f"patch.{key}",
+                        f"steering_angle_{key}_rad": f"{steer_factor * steering:.5f}",
+                        f"suspension_travel_{key}_m": f"{0.035 + 0.004 * math.sin(3.0 * t + side_factor):.5f}",
+                        f"wheel_load_{key}_N": f"{normal_load:.5f}",
+                    }
+                )
+        rows.append(row)
+    return write_csv(OUTPUT_CSV / "vehicle_subsystem_probe.csv", fieldnames, rows)
+
+
+def write_vehicle_subsystem_contract_artifacts() -> list[Path]:
+    source = _vehicle_schema_source()
+    paths: list[Path] = []
+    paths.extend(write_vehicle_axle_wheel_map(source))
+    paths.extend(write_vehicle_frame_hardpoint_map(source))
+    paths.append(write_vehicle_model_spec_manifest(source))
+    paths.append(write_vehicle_component_list(source))
+    paths.append(write_vehicle_subsystem_types(source))
+    paths.append(write_vehicle_subsystem_output_policy(source))
+    paths.append(write_vehicle_subsystem_probe_csv(source))
+    return paths
 
 
 def main() -> None:
     ensure_output_dirs()
     render_results = render_rover_components()
     csv_path, graph_path = run_chassis_motor_probe()
+    vehicle_contract_paths = write_vehicle_subsystem_contract_artifacts()
 
     status_lines = []
     print("rover_vehicle renders:")
@@ -503,6 +942,9 @@ def main() -> None:
     _render_status_path().write_text("\n".join(status_lines) + "\n", encoding="utf-8")
     print("rover_vehicle csv:", csv_path)
     print("rover_vehicle graph:", graph_path)
+    print("rover_vehicle subsystem contract artifacts:")
+    for path in vehicle_contract_paths:
+        print(path)
 
 
 if __name__ == "__main__":

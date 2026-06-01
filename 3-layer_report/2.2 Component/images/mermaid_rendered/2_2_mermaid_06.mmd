@@ -4,9 +4,14 @@ flowchart LR
     Sim --> Contact["Contact Logger"]
     Sim --> Render["Render / Screenshot"]
     Sim --> Meta["Metadata Logger"]
+    Sim --> Manager["ChSensorManager"]
     State --> CSV["CSV Schema"]
     Control --> CSV
     Contact --> CSV
+    Manager --> Sensors["Sensor Components"]
+    Sensors --> Filters["Filter Chain"]
+    Filters --> SensorFiles["Sensor Files / Buffers"]
+    SensorFiles --> CSV
     CSV --> Graph["Graph Generator"]
     Render --> Report["Markdown Report"]
     Graph --> Report

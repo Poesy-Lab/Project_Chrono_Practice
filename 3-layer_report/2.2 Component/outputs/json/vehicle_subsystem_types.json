@@ -1,0 +1,20 @@
+{
+  "run_id": "rover_vehicle_component_demo",
+  "schema_id": "vehicle.subsystem_types.v1",
+  "source": "fallback_vehicle_schema_only_pychrono_unavailable",
+  "subsystem_types": {
+    "anti_roll_bar": "anti-roll stiffness/coupling output slot",
+    "axle": "front/rear axle ownership and side indexing",
+    "brake": "per-wheel brake torque contract",
+    "chassis": "Rigid chassis schema placeholder",
+    "driveline": "4WD torque split contract",
+    "powertrain": "engine + transmission assembly",
+    "steering": "PitmanArm/RackPinion or skid command mapper",
+    "subchassis": "payload/sensor body group upgrade slot",
+    "suspension": "DoubleWishbone/solid-axle upgrade slot",
+    "tire": "RigidTire fallback slot; TMeasy/Fiala/Pacejka/FEA upgrade path",
+    "tracked_vehicle": "separate tracked subsystem path, indexed but not active in wheeled probe",
+    "wheel": "single wheel per side per axle in this schema"
+  },
+  "vehicle_model": "core_to_vehicle_upgrade_contract"
+}

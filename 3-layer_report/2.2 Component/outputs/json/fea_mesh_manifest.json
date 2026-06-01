@@ -1,0 +1,27 @@
+{
+  "meshes": [
+    {
+      "boundary_condition_ids": "bc.panel_root_fixed;bc.sensor_payload_load",
+      "catalog_component_id": "flex.mesh",
+      "contact_surface_ids": "contact.panel_proxy",
+      "deformation_artifact_path": "",
+      "element_count": "18",
+      "element_family": "shell_quad_catalog_fixture",
+      "frame": "body_REF",
+      "instance_id": "flex.mesh.rover_panel_demo",
+      "material_law_id": "material.flex.aluminum_panel",
+      "mesh_family": "ANCF_shell_or_solid_catalog_slot",
+      "mesh_id": "fea_mesh.rover_panel_demo",
+      "mesh_source_hash": "",
+      "mesh_source_path": "not_bound_in_fallback_bundle",
+      "node_count": "24",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "flex.fea_mesh_manifest.v1",
+      "source": "fallback_flex_fea_schema_only",
+      "visualization_surface_ids": "surface.panel_top;surface.panel_edge"
+    }
+  ],
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "flex.fea_mesh_manifest.v1",
+  "source": "fallback_flex_fea_schema_only"
+}

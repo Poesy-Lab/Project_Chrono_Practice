@@ -1,2 +1,2 @@
-event,time_s,contacts
-first_contact,0.8600,3
+run_id,schema_id,scenario_id,event,time_s,step_index,body_a,body_b,threshold_N,debounce_s,dwell_s,contact_count,peak_force_N,source
+collision_contact_component_demo,collision.event_timeline.v1,pair_contact_schema_v1,first_contact,0.8600,344,rover_body,rigid_obstacle,1.00000,0.0000,0.3000,3,576.75540,deterministic_contact_probe_pychrono_unavailable

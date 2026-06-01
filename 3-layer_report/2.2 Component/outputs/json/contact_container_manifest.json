@@ -1,0 +1,27 @@
+{
+  "containers": [
+    {
+      "callback_class": "PairContactReporter",
+      "callback_filter_rule": "body_pair:rover_body-rigid_obstacle",
+      "catalog_component_id": "contact.container_reporter",
+      "collision_backend": "Bullet_or_fallback",
+      "contact_container_class": "ChContactContainerNSC_or_fallback",
+      "contact_count_filtered_peak": "3",
+      "contact_method": "NSC",
+      "force_frame": "world",
+      "instance_id": "contact_container.default_nsc",
+      "owner_component_id": "collision.system_lifecycle",
+      "probe_csv": "outputs/csv/collision_contact_probe.csv",
+      "reset_each_step": "true",
+      "run_id": "collision_contact_component_demo",
+      "scenario_id": "pair_contact_schema_v1",
+      "schema_id": "collision.contact_container_manifest.v1",
+      "source": "deterministic_contact_probe_pychrono_unavailable",
+      "torque_frame": "world",
+      "unsupported_contactable_types": ""
+    }
+  ],
+  "run_id": "collision_contact_component_demo",
+  "schema_id": "collision.contact_container_manifest.v1",
+  "source": "deterministic_contact_probe_pychrono_unavailable"
+}

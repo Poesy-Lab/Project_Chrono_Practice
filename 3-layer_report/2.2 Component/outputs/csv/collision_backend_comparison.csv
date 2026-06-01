@@ -1,0 +1,2 @@
+schema_id,run_id,scenario_id,backend_id,system_class,contact_method,module_availability,thread_count_collision,envelope_m,margin_m,timer_collision_broad_s,timer_collision_narrow_s,contact_count_total_peak,contact_count_filtered_peak,peak_force_N,source
+collision.backend_comparison.v1,collision_contact_component_demo,pair_contact_schema_v1,Bullet_or_fallback,ChSystemNSC_or_fallback,NSC,"pychrono live if source=pychrono, deterministic fallback otherwise",,,,,,3,3,576.75540,deterministic_contact_probe_pychrono_unavailable

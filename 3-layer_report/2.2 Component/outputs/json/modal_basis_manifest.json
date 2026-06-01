@@ -1,0 +1,23 @@
+{
+  "modal_bases": [
+    {
+      "basis_vector_hash": "",
+      "boundary_dof_count": "catalog_only",
+      "catalog_component_id": "flex.modal_reduction",
+      "frequency_table_path": "outputs/csv/mode_frequency_table.csv",
+      "instance_id": "modal_basis.panel_demo",
+      "internal_dof_count": "catalog_only",
+      "modal_basis_id": "modal_basis.panel_demo",
+      "mode_count": "2",
+      "reduction_method": "Craig-Bampton or eigenmode basis contract",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "flex.modal_basis_manifest.v1",
+      "source": "fallback_flex_fea_schema_only",
+      "source_model_hash": "",
+      "validity_note": "schema-only modal contract; live run must attach real eigenvectors/frequencies"
+    }
+  ],
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "flex.modal_basis_manifest.v1",
+  "source": "fallback_flex_fea_schema_only"
+}

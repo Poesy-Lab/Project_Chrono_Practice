@@ -1,0 +1,26 @@
+{
+  "material_laws": [
+    {
+      "catalog_component_id": "flex.material_section",
+      "chrono_class": "ChMaterialShellANCF / ChContinuumElastic",
+      "damping": "catalog_only",
+      "density_kg_m3": "2700",
+      "instance_id": "material.flex.aluminum_panel",
+      "layer_count": "1",
+      "material_law_id": "material.flex.aluminum_panel",
+      "plasticity_model": "none_in_fixture",
+      "poisson_ratio": "0.33",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "flex.material_law_manifest.v1",
+      "section_Ixx_m4": "",
+      "section_Iyy_m4": "",
+      "section_area_m2": "",
+      "source": "fallback_flex_fea_schema_only",
+      "thickness_m": "0.004",
+      "young_modulus_Pa": "7.0e10"
+    }
+  ],
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "flex.material_law_manifest.v1",
+  "source": "fallback_flex_fea_schema_only"
+}

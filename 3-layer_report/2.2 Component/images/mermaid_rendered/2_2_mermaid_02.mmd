@@ -1,21 +1,6 @@
-classDiagram
-    class Component {
-      +name
-      +parameters
-      +build(system)
-      +visual_artifact
-      +log_schema
-      +validation_graph
-    }
-    class ChronoCommand {
-      +API call
-      +object creation
-      +state update
-    }
-    class SystemScenario {
-      +components
-      +simulation loop
-      +outputs
-    }
-    ChronoCommand --> Component : "조합"
-    Component --> SystemScenario : "배치"
+flowchart LR
+    Command["Chrono Command inputs<br/>API call<br/>object creation<br/>state update<br/>raw parameters"]
+    Card["Component Card<br/>Physical: mass, inertia, pose, fixed/dynamic<br/>Connection: joint, motor, constraint<br/>Contact: collision shape, material, envelope<br/>Visual: render shape, color, camera/view<br/>Data: CSV schema, graph, metadata<br/>Validation: render, probe CSV, sanity check<br/>Owner: owns, depends_on, outputs, failure modes"]
+    System["System Scenario outputs<br/>assembled model<br/>simulation loop<br/>evidence bundle<br/>run metadata"]
+    Command -->|"조합"| Card
+    Card -->|"배치"| System

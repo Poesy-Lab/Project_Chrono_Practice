@@ -1,0 +1,9 @@
+set terminal pngcairo size 1280,720
+set output 'images/graphs/data_visualization_control_inputs_gnuplot.png'
+set title 'Control Logger Inputs'
+set xlabel 'time [s]'
+set ylabel 'normalized input'
+set grid
+plot 'outputs/raw/gnuplot/data_visualization_control_inputs.dat' using 1:2 with lines title 'throttle', \
+     'outputs/raw/gnuplot/data_visualization_control_inputs.dat' using 1:3 with lines title 'brake', \
+     'outputs/raw/gnuplot/data_visualization_control_inputs.dat' using 1:4 with lines title 'steering'

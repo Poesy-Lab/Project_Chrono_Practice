@@ -1,0 +1,51 @@
+{
+  "callbacks": [
+    {
+      "artifact": "outputs/csv/collision_contact_probe.csv",
+      "callback_family": "Report-contact callback",
+      "callback_id": "callback.report_pair_contact",
+      "catalog_component_id": "contact.report_callback",
+      "chrono_hook": "ReportAllContacts(callback)",
+      "class_name": "PairContactReporter",
+      "contactable_type_policy": "ChBody pair in fallback; non-body contactables must be recorded as unsupported",
+      "evidence_level": "fallback_schema_probe",
+      "fallback_reason": "deterministic_contact_probe_pychrono_unavailable",
+      "filter_rule": "body_pair:rover_body-rigid_obstacle",
+      "input_contract": "pA,pB,plane_coord,distance,eff_radius,cforce,ctorque,modA,modB,cnstr_offset",
+      "instance_id": "callback.report_pair_contact",
+      "mutation_policy": "report-only",
+      "owner_component_id": "contact.container_reporter",
+      "pair_scope": "rover_body-rigid_obstacle",
+      "phase": "post-contact report",
+      "registered_on": "ChContactContainer",
+      "run_id": "collision_contact_component_demo",
+      "schema_id": "collision.contact_callback_manifest.v1",
+      "source": "deterministic_contact_probe_pychrono_unavailable"
+    },
+    {
+      "artifact": "images/renders/collision_contact_debug_vectors.png",
+      "callback_family": "Visualization callback",
+      "callback_id": "callback.debug_visualization",
+      "catalog_component_id": "contact.debug_visualization",
+      "chrono_hook": "Visualization callback or report render generator",
+      "class_name": "schema_only_debug_render",
+      "contactable_type_policy": "rendered schematic",
+      "evidence_level": "concept_render",
+      "fallback_reason": "debug render is schematic unless tied to live frame index",
+      "filter_rule": "body_pair:rover_body-rigid_obstacle",
+      "input_contract": "contact point, normal, force vector, collision envelope",
+      "instance_id": "callback.debug_visualization",
+      "mutation_policy": "visualize-only",
+      "owner_component_id": "contact.container_reporter",
+      "pair_scope": "rover_body-rigid_obstacle",
+      "phase": "debug visualization",
+      "registered_on": "render pipeline",
+      "run_id": "collision_contact_component_demo",
+      "schema_id": "collision.contact_callback_manifest.v1",
+      "source": "deterministic_contact_probe_pychrono_unavailable"
+    }
+  ],
+  "run_id": "collision_contact_component_demo",
+  "schema_id": "collision.contact_callback_manifest.v1",
+  "source": "deterministic_contact_probe_pychrono_unavailable"
+}

@@ -1,0 +1,104 @@
+{
+  "output_policy": [
+    {
+      "artifact": "outputs/csv/rover_vehicle_chassis_probe.csv",
+      "cadence": "every dynamics step",
+      "enabled": true,
+      "subsystem": "chassis"
+    },
+    {
+      "artifact": "outputs/json/vehicle_component_list.json",
+      "cadence": "schema inventory row",
+      "enabled": true,
+      "subsystem": "subchassis"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_axle_wheel_map.csv",
+      "cadence": "schema inventory row",
+      "enabled": true,
+      "subsystem": "axle"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_subsystem_probe.csv",
+      "cadence": "every schema probe row",
+      "enabled": true,
+      "subsystem": "suspension"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_subsystem_probe.csv",
+      "cadence": "every schema probe row",
+      "enabled": true,
+      "subsystem": "steering"
+    },
+    {
+      "artifact": "outputs/json/vehicle_component_list.json",
+      "cadence": "schema inventory row; live torque log required",
+      "enabled": true,
+      "subsystem": "anti_roll_bar"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_subsystem_probe.csv",
+      "cadence": "every schema probe row",
+      "enabled": true,
+      "subsystem": "driver"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_subsystem_probe.csv",
+      "cadence": "every schema probe row",
+      "enabled": true,
+      "subsystem": "powertrain"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_subsystem_probe.csv",
+      "cadence": "every schema probe row",
+      "enabled": true,
+      "subsystem": "driveline"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_subsystem_probe.csv",
+      "cadence": "every schema probe row",
+      "enabled": true,
+      "subsystem": "brake"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_axle_wheel_map.csv",
+      "cadence": "schema inventory row",
+      "enabled": true,
+      "subsystem": "wheel"
+    },
+    {
+      "artifact": "outputs/csv/vehicle_subsystem_probe.csv",
+      "cadence": "every schema probe row",
+      "enabled": true,
+      "subsystem": "tire"
+    },
+    {
+      "artifact": "outputs/json/vehicle_component_list.json",
+      "cadence": "schema inventory row; live tracked run required",
+      "enabled": true,
+      "subsystem": "tracked_vehicle"
+    },
+    {
+      "artifact": "outputs/json/vehicle_component_list.json",
+      "cadence": "schema inventory row; live tracked run required",
+      "enabled": true,
+      "subsystem": "track_assembly"
+    },
+    {
+      "artifact": "outputs/json/vehicle_component_list.json",
+      "cadence": "schema inventory row; live tracked run required",
+      "enabled": true,
+      "subsystem": "track_shoe"
+    },
+    {
+      "artifact": "",
+      "cadence": "requires Sensor module live run",
+      "enabled": false,
+      "subsystem": "sensor"
+    }
+  ],
+  "run_id": "rover_vehicle_component_demo",
+  "schema_id": "vehicle.subsystem_output_policy.v1",
+  "source": "fallback_vehicle_schema_only_pychrono_unavailable",
+  "vehicle_model": "core_to_vehicle_upgrade_contract"
+}

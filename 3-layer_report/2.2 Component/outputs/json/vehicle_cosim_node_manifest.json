@@ -1,0 +1,31 @@
+{
+  "cosim_nodes": [
+    {
+      "body_or_subsystem_ids": "vehicle.chassis;vehicle.axle;vehicle.wheel",
+      "catalog_component_id": "integration.vehicle_cosim",
+      "exchanged_variables": "wheel_state;terrain_force;tire_force",
+      "instance_id": "cosim_node.mbs_rover",
+      "node_role": "MBS",
+      "rank_or_process_id": "0",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "integration.vehicle_cosim_node_manifest.v1",
+      "source": "fallback_model_integration_schema_only",
+      "sync_timestep_s": "0.001"
+    },
+    {
+      "body_or_subsystem_ids": "terrain.core_ground;terrain.scm",
+      "catalog_component_id": "integration.vehicle_cosim",
+      "exchanged_variables": "terrain_height;terrain_force;contact_patch",
+      "instance_id": "cosim_node.terrain",
+      "node_role": "Terrain",
+      "rank_or_process_id": "1",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "integration.vehicle_cosim_node_manifest.v1",
+      "source": "fallback_model_integration_schema_only",
+      "sync_timestep_s": "0.001"
+    }
+  ],
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "integration.vehicle_cosim_node_manifest.v1",
+  "source": "fallback_model_integration_schema_only"
+}

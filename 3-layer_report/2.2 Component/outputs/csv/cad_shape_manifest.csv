@@ -1,0 +1,2 @@
+schema_id,run_id,catalog_component_id,instance_id,cad_shape_id,parent_shape_id,shape_name,step_source_path,step_source_hash,tessellation_chord_tol_m,tessellation_angle_tol_deg,mass_inertia_source,collision_proxy_policy,source
+asset.cad_shape_manifest.v1,component_catalog_fallback_bundle,asset.cad_step,cad_shape.chassis_proxy,cad_shape.chassis_proxy,,chassis_proxy,not_bound_in_fallback_bundle,,0.002,12,computed_or_external_required,use primitive/convex proxy; never raw decorative CAD for collision without review,fallback_model_integration_schema_only

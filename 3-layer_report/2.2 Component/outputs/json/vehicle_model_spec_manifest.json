@@ -1,0 +1,30 @@
+{
+  "model_specs": [
+    {
+      "axis_transform": "none for report fallback; source importers must declare transforms",
+      "brake_files": "schema_fallback/brake.json",
+      "chassis_file": "schema_fallback/chassis.json",
+      "chrono_vehicle_class": "ChWheeledVehicle",
+      "driveline_file": "schema_fallback/driveline.json",
+      "evidence_level": "schema_only_vehicle_model_spec",
+      "missing_field_policy": "schema fallback marks missing template files as not live-loadable",
+      "model_spec_id": "core_to_vehicle_upgrade_contract",
+      "path_base": "project_report_schema_only",
+      "powertrain_file": "schema_fallback/powertrain.json",
+      "resolved_config_hash": "",
+      "source": "fallback_vehicle_schema_only_pychrono_unavailable",
+      "source_to_chrono_name_map": "vehicle.system->ChWheeledVehicle;vehicle.chassis->ChRigidChassis;vehicle.axle.*->ChAxle;vehicle.tire.rigid->ChTire",
+      "steering_file": "schema_fallback/steering.json",
+      "suspension_files": "schema_fallback/front_suspension.json;schema_fallback/rear_suspension.json",
+      "template_family": "wheeled_vehicle_json_hierarchy",
+      "tire_files": "schema_fallback/rigid_tire.json",
+      "top_level_json": "schema_fallback_vehicle_model.json",
+      "unit_policy": "SI units; ISO vehicle frame X-forward/Y-left/Z-up",
+      "vehicle_model": "core_to_vehicle_upgrade_contract",
+      "wheel_files": "schema_fallback/wheel.json"
+    }
+  ],
+  "run_id": "rover_vehicle_component_demo",
+  "schema_id": "vehicle.model_spec_manifest.v1",
+  "source": "fallback_vehicle_schema_only_pychrono_unavailable"
+}

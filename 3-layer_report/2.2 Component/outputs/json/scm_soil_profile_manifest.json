@@ -1,0 +1,30 @@
+{
+  "run_id": "environment_terrain_component_demo",
+  "schema_id": "terrain.scm_soil_profile_manifest.v1",
+  "soil_profiles": [
+    {
+      "bekker_Kc": "0.14e4",
+      "bekker_Kphi": "0.82e6",
+      "bekker_n": "1.10",
+      "calibration_provenance": "illustrative only; replace with plate/wheel calibration before validation",
+      "catalog_component_id": "terrain.scm",
+      "damping_Ns_per_m3": "3.0e4",
+      "elastic_stiffness_Pa_per_m": "2.0e7",
+      "grid_spacing_m": "0.050",
+      "instance_id": "scm.soil_profile.default_loam",
+      "janosi_shear_m": "0.018",
+      "mohr_cohesion_Pa": "1200",
+      "mohr_friction_angle_deg": "28.0",
+      "moving_patch_policy": "record body id/OOBB in live run",
+      "profile_source": "catalog fixture",
+      "run_id": "environment_terrain_component_demo",
+      "schema_id": "terrain.scm_soil_profile_manifest.v1",
+      "soil_callback_id": "none_in_fallback",
+      "soil_profile_id": "scm.soil_profile.default_loam",
+      "soil_profile_name": "catalog loam fixture",
+      "source": "fallback_terrain_schema_only_pychrono_unavailable",
+      "terrain_component_id": "terrain.scm"
+    }
+  ],
+  "source": "fallback_terrain_schema_only_pychrono_unavailable"
+}

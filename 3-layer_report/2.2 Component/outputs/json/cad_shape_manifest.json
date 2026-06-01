@@ -1,0 +1,23 @@
+{
+  "cad_shapes": [
+    {
+      "cad_shape_id": "cad_shape.chassis_proxy",
+      "catalog_component_id": "asset.cad_step",
+      "collision_proxy_policy": "use primitive/convex proxy; never raw decorative CAD for collision without review",
+      "instance_id": "cad_shape.chassis_proxy",
+      "mass_inertia_source": "computed_or_external_required",
+      "parent_shape_id": "",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "asset.cad_shape_manifest.v1",
+      "shape_name": "chassis_proxy",
+      "source": "fallback_model_integration_schema_only",
+      "step_source_hash": "",
+      "step_source_path": "not_bound_in_fallback_bundle",
+      "tessellation_angle_tol_deg": "12",
+      "tessellation_chord_tol_m": "0.002"
+    }
+  ],
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "asset.cad_shape_manifest.v1",
+  "source": "fallback_model_integration_schema_only"
+}

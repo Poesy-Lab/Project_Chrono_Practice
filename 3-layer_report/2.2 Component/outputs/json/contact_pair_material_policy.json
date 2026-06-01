@@ -1,0 +1,26 @@
+{
+  "pair_policies": [
+    {
+      "add_contact_callback_class": "none_in_fallback",
+      "body_a": "rover_body",
+      "body_b": "rigid_obstacle",
+      "catalog_component_id": "collision.contact_material_policy",
+      "composite_material_class": "ChContactMaterialCompositeNSC",
+      "contactinfo_filter": "body_pair:rover_body-rigid_obstacle",
+      "evidence_graph": "images/graphs/collision_contact_material_effect_graph.png",
+      "instance_id": "pair.rover_body-rigid_obstacle",
+      "material_a_id": "contact_material_nsc_demo",
+      "material_b_id": "contact_material_nsc_demo",
+      "mixing_rule": "same-material direct pair",
+      "modified_fields": "",
+      "owner_component_id": "collision.system_lifecycle",
+      "pair_policy_id": "pair.rover_body-rigid_obstacle",
+      "run_id": "collision_contact_component_demo",
+      "schema_id": "collision.contact_pair_material_policy.v1",
+      "source": "deterministic_contact_probe_pychrono_unavailable"
+    }
+  ],
+  "run_id": "collision_contact_component_demo",
+  "schema_id": "collision.contact_pair_material_policy.v1",
+  "source": "deterministic_contact_probe_pychrono_unavailable"
+}

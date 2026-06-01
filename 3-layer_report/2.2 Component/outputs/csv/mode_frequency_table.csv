@@ -1,0 +1,3 @@
+schema_id,run_id,catalog_component_id,modal_basis_id,mode_id,frequency_hz,damping_ratio,boundary_condition_id,reduction_validity,source
+flex.mode_frequency_table.v1,component_catalog_fallback_bundle,flex.modal_reduction,modal_basis.panel_demo,mode_001,42.0,0.020,bc.panel_root_fixed,catalog_fixture_only,fallback_flex_fea_schema_only
+flex.mode_frequency_table.v1,component_catalog_fallback_bundle,flex.modal_reduction,modal_basis.panel_demo,mode_002,86.5,0.020,bc.panel_root_fixed,catalog_fixture_only,fallback_flex_fea_schema_only

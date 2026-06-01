@@ -1,0 +1,29 @@
+{
+  "run_id": "collision_contact_component_demo",
+  "schema_id": "collision.system_manifest.v1",
+  "source": "deterministic_contact_probe_pychrono_unavailable",
+  "system_components": [
+    {
+      "bind_init_run_report_sequence": "create bodies -> bind material/shape -> DoStepDynamics -> ReportAllContacts -> write CSV",
+      "callback_registration": "ReportContactCallback pair filter",
+      "collision_backend": "Bullet_or_fallback",
+      "collision_system_type": "Bullet_or_fallback",
+      "component_id": "collision.system_lifecycle",
+      "contact_count_peak": "3",
+      "contact_method": "NSC",
+      "envelope_m": "",
+      "evidence_level": "fallback_schema_probe",
+      "fallback_reason": "deterministic_contact_probe_pychrono_unavailable",
+      "margin_m": "",
+      "peak_force_N": "576.75540",
+      "run_id": "collision_contact_component_demo",
+      "scenario_id": "pair_contact_schema_v1",
+      "schema_id": "collision.system_manifest.v1",
+      "source": "deterministic_contact_probe_pychrono_unavailable",
+      "system_class": "ChSystemNSC_or_fallback",
+      "thread_count_collision": "",
+      "timer_collision_broad_s": "",
+      "timer_collision_narrow_s": ""
+    }
+  ]
+}

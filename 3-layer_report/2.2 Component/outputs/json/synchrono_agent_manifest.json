@@ -1,0 +1,21 @@
+{
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "integration.synchrono_agent_manifest.v1",
+  "source": "fallback_model_integration_schema_only",
+  "synchrono_agents": [
+    {
+      "agent_id": "rover_001",
+      "catalog_component_id": "integration.synchrono",
+      "communication_backend": "DDS/MPI catalog slot",
+      "gps_frame": "lat/lon/alt ENU projection required in live run",
+      "instance_id": "synchrono.agent.rover_001",
+      "owned_component_ids": "vehicle.chassis;sensor.manager;core.function_input",
+      "packet_timing_policy": "timestamped state/control packets",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "integration.synchrono_agent_manifest.v1",
+      "source": "fallback_model_integration_schema_only",
+      "synchronization_period_s": "0.020",
+      "world_frame": "Chrono world X forward Y left Z up"
+    }
+  ]
+}

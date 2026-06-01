@@ -1,0 +1,35 @@
+{
+  "ros_topics": [
+    {
+      "catalog_component_id": "integration.ros",
+      "chrono_component_ids": "runtime.system",
+      "direction": "publish",
+      "frame_id": "",
+      "handler_class": "ChROSClockHandler",
+      "instance_id": "ros.topic.clock",
+      "message_type": "rosgraph_msgs/Clock",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "integration.ros_topic_handler_manifest.v1",
+      "source": "fallback_model_integration_schema_only",
+      "topic": "/clock",
+      "update_rate_hz": "50"
+    },
+    {
+      "catalog_component_id": "integration.ros",
+      "chrono_component_ids": "core.function_input",
+      "direction": "subscribe",
+      "frame_id": "base_link",
+      "handler_class": "custom_driver_input_handler",
+      "instance_id": "ros.topic.driver_inputs",
+      "message_type": "chrono_msgs/DriverInputs",
+      "run_id": "component_catalog_fallback_bundle",
+      "schema_id": "integration.ros_topic_handler_manifest.v1",
+      "source": "fallback_model_integration_schema_only",
+      "topic": "/cmd/driver_inputs",
+      "update_rate_hz": "50"
+    }
+  ],
+  "run_id": "component_catalog_fallback_bundle",
+  "schema_id": "integration.ros_topic_handler_manifest.v1",
+  "source": "fallback_model_integration_schema_only"
+}
