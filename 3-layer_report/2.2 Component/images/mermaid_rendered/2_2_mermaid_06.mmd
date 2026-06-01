@@ -1,18 +1,61 @@
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'linear', 'nodeSpacing': 34, 'rankSpacing': 52}, 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
 flowchart LR
-    Sim["Chrono Simulation Loop"] --> State["State Logger"]
-    Sim --> Control["Control Logger"]
-    Sim --> Contact["Contact Logger"]
-    Sim --> Render["Render / Screenshot"]
-    Sim --> Meta["Metadata Logger"]
-    Sim --> Manager["ChSensorManager"]
-    State --> CSV["CSV Schema"]
-    Control --> CSV
-    Contact --> CSV
-    Manager --> Sensors["Sensor Components"]
-    Sensors --> Filters["Filter Chain"]
-    Filters --> SensorFiles["Sensor Files / Buffers"]
-    SensorFiles --> CSV
-    CSV --> Graph["Graph Generator"]
-    Render --> Report["Markdown Report"]
-    Graph --> Report
-    Meta --> Report
+    classDef runtime fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef logger fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef contract fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1px
+    classDef output fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Runtime["Chrono 실행 루프"]
+        R1["Simulation step<br/>DoStepDynamics(dt)"]
+        R2["Driver / motor input"]
+        R3["Contact / terrain response"]
+        R4["ChSensorManager<br/>optional Sensor module"]
+    end
+
+    subgraph Logger["출력 Component"]
+        L1["State logger<br/>pose, velocity, attitude"]
+        L2["Control logger<br/>steering, speed, torque"]
+        L3["Contact logger<br/>pair, count, force"]
+        L4["Render / screenshot<br/>camera, backend"]
+        L5["Sensor logger<br/>image, point cloud, IMU"]
+        L6["Metadata logger<br/>solver, timestep, module"]
+    end
+
+    subgraph Contract["산출물 계약"]
+        C1["CSV schema<br/>unit, source, timestamp"]
+        C2["Sensor raw artifacts<br/>frames, clouds, logs"]
+        C3["Sensor manifest<br/>pose, rate, filter chain"]
+        C4["Run manifest<br/>parameter hash, file path"]
+    end
+
+    subgraph Output["보고서 / AI 전달"]
+        O1["Graph generator<br/>trajectory, force, input"]
+        O2["Markdown report<br/>image + table + graph"]
+        O3["AI / Ontology interface<br/>CSV, JSON, mesh, artifact paths"]
+    end
+
+    R1 --> L1
+    R2 --> L2
+    R3 --> L3
+    R1 --> L4
+    R4 --> L5
+    R1 --> L6
+    L1 --> C1
+    L2 --> C1
+    L3 --> C1
+    L5 --> C2
+    L5 --> C3
+    L6 --> C4
+    C1 --> O1
+    O1 --> O2
+    L4 --> O2
+    C4 --> O2
+    C1 --> O3
+    C2 --> O3
+    C3 --> O3
+    C4 --> O3
+
+    class R1,R2,R3,R4 runtime
+    class L1,L2,L3,L4,L5,L6 logger
+    class C1,C2,C3,C4 contract
+    class O1,O2,O3 output

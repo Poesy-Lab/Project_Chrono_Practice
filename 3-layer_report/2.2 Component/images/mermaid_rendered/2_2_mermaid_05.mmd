@@ -1,13 +1,54 @@
-sequenceDiagram
-    participant Body as ChBody shape
-    participant Solver as Contact solver
-    participant Container as Contact container
-    participant Reporter as Contact reporter
-    participant Logger as CSV logger
-    participant Graph as Graph generator
-    Body->>Solver: candidates + constraints
-    Solver->>Container: points, normal, force
-    Container->>Reporter: ReportAllContacts(callback)
-    Reporter->>Logger: count, pair, force xyz
-    Logger->>Graph: write CSV
-    Graph->>Graph: force/count/event plots
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'linear', 'nodeSpacing': 34, 'rankSpacing': 52}, 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
+flowchart LR
+    classDef setup fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef solver fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef measure fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1px
+    classDef output fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Setup["접촉 조건 Component"]
+        A1["Collision shape<br/>box, sphere, mesh"]
+        A2["Contact material<br/>NSC/SMC, friction, restitution"]
+        A3["Pair filter / family<br/>self-collision policy"]
+    end
+
+    subgraph Runtime["Chrono contact pipeline"]
+        B1["Collision detection<br/>broadphase / narrowphase"]
+        B2["Contact container<br/>pair, point, normal"]
+        B3["Solver reaction<br/>constraint force / impulse state"]
+    end
+
+    subgraph Measurement["측정 Component"]
+        C1["ReportAllContacts(callback)<br/>pair-level readout"]
+        C2["GetContactForce()<br/>body total contact force"]
+        C3["Frame conversion<br/>world/contact/body axis"]
+        C4["CSV logger<br/>time, pair, count, force_xyz"]
+        C5["Event detector<br/>first, peak, separation"]
+    end
+
+    subgraph Evidence["검증 산출물"]
+        O1["force / count graph"]
+        O2["event timeline"]
+        O3["debug render<br/>point, normal, envelope"]
+        O4["metadata note<br/>force source + threshold"]
+    end
+
+    A1 --> B1
+    A2 --> B3
+    A3 --> C1
+    B1 --> B2
+    B2 --> B3
+    B2 --> C1
+    B3 --> C2
+    C1 --> C3
+    C2 --> C3
+    C3 --> C4
+    C4 --> C5
+    C4 --> O1
+    C5 --> O2
+    C1 --> O3
+    C3 --> O4
+
+    class A1,A2,A3 setup
+    class B1,B2,B3 solver
+    class C1,C2,C3,C4,C5 measure
+    class O1,O2,O3,O4 output

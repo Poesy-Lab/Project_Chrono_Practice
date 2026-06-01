@@ -1,0 +1,47 @@
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
+flowchart LR
+    classDef command fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef component fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef system fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1.5px
+    classDef output fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Command["Command 단계"]
+        C1["veh.SCMTerrain(system)"]
+        C2["Heightmap 생성 및 입력"]
+        C3["SetGravitationalAcceleration()"]
+        C4["robot.Curiosity(system)"]
+        C5["robot.CuriositySpeedDriver()"]
+        C6["GetPos + 자세 변환<br/>CSV 출력"]
+    end
+
+    subgraph Component["Component 단계"]
+        P1["SCM Terrain"]
+        P2["Mars Heightmap"]
+        P3["Mars Gravity Environment"]
+        P4["Curiosity Rover"]
+        P5["Speed Driver"]
+        P6["State Logger"]
+    end
+
+    S["화성 지형 주행 System<br/>SCMTerrain + Heightmap<br/>+ Mars Gravity + Rover"]
+    O["산출물<br/>Heightmap 이미지<br/>SCM 활성 영역<br/>height / pitch / roll"]
+
+    C1 --> P1
+    C2 --> P2 --> P1
+    C3 --> P3
+    C4 --> P4
+    C5 --> P5
+    C6 --> P6
+
+    P1 --> S
+    P2 --> S
+    P3 --> S
+    P4 --> S
+    P5 --> S
+    P6 --> S
+    S --> O
+
+    class C1,C2,C3,C4,C5,C6 command
+    class P1,P2,P3,P4,P5,P6 component
+    class S system
+    class O output

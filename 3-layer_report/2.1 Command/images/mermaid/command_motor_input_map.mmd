@@ -1,0 +1,24 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#EEF2FF", "primaryBorderColor": "#4F46E5", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#F0FDF4", "tertiaryColor": "#FFF7ED"}}}%%
+flowchart LR
+    A["Motor Command"] --> B["Angle / Position 입력"]
+    A --> C["Speed 입력"]
+    A --> D["Torque / Force 입력"]
+
+    B --> E["조향각 추종<br/>Steering Motor"]
+    C --> F["바퀴 속도 구동<br/>Drive Motor"]
+    D --> G["실제 하중 기반 구동<br/>Powertrain 확장"]
+
+    H["ChFunction<br/>Const · Step · Sine · Custom"] --> B
+    H --> C
+    H --> D
+
+    E --> I["System 결과<br/>회전 반경·경로 오차"]
+    F --> J["System 결과<br/>속도·이동 거리"]
+    G --> K["System 결과<br/>토크·에너지"]
+
+    classDef root fill:#E0E7FF,stroke:#4F46E5,stroke-width:2px,color:#111827;
+    classDef input fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A,H root;
+    class B,C,D,E,F,G input;
+    class I,J,K result;

@@ -1,0 +1,26 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#F8FAFC", "primaryBorderColor": "#475569", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#EFF6FF", "tertiaryColor": "#ECFDF5"}}}%%
+flowchart TB
+    A["Chrono 기반 물리 시뮬레이션<br/>정밀 가상환경과 데이터 생성"]
+
+    A --> B["1순위<br/>AI용 물리환경 생성 프로그램"]
+    A --> C["2순위<br/>AI surrogate model / PINN"]
+    A --> D["3순위<br/>게임 물리 파라미터 추출"]
+    A --> E["4순위<br/>온보드 주행 모델 지원"]
+
+    B --> F["설계안 입력 → 물리 검증 → AI 평가 데이터"]
+    C --> G["반복 시뮬레이션 → 학습 데이터셋 → 빠른 예측기"]
+    D --> H["정밀 거동 → 단순 파라미터 → 게임 엔진 적용"]
+    E --> I["오프라인 해석 → 단순화 모델 → 제한된 컴퓨터에서 사용"]
+
+    B <--> C
+    F --> J["최종 방향<br/>연구 연계성과 구현 가능성 비교"]
+    G --> J
+    H --> J
+    I --> J
+
+    classDef root fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef topic fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef priority fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A root;
+    class B,C,D,E,F,G,H,I topic;
+    class J priority;

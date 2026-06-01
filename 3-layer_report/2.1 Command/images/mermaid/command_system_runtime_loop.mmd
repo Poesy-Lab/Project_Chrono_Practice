@@ -1,0 +1,17 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#EFF6FF", "primaryBorderColor": "#2563EB", "primaryTextColor": "#111827", "lineColor": "#475569", "secondaryColor": "#F0FDF4", "tertiaryColor": "#FEFCE8"}}}%%
+flowchart TD
+    A["ChSystem 생성<br/>NSC 또는 SMC 선택"] --> B["실행 조건 설정<br/>중력 · Solver · Timestep"]
+    B --> C["Body / Link / Motor 추가"]
+    C --> D["현재 상태 확인<br/>위치 · 속도 · 접촉 상태"]
+    D --> E["힘과 구속 계산<br/>중력 · 외력 · 접촉력 · 조인트"]
+    E --> F["Solver가 운동방정식 풀이"]
+    F --> G["DoStepDynamics(dt)<br/>시간 전진"]
+    G --> H["Logger / Visualization<br/>CSV · 그래프 · 렌더"]
+    H --> D
+
+    classDef setup fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef loop fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef out fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A,B,C setup;
+    class D,E,F,G loop;
+    class H out;

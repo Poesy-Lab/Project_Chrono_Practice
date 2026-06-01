@@ -1,0 +1,15 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#FFF7ED", "primaryBorderColor": "#EA580C", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#EFF6FF", "tertiaryColor": "#F0FDF4"}}}%%
+flowchart LR
+    A["Body<br/>위치·속도·질량"] --> B["Visual Shape<br/>화면에 보이는 형상"]
+    A --> C["Collision Shape<br/>물리 계산 형상"]
+    D["Contact Material<br/>마찰·반발·접촉 물성"] --> E["Contact Solver<br/>NSC 또는 SMC"]
+    C --> E
+    E --> F["Contact Result<br/>접촉력·충격량·미끄럼"]
+    F --> G["System 분석<br/>충돌 안전성 / 바퀴-지면 상호작용"]
+
+    classDef body fill:#FFEDD5,stroke:#EA580C,stroke-width:2px,color:#111827;
+    classDef calc fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A,B,C,D body;
+    class E calc;
+    class F,G result;

@@ -1,0 +1,20 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#EFF6FF", "primaryBorderColor": "#2563EB", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#F8FAFC", "tertiaryColor": "#FEFCE8"}}}%%
+flowchart TD
+    A["System 상태<br/>Body · Link · Contact"] --> B["문제 구성"]
+    B --> C["선형 시스템<br/>질량·구속·FEA"]
+    B --> D["보완성 문제<br/>접촉·마찰·부등식"]
+
+    C --> E["Linear Solver<br/>MINRES · GMRES · SparseLU"]
+    D --> F["VI Solver<br/>PSOR · APGD · ADMM"]
+
+    E --> G["Timestepper<br/>Euler · HHT · Newmark"]
+    F --> G
+    G --> H["다음 상태 계산<br/>위치·속도·반력"]
+    H --> I["검증 지표<br/>수렴·관통량·접촉력 안정성"]
+
+    classDef input fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef solver fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A,B input;
+    class C,D,E,F,G solver;
+    class H,I result;

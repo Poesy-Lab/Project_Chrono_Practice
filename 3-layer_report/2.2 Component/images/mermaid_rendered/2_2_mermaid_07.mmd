@@ -1,0 +1,23 @@
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
+flowchart LR
+    classDef source fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef config fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1.3px
+    classDef runtime fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1.3px
+    classDef component fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+    classDef output fill:#eef2ff,stroke:#6366f1,color:#1e1b4b,stroke-width:1px
+
+    A["입력 출처<br/>JSON / YAML / CLI override<br/>Chrono data path / mesh path<br/>module availability / seed"]
+    B["Run Config / Spec Resolver<br/>resolved_config.json<br/>model import manifest<br/>component parameter table"]
+    C["Runtime Contract<br/>ChSystem<br/>solver / contact method / timestep<br/>gravity / backend / output path"]
+    D["Config를 받는 Component<br/>Rover / Vehicle<br/>Terrain / Environment<br/>Collision / Contact<br/>Sensor / Logging"]
+    E["재현성 산출물<br/>run metadata<br/>artifact manifest<br/>same config can rebuild system"]
+
+    A --> B --> C --> D --> E
+    B --> E
+    C --> E
+
+    class A source
+    class B config
+    class C runtime
+    class D component
+    class E output

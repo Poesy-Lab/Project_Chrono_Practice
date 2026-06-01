@@ -1,0 +1,69 @@
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
+flowchart LR
+    classDef command fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef component fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef system fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1.5px
+    classDef output fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Command["Command 단계"]
+        C1["wheel speed command"]
+        C2["steering angle / steering profile"]
+        C3["waypoint controller"]
+        C4["Gymnasium state / PPO action"]
+        C5["fixed obstacle + terrain contact"]
+        C6["state query + control log + graph output"]
+    end
+
+    subgraph Component["Component 단계"]
+        P1["Drive Motor / Wheel"]
+        P2["Steering Motor / Knuckle"]
+        P3["Waypoint Driver"]
+        P4["RL Driver"]
+        P5["Ground / Slope / Step / Rock"]
+        P6["State Logger / Control Logger"]
+        P7["Common Rover Testbed<br/>Drive + Steering + Terrain + Logger"]
+    end
+
+    subgraph System["System 단계"]
+        S1["직진 안정성 System"]
+        S2["Step Steering System"]
+        S3["Slalom Profile System"]
+        S4["Pivot Turn System"]
+        S5["Obstacle Waypoint Tracking System"]
+        S6["PPO RL Driver System"]
+    end
+
+    O["비교 산출물<br/>trajectory<br/>yaw / roll / pitch<br/>waypoint error<br/>평균 속도<br/>이동 거리"]
+
+    C1 --> P1
+    C2 --> P2
+    C3 --> P3
+    C4 --> P4
+    C5 --> P5
+    C6 --> P6
+
+    P1 --> P7
+    P2 --> P7
+    P5 --> P7
+    P6 --> P7
+    P7 --> S1
+    P7 --> S2
+    P7 --> S3
+    P7 --> S4
+    P7 --> S5
+    P7 --> S6
+    P3 --> S5
+    P4 --> S6
+    P5 --> S5
+    P5 --> S6
+    S1 --> O
+    S2 --> O
+    S3 --> O
+    S4 --> O
+    S5 --> O
+    S6 --> O
+
+    class C1,C2,C3,C4,C5,C6 command
+    class P1,P2,P3,P4,P5,P6,P7 component
+    class S1,S2,S3,S4,S5,S6 system
+    class O output

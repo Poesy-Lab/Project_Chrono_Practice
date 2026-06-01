@@ -1,12 +1,49 @@
-flowchart TB
-    A["Command 단계<br/>Chrono API 호출"] --> B["Component 단계<br/>재사용 가능한 부품 설계"]
-    B --> C["System 단계<br/>시나리오와 실행 파이프라인"]
-    A1["ChBody / ChLink / ChMotor"] --> A
-    A2["Collision shape / Contact material"] --> A
-    A3["CSV writer / Graph generator"] --> A
-    B1["Chassis / Wheel / Motor / Steering"] --> B
-    B2["Ground / Obstacle / Terrain"] --> B
-    B3["Contact Reporter / State Logger"] --> B
-    C1["단일 로버 주행 실험"] --> C
-    C2["로버-장애물 충돌 실험"] --> C
-    C3["지형별 주행 성능 비교"] --> C
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
+flowchart LR
+    classDef command fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef component fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef system fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1.5px
+    classDef evidence fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Command["Command 단계"]
+        C1["ChBody / ChLink / ChMotor"]
+        C2["Collision Shape<br/>Contact Material"]
+        C3["Terrain / Vehicle / Robot API"]
+        C4["CSV Writer<br/>Graph Generator"]
+    end
+
+    subgraph Component["Component 단계"]
+        P1["Rover Component<br/>Chassis / Wheel / Motor / Steering"]
+        P2["Environment Component<br/>Ground / Obstacle / Terrain"]
+        P3["Measurement Component<br/>Contact Reporter / State Logger"]
+        P4["Component Card<br/>물리 + 연결 + 접촉 + 데이터 + 검증"]
+    end
+
+    subgraph System["System 단계"]
+        S1["로버 주행 System"]
+        S2["충돌 해석 System"]
+        S3["지형별 성능 비교 System"]
+    end
+
+    O["Evidence Bundle<br/>render / CSV / graph / metadata"]
+
+    C1 --> P1
+    C2 --> P1
+    C2 --> P2
+    C3 --> P1
+    C3 --> P2
+    C4 --> P3
+    P1 --> P4
+    P2 --> P4
+    P3 --> P4
+    P4 --> S1
+    P4 --> S2
+    P4 --> S3
+    S1 --> O
+    S2 --> O
+    S3 --> O
+
+    class C1,C2,C3,C4 command
+    class P1,P2,P3,P4 component
+    class S1,S2,S3 system
+    class O evidence

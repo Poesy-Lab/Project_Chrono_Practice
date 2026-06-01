@@ -1,0 +1,20 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#F0FDFA", "primaryBorderColor": "#0F766E", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#EFF6FF", "tertiaryColor": "#FFF7ED"}}}%%
+flowchart LR
+    A["ChSystem<br/>공통 물리 시간"] --> B["Terrain<br/>RigidTerrain / SCMTerrain"]
+    A --> C["Vehicle / Robot<br/>HMMWV / Curiosity / Viper"]
+    D["Driver<br/>속도·조향·경로 입력"] --> C
+
+    B --> E["Synchronize / Update"]
+    C --> E
+    D --> E
+    E --> F["Advance / Update<br/>Subsystem 시간 전진"]
+    F --> G["Visualization<br/>VSG / Irrlicht"]
+    F --> H["Data Output<br/>CSV / JSON / Graph"]
+    H --> I["Component/System 검증<br/>자세·접촉력·궤적"]
+
+    classDef runtime fill:#CCFBF1,stroke:#0F766E,stroke-width:2px,color:#111827;
+    classDef subsystem fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef out fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A,E,F runtime;
+    class B,C,D subsystem;
+    class G,H,I out;

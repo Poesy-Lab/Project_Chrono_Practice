@@ -1,0 +1,29 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#EEF2FF", "primaryBorderColor": "#4F46E5", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#F0FDFA", "tertiaryColor": "#FFF7ED"}}}%%
+flowchart LR
+    A["Command<br/>Chrono API 호출 단위"]
+
+    A --> S["System / Runtime"]
+    A --> R["Rigid Body"]
+    A --> C["Collision / Contact"]
+    A --> J["Joint / Motor"]
+    A --> M["Math / Frame"]
+    A --> T["Terrain / Vehicle / Robot"]
+    A --> V["Visualization / Data"]
+
+    S --> Comp["Component<br/>재사용 가능한 부품 단위"]
+    R --> Comp
+    C --> Comp
+    J --> Comp
+    M --> Comp
+    T --> Comp
+    V --> Comp
+
+    Comp --> Sys["System<br/>완성된 실험 환경"]
+    Sys --> Out["Output<br/>렌더 이미지 · CSV · 그래프"]
+
+    classDef root fill:#E0E7FF,stroke:#4F46E5,stroke-width:2px,color:#111827;
+    classDef cmd fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef result fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A root;
+    class S,R,C,J,M,T,V,Comp,Sys cmd;
+    class Out result;

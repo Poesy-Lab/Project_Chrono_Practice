@@ -1,0 +1,47 @@
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
+flowchart LR
+    classDef command fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef component fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef system fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1.5px
+    classDef output fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Command["Command 단계"]
+        C1["ChBodyEasyBox + SetMass + SetPos"]
+        C2["ChBodyEasyCylinder + collision material"]
+        C3["ChBody + Revolute Joint Frame"]
+        C4["ChLinkMotorRotationSpeed"]
+        C5["ChLinkMotorRotationAngle"]
+        C6["Visual Shape + ChLinkLockLock"]
+    end
+
+    subgraph Component["Component 단계"]
+        P1["Main Chassis"]
+        P2["Front / Rear Wheel"]
+        P3["Front Steering Knuckle"]
+        P4["4WD Drive Motor"]
+        P5["Steering Motor<br/>Ackermann 조향각<br/>계산 적용"]
+        P6["Science Deck / Sensor Mast"]
+    end
+
+    S["4WD Front-Steering<br/>Custom Rover System<br/>Chassis + Steering + Drive<br/>+ Sensor Assembly"]
+    O["Implementation outputs<br/>로버 형상<br/>조향각 제어<br/>바퀴 회전 구동<br/>실험 프로파일"]
+
+    C1 --> P1
+    C2 --> P2
+    C3 --> P3
+    C4 --> P4
+    C5 --> P5
+    C6 --> P6
+
+    P1 --> S
+    P2 --> S
+    P3 --> S
+    P4 --> S
+    P5 --> S
+    P6 --> S
+    S --> O
+
+    class C1,C2,C3,C4,C5,C6 command
+    class P1,P2,P3,P4,P5,P6 component
+    class S system
+    class O output

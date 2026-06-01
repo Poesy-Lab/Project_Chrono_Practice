@@ -1,6 +1,50 @@
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
 flowchart LR
-    Command["Chrono Command inputs<br/>API call<br/>object creation<br/>state update<br/>raw parameters"]
-    Card["Component Card<br/>Physical: mass, inertia, pose, fixed/dynamic<br/>Connection: joint, motor, constraint<br/>Contact: collision shape, material, envelope<br/>Visual: render shape, color, camera/view<br/>Data: CSV schema, graph, metadata<br/>Validation: render, probe CSV, sanity check<br/>Owner: owns, depends_on, outputs, failure modes"]
-    System["System Scenario outputs<br/>assembled model<br/>simulation loop<br/>evidence bundle<br/>run metadata"]
-    Command -->|"조합"| Card
-    Card -->|"배치"| System
+    classDef command fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef card fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef core fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1.5px
+    classDef output fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Command["Chrono Command 입력"]
+        C1["constructor / setter<br/>객체 생성과 파라미터"]
+        C2["state update<br/>DoStep / Synchronize"]
+        C3["raw asset<br/>mesh / texture / CSV"]
+    end
+
+    subgraph Card["Component Card"]
+        P0["Owner + Boundary<br/>소유 상태, 의존 대상,<br/>산출물, 실패 조건"]
+        P1["Physical<br/>mass / inertia / pose"]
+        P2["Connection<br/>joint / motor / constraint"]
+        P3["Contact<br/>shape / material / envelope"]
+        P4["Visual<br/>render shape / color / camera"]
+        P5["Data<br/>CSV schema / graph / metadata"]
+        P6["Validation<br/>render / probe CSV / sanity check"]
+    end
+
+    subgraph System["System Scenario 출력"]
+        S1["assembled model<br/>rover + terrain + sensor"]
+        S2["simulation loop<br/>step / sync / driver"]
+        S3["evidence bundle<br/>render + CSV + graph"]
+        S4["run metadata<br/>module / parameter / version"]
+    end
+
+    C1 --> P1
+    C1 --> P2
+    C1 --> P3
+    C2 --> P5
+    C3 --> P4
+    P1 --> P0
+    P2 --> P0
+    P3 --> P0
+    P4 --> P0
+    P5 --> P0
+    P6 --> P0
+    P0 --> S1
+    P0 --> S2
+    P0 --> S3
+    P0 --> S4
+
+    class C1,C2,C3 command
+    class P1,P2,P3,P4,P5,P6 card
+    class P0 core
+    class S1,S2,S3,S4 output

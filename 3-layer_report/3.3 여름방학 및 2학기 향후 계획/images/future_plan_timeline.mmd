@@ -1,0 +1,26 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#EFF6FF", "primaryBorderColor": "#2563EB", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#ECFDF5", "tertiaryColor": "#FFF7ED"}}}%%
+flowchart TB
+    A["여름방학<br/>후보 주제 비교"] --> B["프로토타입 안정화<br/>로버·지형·데이터 출력"]
+    B --> C["최종 주제 확정<br/>연구 연계성·구현 난이도 평가"]
+    C --> D["2학기 구현<br/>대표 System 완성"]
+    D --> E["결과 데이터 정리<br/>CSV / JSON / Graph / Render"]
+    E --> F["AI 연동 또는 응용<br/>물리환경 생성 · surrogate model · 온보드 모델"]
+
+    subgraph Summer["여름방학"]
+        direction TB
+        A
+        B
+        C
+    end
+
+    subgraph Semester["2학기"]
+        direction TB
+        D
+        E
+        F
+    end
+
+    classDef summer fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef sem fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A,B,C summer;
+    class D,E,F sem;

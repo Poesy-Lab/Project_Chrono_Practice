@@ -1,0 +1,45 @@
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
+flowchart LR
+    classDef command fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef component fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef system fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1.5px
+    classDef output fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Command["Command 단계"]
+        C1["veh.RigidTerrain(system)"]
+        C2["robot.Curiosity(system)"]
+        C3["robot.CuriositySpeedDriver()"]
+        C4["ChBodyEasyBox + SetFixed(True)"]
+        C5["wall.GetContactForce()"]
+    end
+
+    subgraph Component["Component 단계"]
+        P1["Rigid Terrain"]
+        P2["Curiosity Rover"]
+        P3["Speed Driver"]
+        P4["Fixed Wall Obstacle"]
+        P5["Contact Logger"]
+        P6["Impulse Calculator"]
+    end
+
+    S["충돌 해석 System<br/>RigidTerrain + Rover + Wall<br/>+ Contact Logger"]
+    O["산출물<br/>충돌 장면<br/>접촉력 그래프<br/>충격량 그래프"]
+
+    C1 --> P1
+    C2 --> P2
+    C3 --> P3
+    C4 --> P4
+    C5 --> P5 --> P6
+
+    P1 --> S
+    P2 --> S
+    P3 --> S
+    P4 --> S
+    P5 --> S
+    P6 --> S
+    S --> O
+
+    class C1,C2,C3,C4,C5 command
+    class P1,P2,P3,P4,P5,P6 component
+    class S system
+    class O output

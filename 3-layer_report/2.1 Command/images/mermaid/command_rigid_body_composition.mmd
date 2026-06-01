@@ -1,0 +1,20 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#FFF7ED", "primaryBorderColor": "#EA580C", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#EFF6FF", "tertiaryColor": "#ECFDF5"}}}%%
+flowchart TB
+    A["ChBody / ChBodyEasy*"] --> B["Mass & Inertia<br/>질량·관성"]
+    A --> C["Pose<br/>위치·회전·초기 속도"]
+    A --> D["Visual Shape<br/>렌더링 형상"]
+    A --> E["Collision Shape<br/>접촉 계산 형상"]
+    A --> F["State Getter<br/>위치·속도·가속도"]
+
+    B --> G["Component 의미<br/>Chassis / Wheel / Ground / Obstacle"]
+    C --> G
+    D --> H["시각 검증<br/>렌더 이미지"]
+    E --> I["물리 검증<br/>접촉력·마찰·충돌"]
+    F --> J["데이터 검증<br/>CSV · 그래프"]
+
+    classDef body fill:#FFEDD5,stroke:#EA580C,stroke-width:2px,color:#111827;
+    classDef part fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef out fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A body;
+    class B,C,D,E,F part;
+    class G,H,I,J out;

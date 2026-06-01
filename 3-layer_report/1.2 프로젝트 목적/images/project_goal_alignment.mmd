@@ -1,0 +1,23 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#F8FAFC", "primaryBorderColor": "#334155", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#ECFDF5", "tertiaryColor": "#EFF6FF"}}}%%
+flowchart TB
+    Center["Project Chrono 학습 목표<br/>시뮬레이션 레이어"]
+
+    A["학습 체계 구축<br/>Command-Component-System"]
+    B["실제 시스템 구현<br/>로버 / 지형 / 충돌 / 주행"]
+    C["정량 데이터 확보<br/>접촉력 / 자세 / 궤적 / 속도"]
+    D["향후 적용 기반<br/>AI 평가 / surrogate model / 설계 자동화"]
+
+    Center --> A
+    Center --> B
+    Center --> C
+    Center --> D
+
+    A --> A1["기능 분류와 사용법"]
+    B --> B1["완성형 System 사례"]
+    C --> C1["CSV·그래프 검증"]
+    D --> D1["연구 및 응용 확장"]
+
+    classDef center fill:#DBEAFE,stroke:#1D4ED8,stroke-width:2px,color:#111827;
+    classDef branch fill:#F8FAFC,stroke:#475569,stroke-width:1.5px,color:#111827;
+    class Center center;
+    class A,B,C,D,A1,B1,C1,D1 branch;

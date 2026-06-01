@@ -1,0 +1,20 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#E8F3FF", "primaryBorderColor": "#2563EB", "primaryTextColor": "#111827", "lineColor": "#475569", "secondaryColor": "#ECFDF5", "tertiaryColor": "#FFF7ED"}}}%%
+flowchart TB
+    A["Project Chrono 학습"] --> B["Command 단계<br/>API와 기능 분류"]
+    B --> C["Component 단계<br/>로버/지형/접촉/데이터 부품화"]
+    C --> D["System 단계<br/>충돌/주행/커스텀 로버 실험"]
+    D --> E["물리 결과<br/>CSV / JSON / Mesh / Graph"]
+    E --> F["AI 친화적 설계 표현<br/>평가 데이터와 학습 데이터"]
+    F --> G["연구 및 응용<br/>설계 자동화 / surrogate model / 온보드 모델"]
+
+    subgraph S["이번 학기 보고서 범위"]
+        direction LR
+        B
+        C
+        D
+    end
+
+    classDef focus fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef data fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class B,C,D focus;
+    class E,F,G data;

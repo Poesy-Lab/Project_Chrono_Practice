@@ -1,0 +1,19 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#F8FAFC", "primaryBorderColor": "#475569", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#EFF6FF", "tertiaryColor": "#ECFDF5"}}}%%
+flowchart TB
+    A["World Frame<br/>X-forward · Y-left · Z-up"] --> B["ChVector3d<br/>위치·속도·힘·축"]
+    A --> C["ChQuaterniond<br/>3D 회전"]
+    B --> D["ChFramed<br/>위치 + 회전"]
+    C --> D
+    D --> E["Body Pose<br/>차체·바퀴·장애물 배치"]
+    D --> F["Joint Frame<br/>회전축·조향축 정의"]
+    D --> G["Sensor / Camera Pose<br/>관측 기준"]
+
+    B --> H["Dot / Cross / Length<br/>방향·거리·힘 크기 계산"]
+    C --> I["QuatFromAngleX/Y/Z<br/>축 기준 회전"]
+
+    classDef base fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef math fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef use fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A base;
+    class B,C,D,H,I math;
+    class E,F,G use;

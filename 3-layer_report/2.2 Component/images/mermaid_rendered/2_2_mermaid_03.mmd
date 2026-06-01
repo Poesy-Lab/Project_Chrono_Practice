@@ -1,12 +1,73 @@
+%%{init: {'theme': 'base', 'flowchart': {'curve': 'linear', 'nodeSpacing': 34, 'rankSpacing': 54}, 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
 flowchart LR
-    Chassis["Chassis<br/>기준 강체"] --> Visual["Visual Shape<br/>보이는 외형"]
-    Chassis --> Collision["Collision Shape<br/>물리 접촉 형상"]
-    Chassis --> Payload["Payload / Sensor Mount"]
-    Chassis --> Suspension["Suspension"]
-    Suspension --> Axle["Axle / Joint"]
-    Axle --> Wheel["Wheel / Tire"]
-    Motor["Motor / Drive"] --> Wheel
-    Steering["Steering"] --> Axle
-    Powertrain["Powertrain / Driveline / Brake"] --> Motor
-    Wheel --> Terrain["Terrain Component"]
-    Chassis --> Logger["State Logger"]
+    classDef source fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef body fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef motion fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1px
+    classDef contact fill:#eef2ff,stroke:#6366f1,color:#1e1b4b,stroke-width:1px
+    classDef data fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Source["Command / module source"]
+        S1["Core prototype<br/>ChBody + ChLink + motor"]
+        S2["Chrono::Vehicle<br/>JSON + subsystem"]
+        S3["Chrono::Robot<br/>Curiosity / Viper model"]
+    end
+
+    subgraph Body["기준 구조 Component"]
+        B1["Chassis<br/>mass, inertia, frame"]
+        B2["Payload / sensor mount<br/>offset pose"]
+        B3["Visual shape<br/>inspection mesh"]
+        B4["Collision shape<br/>solver geometry"]
+    end
+
+    subgraph Motion["주행/조향 Component"]
+        M1["Driver / input<br/>steering, throttle, brake"]
+        M2["Steering<br/>joint or skid command"]
+        M3["Powertrain / driveline / brake<br/>torque path"]
+        M4["Suspension / axle<br/>load path + rotation axis"]
+        M5["Wheel<br/>radius, width, inertia"]
+        M6["Tire model<br/>rigid, TMeasy, FEA"]
+    end
+
+    subgraph Interface["환경 접촉 Interface"]
+        T1["Terrain component<br/>RigidTerrain, SCM, obstacle"]
+        T2["Contact material<br/>friction, restitution"]
+        T3["Contact reporter<br/>pair, point, force"]
+    end
+
+    subgraph Evidence["검증 산출물"]
+        D1["State logger<br/>pose / speed"]
+        D2["Control logger<br/>input / torque"]
+        D3["Evidence bundle<br/>render + CSV + graph"]
+    end
+
+    S1 --> B1
+    S2 --> B1
+    S2 --> M3
+    S3 --> B1
+    B1 --> B2
+    B1 --> B3
+    B1 --> B4
+    B1 --> M4
+    M1 --> M2
+    M1 --> M3
+    M2 --> M4
+    M3 --> M5
+    M4 --> M5
+    M5 --> M6
+    M6 --> T1
+    T2 --> M6
+    T2 --> T1
+    B4 --> T3
+    T1 --> T3
+    B1 --> D1
+    M1 --> D2
+    B3 --> D3
+    T3 --> D3
+    D1 --> D3
+    D2 --> D3
+
+    class S1,S2,S3 source
+    class B1,B2,B3,B4 body
+    class M1,M2,M3,M4,M5,M6 motion
+    class T1,T2,T3 contact
+    class D1,D2,D3 data

@@ -1,0 +1,26 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#EFF6FF", "primaryBorderColor": "#2563EB", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#FFF7ED", "tertiaryColor": "#F0FDF4"}}}%%
+flowchart LR
+    A["두 Body 사이 관계"] --> B["Lock 계열<br/>자유도 제한"]
+    A --> C["Mate 계열<br/>위치/방향 맞춤"]
+    A --> D["Motor 계열<br/>제한 + 구동 입력"]
+
+    B --> B1["LockLock<br/>0 DOF"]
+    B --> B2["Revolute<br/>1축 회전"]
+    B --> B3["Prismatic<br/>1축 병진"]
+    B --> B4["Spherical<br/>3축 회전"]
+
+    D --> D1["Speed Motor<br/>각속도/선속도"]
+    D --> D2["Angle/Position Motor<br/>목표 위치"]
+    D --> D3["Torque/Force Motor<br/>하중 입력"]
+
+    B2 --> E["Wheel Axle"]
+    B3 --> F["Slider"]
+    D1 --> G["Drive Motor"]
+    D2 --> H["Steering Motor"]
+
+    classDef hub fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    classDef type fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef use fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    class A,B,C,D hub;
+    class B1,B2,B3,B4,D1,D2,D3 type;
+    class E,F,G,H use;

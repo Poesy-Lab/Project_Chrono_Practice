@@ -1,0 +1,43 @@
+%%{init: {'theme': 'base', 'themeVariables': {'fontFamily': 'Arial, Apple SD Gothic Neo, sans-serif', 'primaryColor': '#eef6ff', 'primaryTextColor': '#1b2a3a', 'primaryBorderColor': '#4f7db8', 'lineColor': '#6a7280', 'tertiaryColor': '#f7f8fa'}}}%%
+flowchart LR
+    classDef command fill:#e8f1ff,stroke:#4f7db8,color:#1b2a3a,stroke-width:1px
+    classDef component fill:#f3f7ec,stroke:#6f8f42,color:#23320f,stroke-width:1px
+    classDef system fill:#fff3df,stroke:#c9792b,color:#3d2410,stroke-width:1.5px
+    classDef output fill:#f7eef8,stroke:#9a5aa3,color:#32123a,stroke-width:1px
+
+    subgraph Command["Command 단계"]
+        C1["ChBodyEasyBox / ChBodyEasyCylinder"]
+        C2["ChLinkMotorRotationSpeed"]
+        C3["ChLinkMotorRotationAngle"]
+        C4["ChBodyEasyBox + collision material"]
+        C5["상태 조회 + CSV / graph 출력"]
+    end
+
+    subgraph Component["Component 단계"]
+        P1["Chassis / Wheel / Sensor Mast"]
+        P2["Drive Motor"]
+        P3["Steering Knuckle / Steering Motor"]
+        P4["Ground / Slope / Step / Rock"]
+        P5["Driver / State Logger / Control Logger"]
+    end
+
+    S["커스텀 로버 예비 System<br/>Core Command로 부품 직접 조립<br/>지형별 성능 비교"]
+    O["System-level utilization<br/>설계 변수 비교<br/>Waypoint 검증<br/>RL Driver 확장성"]
+
+    C1 --> P1
+    C2 --> P2
+    C3 --> P3
+    C4 --> P4
+    C5 --> P5
+
+    P1 --> S
+    P2 --> S
+    P3 --> S
+    P4 --> S
+    P5 --> S
+    S --> O
+
+    class C1,C2,C3,C4,C5 command
+    class P1,P2,P3,P4,P5 component
+    class S system
+    class O output

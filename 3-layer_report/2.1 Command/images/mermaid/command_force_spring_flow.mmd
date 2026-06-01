@@ -1,0 +1,21 @@
+%%{init: {"theme": "base", "themeVariables": {"fontFamily": "Arial", "primaryColor": "#F0FDF4", "primaryBorderColor": "#16A34A", "primaryTextColor": "#111827", "lineColor": "#64748B", "secondaryColor": "#EFF6FF", "tertiaryColor": "#FFF7ED"}}}%%
+flowchart TD
+    A["Force / Spring Command"] --> B["AccumulateForce<br/>외력·추력·바람"]
+    A --> C["AccumulateTorque<br/>회전 토크"]
+    A --> D["ChLinkTSDA<br/>병진 스프링·댐퍼"]
+    A --> E["ChLinkRSDA<br/>회전 스프링·댐퍼"]
+
+    B --> F["Body에 힘 누적"]
+    C --> F
+    D --> G["상대 변위와 속도 계산"]
+    E --> G
+    F --> H["운동방정식에 반영"]
+    G --> H
+    H --> I["System 결과<br/>가속도·진동·자세 변화"]
+
+    classDef source fill:#DCFCE7,stroke:#16A34A,stroke-width:2px,color:#111827;
+    classDef calc fill:#F8FAFC,stroke:#64748B,color:#111827;
+    classDef result fill:#DBEAFE,stroke:#2563EB,stroke-width:2px,color:#111827;
+    class A,B,C,D,E source;
+    class F,G,H calc;
+    class I result;
