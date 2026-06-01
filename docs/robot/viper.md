@@ -262,12 +262,12 @@ Tracked vehicle의 suspension이 road wheel arm, spring-damper, revolute joint �
 
 ## 8.2 역할
 
-|역할|설명|
-|---|---|
-|조향 연결|steering motor 또는 steering cylinder와 연결|
-|wheel carrier 역할|wheel과 suspension arm 사이 연결부|
-|upper/lower arm 연결|두 connecting rod를 통해 suspension arm과 연결|
-|wheel attitude 결정|wheel의 조향각과 자세에 영향|
+| 역할                 | 설명                                      |
+| ------------------ | --------------------------------------- |
+| 조향 연결              | steering motor 또는 steering cylinder와 연결 |
+| wheel carrier 역할   | wheel과 suspension arm 사이 연결부            |
+| upper/lower arm 연결 | 두 connecting rod를 통해 suspension arm과 연결 |
+| wheel attitude 결정  | wheel의 조향각과 자세에 영향                      |
 
 구조적으로는 다음과 같다.
 
@@ -476,11 +476,11 @@ Viper는 일반 자동차처럼 throttle/brake 하나로 움직이는 구조라�
 
 Driver별 차이를 정리하면 다음과 같다.
 
-|Driver|Drive 제어|Steering 제어|특징|
-|---|---|---|---|
-|`ViperSpeedDriver`|모든 wheel 같은 angular speed|`SetSteering()` 가능|가장 단순|
-|`ViperDCMotorControl`|wheel driveshaft에 torque 적용|사용자가 직접 `SetSteering()`|DC motor 근사|
-|`ViperDirectControl`|wheel별 speed 직접 지정|wheel별 angle 직접 지정|가장 유연|
+| Driver                | Drive 제어                    | Steering 제어             | 특징          |
+| --------------------- | --------------------------- | ----------------------- | ----------- |
+| `ViperSpeedDriver`    | 모든 wheel 같은 angular speed   | `SetSteering()` 가능      | 가장 단순       |
+| `ViperDCMotorControl` | wheel driveshaft에 torque 적용 | 사용자가 직접 `SetSteering()` | DC motor 근사 |
+| `ViperDirectControl`  | wheel별 speed 직접 지정          | wheel별 angle 직접 지정      | 가장 유연       |
 
 ---
 

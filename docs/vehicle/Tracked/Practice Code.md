@@ -649,7 +649,7 @@ def main():
 
     # Scripted driver input.
 
-    # This makes the run reproducible across team members.
+    # This makes the run reproducible across different computers.
 
     driver = veh.ChDataDriver(m113.GetVehicle(), str(driver_file))
 

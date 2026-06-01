@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "3-layer_report/1.1 프로젝트 개요/1.1 프로젝트 개요.md",
+                "file": "3-layer_report/3.1 프로젝트 종합 결론 및 보완할 점/README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "1.1 프로젝트 개요"
+              "title": "README"
             }
           }
         ]
@@ -44,7 +44,7 @@
                 "autoReveal": false
               },
               "icon": "lucide-folder-closed",
-              "title": "파일 탐색기"
+              "title": "Files"
             }
           },
           {
@@ -171,61 +171,62 @@
   },
   "left-ribbon": {
     "hiddenItems": {
-      "switcher:빠른 전환기 열기": false,
-      "graph:그래프 뷰 열기": false,
-      "canvas:새 캔버스 만들기": false,
-      "daily-notes:오늘의 일일 노트 열기": false,
-      "templates:템플릿 삽입": false,
-      "command-palette:명령어 팔레트 열기": false,
-      "bases:새 베이스 생성하기": false
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
     }
   },
   "active": "ebc0a45d64fe4414",
   "lastOpenFiles": [
-    "3-layer_report/1.2 프로젝트 목적/1.2 프로젝트 목적.md",
-    "3-layer_report/1.2 프로젝트 목적/README.md",
-    "3-layer_report/2.3 System/2.3.2_curiosity_rover_mars_terrain_system.md",
-    "lessons/phase4/Jongmin/scm_pockmarked_mars_heightmap.png",
-    "3-layer_report/1.1 프로젝트 개요/1.1 프로젝트 개요.md",
-    "3-layer_report/1.1 프로젝트 개요/무제 2.md",
-    "3-layer_report/2.2 Component/2.2.3_environment_terrain_components.md",
-    "3-layer_report/2.2 Component/2.2.5_data_visualization_components.md",
-    "3-layer_report/2.2 Component/2.2.4_collision_contact_components.md",
-    "3-layer_report/2.2 Component/2.2.2_rover_vehicle_components.md",
-    "3-layer_report/2.1 Command/2.1.4_joint_and_links.md",
-    "3-layer_report/2.1 Command/2.1.2_collision.md",
-    "3-layer_report/2.1 Command/2.1.1_system.md",
-    "3-layer_report/2.3 System/2.3.1_collision_system.md",
-    "3-layer_report/2.3 System/attachments/화면 캡처 2026-05-29 070824.jpg",
-    "3-layer_report/1.1 프로젝트 개요/README.md",
-    "3-layer_report/1.1 프로젝트 개요/무제 1.md",
-    "3-layer_report/2.2 Component/README.md",
-    "3-layer_report/2.1 Command/README.md",
-    "3-layer_report/2.3 System/2.3.3_custom_rover_design_purpose.md",
-    "lessons/phase4/Jongmin/heightmap",
-    "scm_mars_offroad_heightmap.png",
-    "3-layer_report/2.3 System/attachments/pitch and roll 1.png",
-    "3-layer_report/2.3 System/2.3.4_custom_rover_design.md",
-    "3-layer_report/2.3 System/2.3.5_custom_environment_design.md",
-    "3-layer_report/2.3 System/2.3.6_driving_experiments.md",
-    "3-layer_report/2.3 System/attachments/impulse.png",
-    "3-layer_report/2.3 System/attachments/pitch and roll.png",
-    "3-layer_report/2.3 System/attachments",
-    "3-layer_report/2.3 System/images/system_figure_02.png",
+    "3-layer_report/2.3 System/2.4.md",
+    "3-layer_report/3.1 프로젝트 종합 결론 및 보완할 점/결론.md",
     "3-layer_report/3.1 프로젝트 종합 결론 및 보완할 점/README.md",
-    "3-layer_report/jongmin/2.3.md",
+    "3-layer_report/2.1 Command/README.md",
+    "3-layer_report/2.1 Command/2.3.2_Viper Rover.md",
+    "3-layer_report/2.1 Command/2.2.4_Powertrain.md",
+    "3-layer_report/2.1 Command/2.3.1_Curiosity Rover.md",
+    "3-layer_report/2.1 Command/2.2.3_Driver.md",
+    "3-layer_report/2.1 Command/2.2.2_Wheeled vehicle.md",
+    "3-layer_report/2.1 Command/attachments/Pasted image 20260601204134.png",
+    "3-layer_report/2.1 Command/attachments",
+    "3-layer_report/2.1 Command/2.2.1_Tracked vehicle.md",
+    "3-layer_report/2.1 Command/2.1.1_system.md",
+    "3-layer_report/2.1 Command/2.1.8_solver.md",
+    "3-layer_report/2.1 Command/2.1.7_rigid_bodies.md",
+    "3-layer_report/2.1 Command/2.1.6_motors.md",
+    "3-layer_report/2.2 Component/2.2.3_environment_terrain_components.md",
+    "3-layer_report/2.2 Component/2.2.2_rover_vehicle_components.md",
+    "3-layer_report/2.2 Component/2.2.1_component_definition.md",
+    "3-layer_report/1.2 프로젝트 목적/1.2 프로젝트 목적.md",
     "3-layer_report/2026학년도 1학기 캡스톤디자인 보고서.md",
     "3-layer_report/3.3 여름방학 및 2학기 향후 계획/README.md",
+    "3-layer_report/3.2 최종 프로젝트 주제 브레인스토밍 결과/README.md",
+    "3-layer_report/2.2 Component/2.2.5_data_visualization_components.md",
+    "3-layer_report/2.2 Component/images/mermaid_rendered/2_2_mermaid_03.png",
+    "3-layer_report/2.2 Component/images/mermaid_rendered/2_2_mermaid_04.png",
+    "3-layer_report/2.2 Component/images/mermaid_rendered/2_2_mermaid_02.png",
+    "3-layer_report/2.2 Component/images/mermaid_rendered/2_2_mermaid_01.png",
+    "3-layer_report/2.2 Component/images/graphs/collision_contact_count_graph.png",
+    "3-layer_report/2.1 Command/2.1.2_collision.md",
+    "docs/vehicle/Tracked/0. Tracked Vehicles.md",
+    "docs/core/links.md",
+    "docs/robot/curiosity.md",
+    "lessons/phase2/lesson_12_gear_pulley_plot.png",
+    "lessons/phase2/lesson_08_plot1_comparison.png",
+    "lessons/phase2/lesson_08_pendulum_plot.png",
+    "lessons/phase4/Jongmin/scm_pockmarked_mars_heightmap.png",
+    "lessons/phase4/Jongmin/heightmap",
+    "3-layer_report/2.3 System/attachments",
     "3-layer_report/3.3 여름방학 및 2학기 향후 계획",
     "3-layer_report/3.2 최종 프로젝트 주제 브레인스토밍 결과",
     "3-layer_report/3.1 프로젝트 종합 결론 및 보완할 점",
-    "3-layer_report/2.3 System/images/system_figure_25.png",
-    "3-layer_report/2.3 System/images/system_figure_24.png",
-    "3-layer_report/2.3 System/images/system_figure_23.png",
     "3-layer_report/2.3 System/images",
     "3-layer_report/2.3 System",
     "3-layer_report/2.2 Component/outputs/csv/rover_vehicle_chassis_probe.csv",
-    "3-layer_report/2.2 Component/outputs/csv/environment_terrain_height_friction_sinkage.csv",
-    "3-layer_report/2.2 Component/outputs/csv/environment_terrain_contact_probe.csv"
+    "3-layer_report/2.2 Component/outputs/csv/environment_terrain_height_friction_sinkage.csv"
   ]
 }

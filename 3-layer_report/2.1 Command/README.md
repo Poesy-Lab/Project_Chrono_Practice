@@ -12,5 +12,5 @@
 - [2.1.6 Motors](2.1.6_motors.md)
 - [2.1.7 Rigid Bodies](2.1.7_rigid_bodies.md)
 - [2.1.8 Solver](2.1.8_solver.md)
-- [2.1.9 Vehicle](2.1.9_vehicle.md)
-- [2.1.10 Robot](2.1.10_robot.md)
+- [2.1.9 Vehicle](2.2.1_Tracked%20vehicle.md)
+- [2.1.10 Robot](2.3.1_Curiosity%20Rover.md)
