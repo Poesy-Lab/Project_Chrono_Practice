@@ -31,4 +31,4 @@ Chrono Core 예제는 목적에 따라 Y-up 또는 Z-up으로 구성할 수 있�
 
 ## 이미지 관리
 
-본문에 사용되는 이미지는 `images/` 폴더에 모아두었다. Markdown 파일에는 `data:image` 인라인 이미지 대신 `images/...png` 형태의 상대 경로만 남겨, GitHub와 로컬 Markdown 뷰어에서 모두 같은 방식으로 확인할 수 있다. Vehicle/Robot 모델 설명과 관련 이미지는 `2.2 Component`의 로버/차량 Component 문서로 통합했다.
+본문에 사용되는 이미지는 `images/` 폴더에 모아두었다. Markdown 파일에는 base64 인라인 이미지 대신 `images/...png` 형태의 상대 경로만 남겨, GitHub와 로컬 Markdown 뷰어에서 모두 같은 방식으로 확인할 수 있다. Vehicle/Robot 모델 설명과 관련 이미지는 `2.2 Component`의 로버/차량 Component 문서로 통합했다.
